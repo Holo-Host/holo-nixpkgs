@@ -85,7 +85,7 @@ let
     fi
 
     if [ ! -d /home/holochain/.config/holochain/keys ] ;
-    then mkdir /home/holochain/.config/holochain/keys; chown -R holochain:holochain /home/holochain/.config/holochain/keys;
+    then mkdir -p /home/holochain/.config/holochain/keys; chown -R holochain:holochain /home/holochain/.config/holochain/keys;
     fi
 
 
