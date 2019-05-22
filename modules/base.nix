@@ -84,6 +84,10 @@ let
     then mkdir /home/holochain/.n3h; chown -R holochain:holochain /home/holochain/.n3h;
     fi
 
+    if [ ! -d /home/holochain/.config/holochain/keys ] ;
+    then mkdir /home/holochain/.config/holochain/keys; chown -R holochain:holochain /home/holochain/.config/holochain/keys;
+    fi
+
 
     if [ ! -f /var/lib/holochain/conductor-config.toml ];
     then cat <<- EOF > /var/lib/holochain/conductor-config.toml
