@@ -122,7 +122,7 @@ in
 
     holoport.channels.nixpkgs = mkOption {
       type = types.str;
-      default = "http://holoportbuild.holo.host/job/holoportOs-testnet-dev-18_09/testnet-dev/channels.nixpkgs/latest/download/1";
+      default = "http://holoportbuild.holo.host/job/holoportOs-testnet/testnet/channels.nixpkgs/latest/download/1";
       description = ''
         URL understood by Nix to a nixpkgs/NixOS channel
       '';
@@ -130,7 +130,7 @@ in
 
     holoport.channels.holoport = mkOption {
       type = types.str;
-      default = "http://holoportbuild.holo.host/job/holoportOs-testnet-dev-18_09/testnet-dev/channels.holoport-testnet/latest/download/1";
+      default = "http://holoportbuild.holo.host/job/holoportOs-testnet/testnet/channels.holoport-testnet/latest/download/1";
       description = ''
         URL understood by Nix to the Holoport channel
       '';
