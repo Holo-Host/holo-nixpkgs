@@ -17,4 +17,6 @@ in
 
 
   holochain-conductor = callPackage ./packages/holoport-rust.nix {};
+  holochain-cli = callPackage ./packages/holochain-cli/default.nix {};
+
 }
