@@ -1,22 +1,16 @@
 { config, pkgs, lib, ... }:
 
 with lib;
-
 let
   cfg = config.holoport;
-  nodejs-8_13 = pkgs.nodejs-8_x.overrideAttrs(oldAttrs: rec {
-    name = "nodejs-${version}";
-    version = "8.13.0";
-    src = pkgs.fetchurl {
-      url = "https://nodejs.org/dist/v${version}/node-v${version}.tar.xz";
-      sha256 = "1qidcj4smxsz3pmamg3czgk6hlbw71yw537h2jfk7iinlds99a9a";
-    };
-  });
   pre-net-led = pkgs.callPackage ../packages/pre-net-led/pre-net-led.nix {};
   holo-led = pkgs.callPackage ../packages/holo-led/holo-led.nix {};
   shutdown-led = pkgs.callPackage ../packages/shutdown-led/shutdown-led.nix {};
   holo-health = pkgs.callPackage ../packages/holo-health/holo-health.nix {};
-  yarn2nix = pkgs.callPackage ../packages/yarn2nix/default.nix {};
+  holo-cli = pkgs.callPackage ../packages/holo-cli/default.nix {};
+  envoy = pkgs.callPackage ../packages/envoy/default.nix {};
+  fluentbit = pkgs.callPackage ../packages/fluentbit/default.nix {};
+  n3h = pkgs.callPackage ../packages/n3h/default.nix {};
   hptest = pkgs.writeShellScriptBin "hptest" ''
     sudo lshw -C cpu >> hptest.txt
     sudo lshw -C memory >> hptest.txt
@@ -61,8 +55,8 @@ let
                         [[ $r -gt $a ]] && a=$r
         fi
     done
-    echo "Waiting $a minutes for all tests to complete"
-                    sleep $(($a))m
+    echo "Waiting 5 minutes for all tests to complete"
+                    sleep 5m
 
             for hd in /dev/disk/by-id/ata*; do
             if [[ $hd != *"-part"* ]];then
@@ -81,6 +75,39 @@ let
     echo "All tests have completed"
     cat hpplustest.txt | less
     '';
+  systemd-activation = pkgs.writeShellScriptBin "systemd-activation" ''
+    if [ ! -d /var/lib/holochain ] ;
+    then mkdir /var/lib/holochain; chown -R holochain:holochain /var/lib/holochain;
+    fi
+
+    if [ ! -d /home/holochain/.n3h ] ;
+    then mkdir /home/holochain/.n3h; chown -R holochain:holochain /home/holochain/.n3h;
+    fi
+
+    if [ ! -d /home/holochain/.config/holochain/keys ] ;
+    then mkdir -p /home/holochain/.config/holochain/keys; chown -R holochain:holochain /home/holochain/.config/holochain/keys;
+    fi
+
+
+    if [ ! -f /var/lib/holochain/conductor-config.toml ];
+    then cat <<- EOF > /var/lib/holochain/conductor-config.toml
+    agents = []
+    dnas = []
+    instances = []
+    interfaces = []
+    bridges = []
+
+    [logger]
+    type = "debug"
+
+    persistence_dir = "/var/lib/holochain"
+    EOF
+    fi
+    chown holochain:holochain /var/lib/holochain/conductor-config.toml;
+    chown -R holochain:holochain /var/lib/holochain;
+    chmod 0700 /var/lib/holochain/conductor-config.toml;
+
+  '';
 in
 {
   options = {
@@ -95,8 +122,7 @@ in
 
     holoport.channels.nixpkgs = mkOption {
       type = types.str;
-      # FIXME: final url
-      default = "http://holoportbuild.holo.host/job/holoportOs-testnet/testnet/channels.nixpkgs/latest/download/1";
+      default = "http://holoportbuild.holo.host/job/holoportOs-testnet-dev-18_09/testnet-dev/channels.nixpkgs/latest/download/1";
       description = ''
         URL understood by Nix to a nixpkgs/NixOS channel
       '';
@@ -104,8 +130,7 @@ in
 
     holoport.channels.holoport = mkOption {
       type = types.str;
-      # FIXME: final url
-      default = "http://holoportbuild.holo.host/job/holoportOs-testnet/testnet/channels.holoport-testnet/latest/download/1";
+      default = "http://holoportbuild.holo.host/job/holoportOs-testnet-dev-18_09/testnet-dev/channels.holoport-testnet/latest/download/1";
       description = ''
         URL understood by Nix to the Holoport channel
       '';
@@ -137,43 +162,57 @@ in
         # The custom configuration.nix that injects our modules
         "nixos-config=/etc/nixos/holoport-configuration.nix"
       ];
-
+      users.users.holochain = {
+        isNormalUser = true;
+        description = "Holochain conductor service user";
+        createHome = true;
+        extraGroups = [ "holochain" ];
+        uid = 401;
+      };
+      users.groups.holochain.gid = 501;
       # Caches tarballs obtained via fetchurl for 60 seconds, mainly
       # used for the channels
       nix.extraOptions = ''
         tarball-ttl = 60
       '';
       nixpkgs.config.allowUnfree = true;
+      #environment.variables.PERSISTENCE_DIR = "/var/lib/holochain";
+      #environment.variables.CONDUCTOR_CONFIG = "conductor-config.toml";
       environment.etc."nixos/holoport-configuration.nix" = {
         text = replaceStrings ["%%HOLOPORT_MODULES_PATH%%"] [pkgs.holoportModules]
           (readFile ../configuration.nix);
       };
+      environment.variables.NIX_STORE = "/nix/store";
+      #environment.variables.TMPDIR = "/home/holochain";
       environment.systemPackages = with pkgs; [
         binutils
         cmake
+        envoy
+        fluentbit
         gcc
         holochain-conductor
-        nodejs-8_13
+        holochain-cli
+        lshw
+        n3h
+        nodejs
         smartmontools
         stress-ng
-        lshw
         yarn
         yarn2nix
         zeromq4
       ];
-      systemd.services.holochain = {
-        enable = true;
-        wants = [ "multi-user.target" ];
-        description = "Manage holochain (conductor) service";
-        serviceConfig = {
-          Type = "forking";
-          User = "holoport";
-          ExecStart = ''/run/current-system/sw/bin/holochain -c ${../scripts/holochain-config.toml}'';
-          ExecReload = ''/run/current-system/sw/bin/kill $MAINPID'';
-          KillMode = "process";
-          Restart = "on-failure";
-        };
+      programs.bash.shellAliases = {
+        htst = "${hptest}/bin/hptest";
+        hptst = "${hpplustest}/bin/hpplustest";
+        holo =  "/run/wrappers/bin/sudo ${holo-cli}/bin/holo-cli";
+        n3h = "${n3h}/bin/n3h";
+        holofuel-pkg = "${envoy}/envoy/holofuel.dna.json";
+        hha-pkg = "${envoy}/envoy/HHA-dna-src.dna.json";
+        has-pkg = "${envoy}/envoy/HAS-dna-src.dna.json";
+        has-ui = "${envoy}/envoy/has-ui";
+        hha-ui = "${envoy}/envoy/hha-ui";
       };
+
       systemd.services.pre-net-led = {
         enable = true;
         wantedBy = [ "default.target" ];
@@ -227,20 +266,64 @@ in
           StandardOutput = "journal";
         };
       };
+      systemd.timers.systemd-activation = {
+        description = "run systemd-activation every 30 seconds";
+        wantedBy = [ "timers.target" ]; # enable it & auto start it
+
+        timerConfig = {
+          OnCalendar = "*:*:0/30";
+        };
+      };
+      systemd.services.systemd-activation = {
+        enable = true;
+        serviceConfig = {
+          Type = "oneshot";
+          User = "root";
+          ExecStart = '' ${systemd-activation}/bin/systemd-activation '';
+          StandardOutput = "journal";
+        };
+      };
       #not used yet
       #services.osquery.enable = true;
       #services.osquery.loggerPath = "/var/log/osquery/logs";
       #services.osquery.pidfile = "/var/run/osqueryd.pid";
+      networking.firewall.allowedTCPPorts = [ 1111 2222 3333 8800 8880 8888 48080 ];
+      systemd.services.holochain = {
+          description = "Holochain conductor service";
+          after = [ "local-fs.target" "network.target" "systemd-activation.service" ];
+          wantedBy = [ "multi-user.target" ];
+          requires = [ "systemd-activation.service" ];
+          environment = {
+             NIX_STORE = "/nix/store";
+             USER = "holochain";
+          };
+          serviceConfig = {
+            ExecStart = ''/run/current-system/sw/bin/holochain -c /var/lib/holochain/conductor-config.toml'';
+            Restart = "always";
+            User = "holochain";
+            StandardOutput = "journal";
+            KillMode = "process";
+
+          };
+      };
+      systemd.services.holochain.path = [ n3h ];
+      systemd.services.envoy = {
+          description = "envoy service";
+          after = [ "local-fs.target" "network.target" "holochain.service" ];
+          wantedBy = [ "multi-user.target" ];
+          serviceConfig = {
+            ExecStart = ''/run/current-system/sw/bin/node ${envoy}/envoy/lib/index.js'';
+            Restart = "always";
+            User = "holochain";
+            StandardOutput = "journal";
+            KillMode = "process";
+          };
+      };
       services.zerotierone = {
         enable = true;
         joinNetworks = ["e5cd7a9e1c3e8c42"];
       };
 
-      programs.bash.shellAliases = {
-        htst = "${hptest}/bin/hptest";
-        hptst = "${hpplustest}/bin/hpplustest";
-      };
-      networking.firewall.allowedTCPPorts = [ 4141 ];
 
     })
   ];
