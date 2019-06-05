@@ -91,6 +91,7 @@ let
 
     if [ ! -f /var/lib/holochain/conductor-config.toml ];
     then cat <<- EOF > /var/lib/holochain/conductor-config.toml
+    persistence_dir = "/var/lib/holochain"
     agents = []
     dnas = []
     instances = []
@@ -100,7 +101,6 @@ let
     [logger]
     type = "debug"
 
-    persistence_dir = "/var/lib/holochain"
     EOF
     fi
     chown holochain:holochain /var/lib/holochain/conductor-config.toml;
