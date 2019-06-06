@@ -9,8 +9,8 @@ stdenv.mkDerivation rec {
   unpackPhase = ":";
   
   installPhase = ''
-    mkdir -p $out/envoy
-    cp -r $src/*  $out/envoy
+    mkdir -p $out/bin
+    cp -r $src/*  $out/bin
     #ln -s $out/envoy /var/lib/envoy
   '';
 }
