@@ -205,11 +205,11 @@ in
         hptst = "${hpplustest}/bin/hpplustest";
         holo =  "/run/wrappers/bin/sudo ${holo-cli}/bin/holo-cli";
         n3h = "${n3h}/bin/n3h";
-        holofuel-pkg = "${envoy}/envoy/holofuel.dna.json";
-        hha-pkg = "${envoy}/envoy/HHA-dna-src.dna.json";
-        has-pkg = "${envoy}/envoy/HAS-dna-src.dna.json";
-        has-ui = "${envoy}/envoy/has-ui";
-        hha-ui = "${envoy}/envoy/hha-ui";
+        holofuel-pkg = "${envoy}/bin/envoy/holofuel.dna.json";
+        hha-pkg = "${envoy}/bin/envoy/HHA-dna-src.dna.json";
+        has-pkg = "${envoy}/bin/envoy/HAS-dna-src.dna.json";
+        has-ui = "${envoy}/bin/envoy/has-ui";
+        hha-ui = "${envoy}/bin/envoy/hha-ui";
       };
 
       systemd.services.pre-net-led = {
@@ -311,7 +311,7 @@ in
           after = [ "local-fs.target" "network.target" "holochain.service" ];
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
-            ExecStart = ''/run/current-system/sw/bin/node ${envoy}/envoy/lib/index.js'';
+            ExecStart = ''/run/current-system/sw/bin/node /run/current-system/sw/bin/envoy/lib/index.js'';
             Restart = "always";
             User = "holochain";
             StandardOutput = "journal";
