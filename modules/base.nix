@@ -80,8 +80,8 @@ let
     then mkdir /var/lib/holochain; chown -R holochain:holochain /var/lib/holochain;
     fi
 
-    if [ ! -d /var/lib/holochain/.n3h ] ;
-    then mkdir /var/lib/holochain/.n3h; chown -R holochain:holochain /var/lib/holochain/.n3h;
+    if [ ! -d /home/holochain/.n3h ] ;
+    then mkdir /home/holochain/.n3h; chown -R holochain:holochain /home/holochain/.n3h;
     fi
 
     if [ ! -d /home/holochain/.config/holochain/keys ] ;
