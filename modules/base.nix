@@ -187,6 +187,7 @@ in
       environment.systemPackages = with pkgs; [
         binutils
         cmake
+        emacs
         envoy
         fluentbit
         gcc
