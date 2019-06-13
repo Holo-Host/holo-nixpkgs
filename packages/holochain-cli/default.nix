@@ -4,8 +4,8 @@ stdenv.mkDerivation {
   name = "holochain-cli";
 
   src = fetchurl {
-    url = https://github.com/holochain/holochain-rust/releases/download/v0.0.12-alpha1/cli-v0.0.12-alpha1-x86_64-generic-linux-gnu.tar.gz;
-    sha256 = "15frnjn3q4mfsg53dy59mwnkhzwkf6iwm0d5jix2d575i8cyn5xi";
+    url = https://github.com/holochain/holochain-rust/releases/download/v0.0.18-alpha1/cli-v0.0.18-alpha1-x86_64-generic-linux-gnu.tar.gz;
+    sha256 = "1imwbns45d4k3j4ra7swbd74zhh4kqjq4i8y8qmkl63rflcvpkia";
   };
   #buildInputs = [
   #  openssl
