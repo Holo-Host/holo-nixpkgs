@@ -10,8 +10,8 @@
   testScript =
     ''
       startAll;
-      $machine->waitForUnit("multi-user.target");
       $machine->waitForUnit('holochain.service');
       $machine->succeed('hc -V') =~ /0.0.18-alpha1/ or die;
+      $machine->shutdown;
     '';
 }
