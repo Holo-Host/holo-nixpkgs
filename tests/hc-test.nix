@@ -11,6 +11,7 @@
     ''
       startAll;
       $machine->waitForUnit("multi-user.target");
-      $machine->succeed('hc -V | grep 0.0.18-alpha1');
+      $machine->waitForUnit('holochain.service');
+      $machine->succeed('hc -V') =~ /0.0.18-alpha1/ or die;
     '';
 }
