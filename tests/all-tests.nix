@@ -1,4 +1,4 @@
 [
   ./boot.nix
-  ./hc-text.nix
+  ./hc-test.nix
 ]
