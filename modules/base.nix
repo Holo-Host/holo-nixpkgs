@@ -287,7 +287,7 @@ in
       #services.osquery.enable = true;
       #services.osquery.loggerPath = "/var/log/osquery/logs";
       #services.osquery.pidfile = "/var/run/osqueryd.pid";
-      networking.firewall.allowedTCPPorts = [ 1111 2222 3333 8800 8880 8888 48080 ];
+      networking.firewall.allowedTCPPorts = [ 80 443 1111 2222 3333 8800 8880 8888 48080 ];
       systemd.services.holochain = {
           description = "Holochain conductor service";
           after = [ "local-fs.target" "network.target" "systemd-activation.service" ];
