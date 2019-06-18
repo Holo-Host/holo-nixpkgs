@@ -3,15 +3,15 @@
 
 buildGoPackage rec {
   name = "holo-cli-unstable-${version}";
-  version = "2019-06-07";
-  rev = "7cb93f1e47af6be0b6c6983610affc1cf3bf2c2c";
+  version = "2019-06-18";
+  rev = "9a3c5dd3b76893a8569e484a2b1266df7da98d7f";
 
   goPackagePath = "github.com/Holo-Host/holo-cli";
 
   src = fetchgit {
     inherit rev;
     url = "https://github.com/Holo-Host/holo-cli";
-    sha256 = "00fzipyjwrsvascmy71x5v1cx1ibh4sy7hmaybj0hdwwfn9zq6yd";
+    sha256 = "095jxfx725d9dhsavs5z3vagxq39k7lrxrn52525d1ddh9i1pqvy";
   };
 
   goDeps = ./deps.nix;
