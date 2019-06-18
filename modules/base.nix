@@ -333,6 +333,7 @@ in
         "hha.localhost" = {
           addSSL = false;
           enableACME = false;
+           root = "/run/current-system/sw/bin/envoy/hha-ui";
           locations = {
             "/hha" = {
               proxyPass = "http://127.0.0.1:8800";
