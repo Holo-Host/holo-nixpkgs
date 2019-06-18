@@ -323,7 +323,24 @@ in
         enable = true;
         joinNetworks = ["93afae5963c547f1"];
       };
-
+      services.nginx = {
+              enable = true;
+      recommendedOptimisation = true;
+      recommendedTlsSettings = true;
+      recommendedGzipSettings = true;
+      recommendedProxySettings = true;
+      virtualHosts = {
+        "hha.localhost" = {
+          addSSL = false;
+          enableACME = false;
+          locations = {
+            "/hha" = {
+              proxyPass = "http://127.0.0.1:8800";
+            };
+          };
+        };
+      };
+    };
 
     })
   ];
