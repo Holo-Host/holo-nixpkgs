@@ -176,7 +176,6 @@ in
         yarn
         zeromq4
         rsync
-        util-linux
       ];
       programs.bash.shellAliases = {
         htst = "${hptest}/bin/hptest";
