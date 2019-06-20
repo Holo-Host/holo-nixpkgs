@@ -89,7 +89,10 @@ case "${STATE}" in
 	    (( DRYRUN )) || rm -f "${f}"
 	done
 	;& # fall thru
-    # ... Add each new STAT
+
+    # Add each historical STATE here, each falling thru to the next, implementing the checks/fixes
+    # required to upgrade to the next state.
+
     ${CURRENT})
         log "HoloPortOS Configuration State is CURRENT: ${CURRENT}"
 	;;
