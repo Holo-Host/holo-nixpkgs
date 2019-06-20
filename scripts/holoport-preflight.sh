@@ -17,7 +17,14 @@
 #
 #     As CURRENT is advanced, remember to add the last version to the `case "${STATE}" in`, below,
 # or holoport-preflight will begin to fail to keep the system up-to-date.
-#
+# 
+# WARNING
+# 
+#     It is recommended that this script *not* exit with a non-zero exit value, to avoid interfering
+# with later systemd services.  It should make a best-effort attempt to update the system, and warn
+# about persistent problems.  If an important update cannot be effected, then it is best to simply
+# *leave* the PREFLIGHT file as-is, and have the script re-issue an explanatory warning on each run.
+# 
 
 # Current version of preflight checklist.
 CURRENT=v1
@@ -39,7 +46,6 @@ while [[ "${1#-}" != "${1}" ]]; do
 	    ;;
 	*)
 	    $ERR "Invalid option: ${1}"
-	    exit 1
     esac
     shift
 done
