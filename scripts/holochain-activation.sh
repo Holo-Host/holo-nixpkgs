@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 
 # 
 # holochain-activation -- Activate the HoloPort for Holo / Holochain

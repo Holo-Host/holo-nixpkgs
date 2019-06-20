@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 
 # 
 # holoport-preflight -- Ensure that known mutable HoloPortOS configuration issues are corrected

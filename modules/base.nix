@@ -253,6 +253,7 @@ in
       systemd.services.holoport-preflight = {
         enable          = true;
         before          = [ "zerotierone.service" "sshd.service" ];
+        path            = [ pkgs.rsync pkgs.utillinux ];
         serviceConfig   = {
           Type          = "oneshot";
           User          = "root";
