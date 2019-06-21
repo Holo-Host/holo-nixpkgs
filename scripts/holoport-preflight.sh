@@ -27,10 +27,7 @@
 # 
 
 # Current version of preflight checklist.
-CURRENT=v1
-
-# Option flags. Set DRYRUN to non-zero value to avoid performing file mutations.
-DRYRUN=
+CURRENT=1
 
 # Persistence files for holoport-preflight, zerotier, etc.
 HP_PERS="/var/lib/holoport"
@@ -38,79 +35,72 @@ PREFLIGHT="${HP_PERS}/preflight"
 
 ZEROTIER="/var/lib/zerotier-one"
 
-# Process arguments
-while [[ "${1#-}" != "${1}" ]]; do
-    case "${1}" in
-	--dry-run|-d)
-	    DRYRUN=1
-	    ;;
-	*)
-	    $ERR "Invalid option: ${1}"
-    esac
-    shift
-done
-
 # Ensure that our HP_PRS persistence directory exists
-(( DRYRUN )) || [ -d "${HP_PERS}" ] || mkdir -p "${HP_PERS}"
+[ -d "${HP_PERS}" ] || mkdir -p "${HP_PERS}"
+
+# log "some" "argument list"
+[ -t 2 ] && tty=-s
+log() { logger ${tty} -p user.notice  -t "${0##*/}:        " "${*}"; }
+wrn() { logger ${tty} -p user.warning -t "${0##*/}: WARNING" "${*}"; }
+err() { logger ${tty} -p user.error   -t "${0##*/}:   ERROR" "${*}"; }
 
 # Try to load current preflight checklist State; default to "initial"
 STATE=$( cat "${PREFLIGHT}" 2>/dev/null )
-STATE=${STATE:-initial}
+STATE=${STATE:-0}
+log "State of '${PREFLIGHT}' is now: ${STATE}"
+
 BACKUP="${HP_PERS}/backup/${STATE}"	# Store copies of mutated files here
 
-# log "some" "argument list"
-log() { logger -sp user.notice  -t "${0##*/}:        " "${*}"; }
-wrn() { logger -sp user.warning -t "${0##*/}: WARNING" "${*}"; }
-err() { logger -sp user.error   -t "${0##*/}:   ERROR" "${*}"; }
-
-# backup file [description]
+# backup <file> [<description>]
 backup() {
     if [ -a "${1}" ]; then
 	if [ ! -d "${BACKUP}" ]; then
 	    log "Backing up modified files to ${BACKUP} (to restore, run: sudo rsync -va --dry-run ${BACKUP}/ /)"
-	    (( DRYRUN )) || mkdir -p "${BACKUP}"
+	    mkdir -p "${BACKUP}"
 	fi
 	wrn "${2:-Copying file} (backing up ${1})"
-	rsync ${DRYRUN:+--dry-run} -aR "${1}" "${BACKUP}/" # keeps full relative/absolute path
+	rsync -aR "${1}" "${BACKUP}/" # keeps full relative/absolute path
     fi
+}
+
+# set_state <number>
+set_state() {
+    echo "${1}" > "${PREFLIGHT}"
+    log "State in '${PREFLIGHT}' set to: ${1}"
 }
 
 # Evaluate the system STATE as found in the PREFLIGHT file.  Any files requiring modification or
 # removal will first be copied into the HP_PERS persistence backup directory,
 # eg. /var/lib/holoport/backup/initial/...
 case "${STATE}" in
-    initial)
-	# In the initial state (no previous holoport-preflight run), we need to remove any "default"
-	# factory identities that were shipped with the image.  This includes ZeroTier networking,
-	# SSH host keys, etc.
-	log "Clearing initial factory configurations"
+    0)  log "Clearing default factory configurations"
+	# In the initial "0" State (no previous holoport-preflight run), we need to remove any
+	# "default" factory identities that were shipped with the image.  This includes ZeroTier
+	# networking, SSH host keys, etc.
 	for f in identity.public identity.secret authtoken.secret; do
 	    if [ -a    "${ZEROTIER}/${f}" ]; then
 		backup "${ZEROTIER}/${f}" "Removing default ZeroTier configuration"
-		(( DRYRUN )) || rm -f "${ZEROTIER}/${f}"
+		rm -f  "${ZEROTIER}/${f}"
 	    fi
 	done
 	for f in /etc/ssh/ssh_host_*; do 
 	    backup "${f}" "Removing default SSH Host key"
-	    (( DRYRUN )) || rm -f "${f}"
+	    rm -f "${f}"
 	done
+	set_state 1
 	;& # fall thru
 
     # Add each historical STATE here, each falling thru to the next, implementing the checks/fixes
-    # required to upgrade to the next state.
+    # required to upgrade to the next state.  After processing changes, before falling through,
+    # invoke set_state to the next state.
 
-    ${CURRENT})
-        log "HoloPortOS Configuration State is CURRENT: ${CURRENT}"
+    ${CURRENT}) log "HoloPortOS Configuration State is CURRENT: ${CURRENT}"
 	;;
 
-    *)
-	err "Unknown State: '${STATE}'; Not repairing!"
-	log "  To fix, check/repair system manually, and store '${CURRENT}' in ${PREFLIGHT} to restore functionality)"
-    	exit 0
+    *)  err "Unknown State: '${STATE}'; Not repairing!"
+        log "  To fix, check/repair manually, and store '${CURRENT}' in ${PREFLIGHT} to restore functionality"
         ;;
 esac
 
-# Finally, note that the system's preflight checklist state is CURRENT
-(( DRYRUN )) || echo "${CURRENT}" > "${PREFLIGHT}"
 
 exit 0
