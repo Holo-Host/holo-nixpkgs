@@ -40,10 +40,10 @@ ZEROTIER="/var/lib/zerotier-one"
 [ -d "${HP_PERS}" ] || mkdir -p "${HP_PERS}"
 
 # log "some" "argument list"
-[ -t 2 ] && tty=-s
-log() { logger ${tty} -p user.notice  -t "${0##*/}:        " "${*}"; }
-wrn() { logger ${tty} -p user.warning -t "${0##*/}: WARNING" "${*}"; }
-err() { logger ${tty} -p user.error   -t "${0##*/}:   ERROR" "${*}"; }
+[ -t 2 ] && logger_tty=-s
+log() { logger ${logger_tty} -p user.notice  -t "${0##*/}:        " "${*}"; }
+wrn() { logger ${logger_tty} -p user.warning -t "${0##*/}: WARNING" "${*}"; }
+err() { logger ${logger_tty} -p user.error   -t "${0##*/}:   ERROR" "${*}"; }
 
 # set_state <number>
 set_state() {

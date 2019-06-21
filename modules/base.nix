@@ -244,15 +244,18 @@ in
         };
       };
 
-      # HoloPort Preflight checks must occur before ZeroTier and Holo / Holochain startup (or any
-      # other service which may have its configuration modified by the holoport-preflight).
-      # Furthermore, these services must be restarted whenever the Preflight service is run (eg. on
-      # automatic HoloPortOS updates).  Holochain Activation depends on running the "preflight"
-      # configuration checklist (to bring the basic HoloPort OS configuration up to standard), and
-      # then the Activation required for Holo / Holochain.  If either of these fail, the HoloPort
-      # will *not* be considered "Activated".
+      # HoloPort Preflight checks must occur after network hardware discovery (to identify physical
+      # hardware), but before ZeroTier and Holo / Holochain startup (or any other service which may
+      # have its configuration modified by the holoport-preflight).  Furthermore, these services
+      # must be restarted whenever the Preflight service is run (eg. on automatic HoloPortOS
+      # updates).  Holochain Activation depends on running the "preflight" configuration checklist
+      # (to bring the basic HoloPort OS configuration up to standard), and then the Activation
+      # required for Holo / Holochain.  If either of these fail, the HoloPort will *not* be
+      # considered "Activated".
+
       systemd.services.holoport-preflight = {
         enable          = true;
+        after           = [ "network.target" ];
         before          = [ "zerotierone.service" "sshd.service" ];
         requiredBy      = [ "zerotierone.service" "sshd.service" ];
         path            = [ pkgs.rsync pkgs.utillinux ];
