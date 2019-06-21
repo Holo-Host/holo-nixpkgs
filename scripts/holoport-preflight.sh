@@ -32,6 +32,7 @@ CURRENT=1
 # Persistence files for holoport-preflight, zerotier, etc.
 HP_PERS="/var/lib/holoport"
 PREFLIGHT="${HP_PERS}/preflight"
+HARDWARE="${HP_PERS}/hardware"
 
 ZEROTIER="/var/lib/zerotier-one"
 
@@ -44,10 +45,44 @@ log() { logger ${tty} -p user.notice  -t "${0##*/}:        " "${*}"; }
 wrn() { logger ${tty} -p user.warning -t "${0##*/}: WARNING" "${*}"; }
 err() { logger ${tty} -p user.error   -t "${0##*/}:   ERROR" "${*}"; }
 
+# set_state <number>
+set_state() {
+    echo "${1}" > "${PREFLIGHT}"
+    log "State in '${PREFLIGHT}' set to: ${1}"
+}
+
+# set_hardware <MAC>
+set_hardware() {
+    echo "${1}" > "${HARDWARE}"
+    log "Hardware '${HARDWARE}' set to: ${1}"
+}
+
 # Try to load current preflight checklist State; default to "initial"
 STATE=$( cat "${PREFLIGHT}" 2>/dev/null )
 STATE=${STATE:-0}
 log "State of '${PREFLIGHT}' is now: ${STATE}"
+
+# Detect the hardware.  Use the lowest numbered physical ethernet interface, eg 'enp0s3'.  If
+# we can't detect a physical interface, carry on (assuming nothing has changed?)
+INTERFACE=$( ls -1 /sys/class/net | grep '^enp' | sort | head -1 )
+MAC=$( cat /sys/class/net/${INTERFACE}/address 2>/dev/null )
+MAC_WAS=$( cat "${HARDWARE}" 2>/dev/null )
+log "Hardware '${HARDWARE}' was '${MAC_WAS}'; is now '${MAC}'"
+
+if [ -z "${MAC}" ]; then
+    wrn "Unable to detect a primary Ethernet interfaces MAC from: $( ls /sys/class/net )"
+else
+    # Found a MAC.  If it differs from the one stored, we will (for now) force an identity change
+    if [[ "${MAC}" != "${MAC_WAS}" ]]; then
+	# TODO: This must be optional, in the future, to support moving machine images to new hardware!
+	# Probalby, this should be moved to the `holo init` process.
+	wrn "Hardware MAC '${MAC}' (from Ethernet '${INTERFACE}') mismatch; was: '${MAC_WAS}'"
+	wrn" - Resetting State from '${STATE}' to '0' to force SSH Host key and ZeroTier identity reset"
+	STATE=0
+	set_state 0
+	set_hardware "${MAC}"
+    fi
+fi
 
 BACKUP="${HP_PERS}/backup/${STATE}"	# Store copies of mutated files here
 
@@ -61,12 +96,6 @@ backup() {
 	wrn "${2:-Copying file} (backing up ${1})"
 	rsync -aR "${1}" "${BACKUP}/" # keeps full relative/absolute path
     fi
-}
-
-# set_state <number>
-set_state() {
-    echo "${1}" > "${PREFLIGHT}"
-    log "State in '${PREFLIGHT}' set to: ${1}"
 }
 
 # Evaluate the system STATE as found in the PREFLIGHT file.  Any files requiring modification or
