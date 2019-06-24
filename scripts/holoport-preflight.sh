@@ -51,36 +51,60 @@ set_state() {
     log "State in '${PREFLIGHT}' set to: ${1}"
 }
 
-# set_hardware <MAC>
+# set_hardware <Disk-ID>
 set_hardware() {
     echo "${1}" > "${HARDWARE}"
     log "Hardware '${HARDWARE}' set to: ${1}"
 }
 
-# Try to load current preflight checklist State; default to "initial"
+# Try to load current preflight checklist State; default to "0"
 STATE=$( cat "${PREFLIGHT}" 2>/dev/null )
 STATE=${STATE:-0}
 log "State of '${PREFLIGHT}' is now: ${STATE}"
 
-# Detect the hardware.  Use the lowest numbered physical ethernet interface, eg 'enp0s3'.  If
-# we can't detect a physical interface, carry on (assuming nothing has changed?)
-INTERFACE=$( ls -1 /sys/class/net | grep '^enp' | sort | head -1 )
-MAC=$( cat /sys/class/net/${INTERFACE}/address 2>/dev/null )
-MAC_WAS=$( cat "${HARDWARE}" 2>/dev/null )
-log "Hardware '${HARDWARE}' was '${MAC_WAS}'; is now '${MAC}'"
+# Detect the hardware.  Find the root fs' mount define, eg. / -> /dev/sda1, then the disk id
+# assigned to that device.
+# 
+# eg. $ ls -l /dev/disk/by-id
+#   ata-VBOX_HARDDISK_VB1de9c612-26d85be5-part1 -> ../../sda1
+# or
+#   ata-ST1000LM035-1RK172_WL1SAF63-part1 -> ../../sda1
+# 
+# Use realpath to resolve the possibly symbolic-linked (eg. to a /dev/disk/by-uuid/...)  device path
+# to a physical /dev/... device.  Then, see if we can find the corresponding device by ID (which is
+# unique in each physical or virtual disk drive).  Use the entire by-id path, instead of trying to
+# parse out the serial number.
+ROOTMOUNT=$(
+    while read src dst typ rest; do
+	if [[ ${dst} == "/" ]]; then
+	    realpath "${src}" # eg. /dev/disk/by-uuid/4878de65-3c7d-46c2-9ae2-ccb2874094fa ==> /dev/sda1
+	    break
+	fi
+    done < /proc/mounts )
+log "Root mount device:  ${ROOTMOUNT}"
 
-if [ -z "${MAC}" ]; then
-    wrn "Unable to detect a primary Ethernet interfaces MAC from: $( ls /sys/class/net )"
+DID=$(
+    for id in /dev/disk/by-id/*; do
+	if [[ $( realpath "${id}" ) == ${ROOTMOUNT} ]]; then
+	    echo ${id}
+	    break
+	fi
+    done )
+log "Root mount Disk ID: ${DID}"
+
+DID_WAS=$( cat "${HARDWARE}" 2>/dev/null )
+
+if [ -z "${DID}" ]; then
+    wrn "Unable to detect a root filesystem Disk ID from mount point '${ROOTMOUNT}'"
 else
-    # Found a MAC.  If it differs from the one stored, we will (for now) force an identity change
-    if [[ "${MAC}" != "${MAC_WAS}" ]]; then
+    # Found a root Disk ID.  If it differs from the one stored, we will (for now) force an identity change
+    if [[ "${DID}" != "${DID_WAS}" ]]; then
 	# TODO: This must be optional, in the future, to support moving machine images to new hardware!
-	# Probalby, this should be moved to the `holo init` process.
-	wrn "Hardware MAC '${MAC}' (from Ethernet '${INTERFACE}') mismatch; was: '${MAC_WAS}'"
-	wrn" - Resetting State from '${STATE}' to '0' to force SSH Host key and ZeroTier identity reset"
+	# Probably, this should be moved to the `holo init` process.
+	wrn "Previous Disk ID: ${DID_WAS}; Resetting State from '${STATE}' to '0' to force SSH, ZeroTier identity reset"
 	STATE=0
 	set_state 0
-	set_hardware "${MAC}"
+	set_hardware "${DID}"
     fi
 fi
 
@@ -106,12 +130,16 @@ case "${STATE}" in
 	# In the initial "0" State (no previous holoport-preflight run), we need to remove any
 	# "default" factory identities that were shipped with the image.  This includes ZeroTier
 	# networking, SSH host keys, etc.
-	for f in identity.public identity.secret authtoken.secret; do
-	    if [ -a    "${ZEROTIER}/${f}" ]; then
-		backup "${ZEROTIER}/${f}" "Removing default ZeroTier configuration"
-		rm -f  "${ZEROTIER}/${f}"
-	    fi
-	done
+	if [ -d "${ZEROTIER}" ]; then
+	    for f in identity.public identity.secret authtoken.secret; do
+		if [ -a    "${ZEROTIER}/${f}" ]; then
+		    backup "${ZEROTIER}/${f}" "Removing default ZeroTier configuration"
+		    rm -f  "${ZEROTIER}/${f}"
+		fi
+	    done
+	else
+	    log "ZeroTier not yet configured; no default identity to clear"
+	fi
 	for f in /etc/ssh/ssh_host_*; do 
 	    backup "${f}" "Removing default SSH Host key"
 	    rm -f "${f}"

@@ -261,6 +261,7 @@ in
         path            = [ pkgs.rsync pkgs.utillinux ];
         serviceConfig   = {
           Type          = "oneshot";
+          RemainAfterExit= "yes";
           User          = "root";
           ExecStart     = '' ${holoport-preflight}/bin/holoport-preflight '';
           StandardOutput= "journal";
