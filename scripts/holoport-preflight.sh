@@ -129,7 +129,7 @@ case "${STATE}" in
     0)  log "Clearing default factory configurations"
 	# In the initial "0" State (no previous holoport-preflight run), we need to remove any
 	# "default" factory identities that were shipped with the image.  This includes ZeroTier
-	# networking, SSH host keys, etc.
+	# networking, SSH host keys, /etc/machine-id, etc.
 	if [ -d "${ZEROTIER}" ]; then
 	    for f in identity.public identity.secret authtoken.secret; do
 		if [ -a    "${ZEROTIER}/${f}" ]; then
@@ -144,6 +144,13 @@ case "${STATE}" in
 	    backup "${f}" "Removing default SSH Host key"
 	    rm -f "${f}"
 	done
+	# Remove any existing /etc/machine-id, which is (possibly) the same as other Hosts'
+	if [ -s /etc/machine-id ]; then
+	    backup "/etc/machine-id" "Removing default /etc/machine-id"
+	    truncate --size=0 /etc/machine-id
+	fi
+	systemd-machine-id-setup
+	log "Generated /etc/machine-id: $( cat /etc/machine-id )"
 	set_state 1
 	;& # fall thru
 
