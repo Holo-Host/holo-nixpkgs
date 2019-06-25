@@ -322,33 +322,12 @@ in
       };
 
       services.nginx = {
-              enable = true;
-      recommendedOptimisation = true;
-      recommendedTlsSettings = true;
-      recommendedGzipSettings = true;
-      recommendedProxySettings = true;
-      virtualHosts = {
-        "hha.localhost" = {
-          addSSL = false;
-          enableACME = false;
-           root = "/run/current-system/sw/bin/envoy/hha-ui";
-          locations = {
-            "/hha" = {
-              proxyPass = "http://127.0.0.1:8800";
-            };
-          };
-        };
-        "has.localhost" = {
-          addSSL = false;
-          enableACME = false;
-           root = "/run/current-system/sw/bin/envoy/has-ui";
-          locations = {
-            "/has" = {
-              proxyPass = "http://127.0.0.1:8880";
-            };
-          };
-        };
-      };
+        enable = true;
+        recommendedOptimisation = true;
+        recommendedTlsSettings = true;
+        recommendedGzipSettings = true;
+        recommendedProxySettings = true;
+        config = pkgs.lib.readFile ../config/nginx.conf;
     };
 
     })
