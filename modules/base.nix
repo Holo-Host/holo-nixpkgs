@@ -340,6 +340,16 @@ in
             };
           };
         };
+        "has.localhost" = {
+          addSSL = false;
+          enableACME = false;
+           root = "/run/current-system/sw/bin/envoy/has-ui";
+          locations = {
+            "/hha" = {
+              proxyPass = "http://127.0.0.1:8880";
+            };
+          };
+        };
       };
     };
 
