@@ -323,12 +323,23 @@ in
       };
 
       services.nginx = {
-        enable = true;
-        recommendedOptimisation = true;
-        recommendedTlsSettings = true;
-        recommendedGzipSettings = true;
-        recommendedProxySettings = true;
-        config = pkgs.lib.readFile ../config/nginx.conf;
+              enable = true;
+      recommendedOptimisation = true;
+      recommendedTlsSettings = true;
+      recommendedGzipSettings = true;
+      recommendedProxySettings = true;
+      virtualHosts = {
+        "holo.localhost" = {
+          addSSL = false;
+          enableACME = false;
+          locations = {
+            "/hha" = {
+              root = "/run/current-system/sw/bin/envoy/hha-ui";
+              proxyPass = "http://127.0.0.1:8800";
+            };
+          };
+        };
+      };
     };
 
     })
