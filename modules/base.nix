@@ -75,39 +75,14 @@ let
     echo "All tests have completed"
     cat hpplustest.txt | less
     '';
-  systemd-activation = pkgs.writeShellScriptBin "systemd-activation" ''
-    if [ ! -d /var/lib/holochain ] ;
-    then mkdir /var/lib/holochain; chown -R holochain:holochain /var/lib/holochain;
-    fi
 
-    if [ ! -d /home/holochain/.n3h ] ;
-    then mkdir /home/holochain/.n3h; chown -R holochain:holochain /home/holochain/.n3h;
-    fi
+  holoport-preflight = pkgs.writeShellScriptBin "holoport-preflight" (
+    builtins.readFile ../scripts/holoport-preflight.sh
+  );
+  holochain-activation = pkgs.writeShellScriptBin "holochain-activation" (
+    builtins.readFile ../scripts/holochain-activation.sh
+  );
 
-    if [ ! -d /home/holochain/.config/holochain/keys ] ;
-    then mkdir -p /home/holochain/.config/holochain/keys; chown -R holochain:holochain /home/holochain/.config/holochain/keys;
-    fi
-
-
-    if [ ! -f /var/lib/holochain/conductor-config.toml ];
-    then cat <<- EOF > /var/lib/holochain/conductor-config.toml
-    persistence_dir = "/var/lib/holochain"
-    agents = []
-    dnas = []
-    instances = []
-    interfaces = []
-    bridges = []
-
-    [logger]
-    type = "debug"
-
-    EOF
-    fi
-    chown holochain:holochain /var/lib/holochain/conductor-config.toml;
-    chown -R holochain:holochain /var/lib/holochain;
-    chmod 0775 /var/lib/holochain/conductor-config.toml;
-
-  '';
 in
 {
   options = {
@@ -200,6 +175,8 @@ in
         stress-ng
         yarn
         zeromq4
+        rsync
+        utillinux
       ];
       programs.bash.shellAliases = {
         htst = "${hptest}/bin/hptest";
@@ -266,21 +243,38 @@ in
           StandardOutput = "journal";
         };
       };
-      systemd.timers.systemd-activation = {
-        description = "run systemd-activation every 30 seconds";
-        wantedBy = [ "timers.target" ]; # enable it & auto start it
 
-        timerConfig = {
-          OnCalendar = "*:*:0/30";
+      # HoloPort Preflight checks must occur after network hardware discovery (to identify physical
+      # hardware), but before ZeroTier and Holo / Holochain startup (or any other service which may
+      # have its configuration modified by the holoport-preflight).  Furthermore, these services
+      # must be restarted whenever the Preflight service is run (eg. on automatic HoloPortOS
+      # updates).  Holochain Activation depends on running the "preflight" configuration checklist
+      # (to bring the basic HoloPort OS configuration up to standard), and then the Activation
+      # required for Holo / Holochain.  If either of these fail, the HoloPort will *not* be
+      # considered "Activated".
+
+      systemd.services.holoport-preflight = {
+        enable          = true;
+        after           = [ "network.target" ];
+        before          = [ "zerotierone.service" "sshd.service" ];
+        requiredBy      = [ "zerotierone.service" "sshd.service" ];
+        path            = [ pkgs.rsync pkgs.utillinux ];
+        serviceConfig   = {
+          Type          = "oneshot";
+          User          = "root";
+          ExecStart     = '' ${holoport-preflight}/bin/holoport-preflight '';
+          StandardOutput= "journal";
         };
       };
-      systemd.services.systemd-activation = {
-        enable = true;
-        serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-          ExecStart = '' ${systemd-activation}/bin/systemd-activation '';
-          StandardOutput = "journal";
+      systemd.services.holochain-activation = {
+        enable          = true;
+        wants           = [ "holoport-preflight.service" ];
+        after           = [ "holoport-preflight.service" ];
+        serviceConfig   = {
+          Type          = "oneshot";
+          User          = "root";
+          ExecStart     = '' ${holochain-activation}/bin/holochain-activation '';
+          StandardOutput= "journal";
         };
       };
       #not used yet
@@ -288,11 +282,14 @@ in
       #services.osquery.loggerPath = "/var/log/osquery/logs";
       #services.osquery.pidfile = "/var/run/osqueryd.pid";
       networking.firewall.allowedTCPPorts = [ 80 443 1111 2222 3333 8800 8880 8888 48080 ];
+
+      # Holochain can't come up until filesystems are available, ZeroTier is started, and the HoloPort
+      # is Activated (configuration is confirmed to be valid).
       systemd.services.holochain = {
           description = "Holochain conductor service";
-          after = [ "local-fs.target" "network.target" "systemd-activation.service" ];
+          after = [ "local-fs.target" "zerotierone.service" "holochain-activation.service" ];
           wantedBy = [ "multi-user.target" ];
-          requires = [ "systemd-activation.service" ];
+          requires = [ "holochain-activation.service" ];
           environment = {
              NIX_STORE = "/nix/store";
              USER = "holochain";
@@ -323,6 +320,7 @@ in
         enable = true;
         joinNetworks = ["93afae5963c547f1"];
       };
+
       services.nginx = {
               enable = true;
       recommendedOptimisation = true;
