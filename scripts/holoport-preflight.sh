@@ -125,8 +125,9 @@ backup() {
 # Evaluate the system STATE as found in the PREFLIGHT file.  Any files requiring modification or
 # removal will first be copied into the HP_PERS persistence backup directory,
 # eg. /var/lib/holoport/backup/initial/...
+REBOOT=
 case "${STATE}" in
-    0)  log "Clearing default factory configurations"
+    0)  log "Clearing default factory identity configurations, and rebooting."
 	# In the initial "0" State (no previous holoport-preflight run), we need to remove any
 	# "default" factory identities that were shipped with the image.  This includes ZeroTier
 	# networking, SSH host keys, /etc/machine-id, etc.
@@ -147,11 +148,10 @@ case "${STATE}" in
 	# Remove any existing /etc/machine-id, which is (possibly) the same as other Hosts'
 	if [ -s /etc/machine-id ]; then
 	    backup "/etc/machine-id" "Removing default /etc/machine-id"
-	    truncate --size=0 /etc/machine-id
+	    rm -f /etc/machine-id
 	fi
-	systemd-machine-id-setup
-	log "Generated /etc/machine-id: $( cat /etc/machine-id )"
 	set_state 1
+	REBOOT=1
 	;& # fall thru
 
     # Add each historical STATE here, each falling thru to the next, implementing the checks/fixes
@@ -166,5 +166,11 @@ case "${STATE}" in
         ;;
 esac
 
+if (( REBOOT )); then
+    wrn "Rebooting system"
+    echo "holoport-preflight.service: Rebooting to ensure a unique HoloPort Identity" | wall
+    sleep 5
+    systemctl reboot
+fi
 
 exit 0

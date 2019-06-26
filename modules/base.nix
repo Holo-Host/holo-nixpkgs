@@ -191,91 +191,90 @@ in
       };
 
       systemd.services.pre-net-led = {
-        enable = true;
-        wantedBy = [ "default.target" ];
-        before = [ "network.target" ];
-        description = "Turn on blinking purple until network is live";
+        enable                  = true;
+        wantedBy                = [ "default.target" ];
+        before                  = [ "network.target" ];
+        description             = "Turn on blinking purple until network is live";
         serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-          ExecStart = ''${pre-net-led}/bin/pre-net-led'';
-          StandardOutput = "journal";
+          Type                  = "oneshot";
+          User                  = "root";
+          ExecStart             = ''${pre-net-led}/bin/pre-net-led'';
+          StandardOutput        = "journal";
         };
       };
       systemd.services.holo-up = {
-        enable = true;
-        wantedBy = [ "default.target" ];
-        after = [ "getty.target" ];
-        description = "Turn on aurora when all systems go";
+        enable                  = true;
+        wantedBy                = [ "default.target" ];
+        after                   = [ "getty.target" ];
+        description             = "Turn on aurora when all systems go";
         serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-          ExecStart = ''${holo-led}/bin/holo-led'';
-          StandardOutput = "journal";
+          Type                  = "oneshot";
+          User                  = "root";
+          ExecStart             = ''${holo-led}/bin/holo-led'';
+          StandardOutput        = "journal";
         };
       };
       systemd.services.holo-shutdown = {
-        enable = true;
-        wantedBy = [ "multi-user.target" ];
-        description = "Flash blue on any request for shutdown/poweroff/reboot";
+        enable                  = true;
+        wantedBy                = [ "multi-user.target" ];
+        description             = "Flash blue on any request for shutdown/poweroff/reboot";
         serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-          ExecStop = ''${shutdown-led}/bin/shutdown-led'';
-          StandardOutput = "journal";
-          RemainAfterExit = "yes";
+          Type                  = "oneshot";
+          User                  = "root";
+          ExecStop              = ''${shutdown-led}/bin/shutdown-led'';
+          StandardOutput        = "journal";
+          RemainAfterExit       = "yes";
         };
       };
       systemd.timers.holo-health = {
-        description = "run holo-health every 30 seconds";
-        wantedBy = [ "timers.target" ]; # enable it & auto start it
+        description             = "run holo-health every 30 seconds";
+        wantedBy                = [ "timers.target" ]; # enable it & auto start it
 
         timerConfig = {
-          OnCalendar = "*:*:0/30";
+          OnCalendar            = "*:*:0/30";
         };
        };
       systemd.services.holo-health = {
-        enable = true;
+        enable                  = true;
         serviceConfig = {
-          Type = "oneshot";
-          User = "root";
-          ExecStart = ''${holo-health}/bin/holo-health'';
-          StandardOutput = "journal";
+          Type                  = "oneshot";
+          User                  = "root";
+          ExecStart             = ''${holo-health}/bin/holo-health'';
+          StandardOutput        = "journal";
         };
       };
 
-      # HoloPort Preflight checks must occur after network hardware discovery (to identify physical
-      # hardware), but before ZeroTier and Holo / Holochain startup (or any other service which may
-      # have its configuration modified by the holoport-preflight).  Furthermore, these services
-      # must be restarted whenever the Preflight service is run (eg. on automatic HoloPortOS
-      # updates).  Holochain Activation depends on running the "preflight" configuration checklist
-      # (to bring the basic HoloPort OS configuration up to standard), and then the Activation
-      # required for Holo / Holochain.  If either of these fail, the HoloPort will *not* be
-      # considered "Activated".
-
+      # HoloPort Preflight checks validate system identity, etc., and must occur after
+      # local-fs.target, and before network.target (ie. before SSH, ZeroTier and Holo / Holochain
+      # startup, or any other service which may have its configuration modified by the
+      # holoport-preflight).  If holoport-preflight determines that it is necessary (eg. because
+      # system identity files have been changed and must be regenereted), it will reboot the system.
       systemd.services.holoport-preflight = {
-        enable          = true;
-        after           = [ "network.target" ];
-        before          = [ "zerotierone.service" "sshd.service" ];
-        requiredBy      = [ "zerotierone.service" "sshd.service" ];
-        path            = [ pkgs.rsync pkgs.utillinux ];
-        serviceConfig   = {
-          Type          = "oneshot";
-          RemainAfterExit= "yes";
-          User          = "root";
-          ExecStart     = '' ${holoport-preflight}/bin/holoport-preflight '';
-          StandardOutput= "journal";
+        enable                  = true;
+        after                   = [ "local-fs.target" ];
+        before                  = [ "network.target" ];
+        path                    = [ pkgs.rsync pkgs.utillinux ];
+        serviceConfig = {
+          Type                  = "oneshot";
+          User                  = "root";
+          ExecStart             = '' ${holoport-preflight}/bin/holoport-preflight '';
+          StandardOutput        = "journal";
         };
       };
+
+      # Holochain Activation depends on running the "preflight" configuration checklist (to bring
+      # the basic HoloPort OS configuration up to standard), and then the Activation required for
+      # Holo / Holochain.  If either of these fail, the HoloPort will *not* be considered
+      # "Activated".
       systemd.services.holochain-activation = {
-        enable          = true;
-        wants           = [ "holoport-preflight.service" ];
-        after           = [ "holoport-preflight.service" ];
-        serviceConfig   = {
-          Type          = "oneshot";
-          User          = "root";
-          ExecStart     = '' ${holochain-activation}/bin/holochain-activation '';
-          StandardOutput= "journal";
+        enable                  = true;
+        wants                   = [ "holoport-preflight.service" ];
+        after                   = [ "holoport-preflight.service" ];
+        serviceConfig = {
+          Type                  = "oneshot";
+          User                  = "root";
+          ExecStart             = '' ${holochain-activation}/bin/holochain-activation '';
+          StandardOutput        = "journal";
         };
       };
       #not used yet
@@ -285,63 +284,63 @@ in
       networking.firewall.allowedTCPPorts = [ 80 443 1111 2222 3333 8800 8880 8888 48080 ];
 
       # Holochain can't come up until filesystems are available, ZeroTier is started, and the HoloPort
-      # is Activated (configuration is confirmed to be valid).
+      # is Preflight-checked and Activated (configuration is confirmed to be valid).
       systemd.services.holochain = {
-          description = "Holochain conductor service";
-          after = [ "local-fs.target" "zerotierone.service" "holochain-activation.service" ];
-          wantedBy = [ "multi-user.target" ];
-          requires = [ "holochain-activation.service" ];
+          description           = "Holochain conductor service";
+          after                 = [ "local-fs.target" "zerotierone.service" "holochain-activation.service" ];
+          wantedBy              = [ "multi-user.target" ];
+          requires              = [ "holochain-activation.service" ];
           environment = {
-             NIX_STORE = "/nix/store";
-             USER = "holochain";
+             NIX_STORE          = "/nix/store";
+             USER               = "holochain";
           };
           serviceConfig = {
-            ExecStart = ''/run/current-system/sw/bin/holochain -c /var/lib/holochain/conductor-config.toml'';
-            Restart = "always";
-            User = "holochain";
-            StandardOutput = "journal";
-            KillMode = "process";
-
+            ExecStart           = ''/run/current-system/sw/bin/holochain -c /var/lib/holochain/conductor-config.toml'';
+            Restart             = "always";
+            User                = "holochain";
+            StandardOutput      = "journal";
+            KillMode            = "process";
           };
       };
       systemd.services.holochain.path = [ n3h ];
+
       systemd.services.envoy = {
-          description = "envoy service";
-          after = [ "local-fs.target" "network.target" "holochain.service" ];
-          wantedBy = [ "multi-user.target" ];
+          description           = "envoy service";
+          after                 = [ "local-fs.target" "network.target" "holochain.service" ];
+          wantedBy              = [ "multi-user.target" ];
           serviceConfig = {
-            ExecStart = ''/run/current-system/sw/bin/node /run/current-system/sw/bin/envoy/lib/index.js'';
-            Restart = "always";
-            User = "holochain";
-            StandardOutput = "journal";
-            KillMode = "process";
+            ExecStart           = ''/run/current-system/sw/bin/node /run/current-system/sw/bin/envoy/lib/index.js'';
+            Restart             = "always";
+            User                = "holochain";
+            StandardOutput      = "journal";
+            KillMode            = "process";
           };
       };
+
       services.zerotierone = {
-        enable = true;
-        joinNetworks = ["93afae5963c547f1"];
+        enable                  = true;
+        joinNetworks            = ["93afae5963c547f1"];
       };
 
       services.nginx = {
-              enable = true;
-      recommendedOptimisation = true;
-      recommendedTlsSettings = true;
-      recommendedGzipSettings = true;
-      recommendedProxySettings = true;
-      virtualHosts = {
-        "holo.localhost" = {
-          addSSL = false;
-          enableACME = false;
-          locations = {
-            "/hha" = {
-              root = "/run/current-system/sw/bin/envoy/hha-ui";
-              proxyPass = "http://127.0.0.1:8800";
+        enable                  = true;
+        recommendedOptimisation = true;
+        recommendedTlsSettings  = true;
+        recommendedGzipSettings = true;
+        recommendedProxySettings= true;
+        virtualHosts = {
+          "hha.localhost" = {
+            addSSL              = false;
+            enableACME          = false;
+            locations = {
+              "/hha" = {
+	        root            = "/run/current-system/sw/bin/envoy/hha-ui";
+                proxyPass       = "http://127.0.0.1:8800";
+              };
             };
           };
         };
       };
-    };
-
     })
   ];
 }
