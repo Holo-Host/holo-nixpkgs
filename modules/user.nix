@@ -3,7 +3,7 @@
 {
   users.extraUsers.holoport = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "holochain" ];
   };
   users.extraUsers.manager = {
     isNormalUser = true;

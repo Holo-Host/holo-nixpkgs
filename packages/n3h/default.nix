@@ -1,8 +1,8 @@
 { pkgs, fetchzip }:
 let
   src = fetchzip {
-    url = "https://github.com/samrose/n3h/archive/d3b36c4ab3323b9a8f2a45ca6192f683c72b09fc.tar.gz";
-    sha256 = "1wll888y40n66d92k36jsdgv8rg2rykcd1w3mirr7wmn78gjzkd5";
-  };
+    url = "https://github.com/samrose/n3h/archive/4c3541a7432b4f0ac72cb3dac83affc062f055e1.tar.gz";
+    sha256 = "1cbdjjg0nxm4bwvw7l6srhlll1iiz2il1kggvkhbh7c0c830fr2w";
+};
   n3h = pkgs.callPackage src {};
 in n3h.package
