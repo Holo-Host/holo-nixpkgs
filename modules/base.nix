@@ -250,6 +250,15 @@ in
       # startup, or any other service which may have its configuration modified by the
       # holoport-preflight).  If holoport-preflight determines that it is necessary (eg. because
       # system identity files have been changed and must be regenereted), it will reboot the system.
+      boot.initrd.postMountCommands = ''
+        # This runs before systemd does; clean up any residual holoport-preflight.service reboot flag
+	REBOOT=/var/lib/holoport/reboot
+	if [ -a "${REBOOT}" ]; then
+	      msg=$( cat "${REBOOT}" )
+	      echo "Rebooted successfully, due to: ${msg}"
+	      rm -f "${REBOOT}"
+	fi
+      '';
       systemd.services.holoport-preflight = {
         enable                  = true;
         after                   = [ "local-fs.target" ];

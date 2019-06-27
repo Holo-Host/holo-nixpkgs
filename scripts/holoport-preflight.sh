@@ -33,6 +33,7 @@ CURRENT=1
 HP_PERS="/var/lib/holoport"
 PREFLIGHT="${HP_PERS}/preflight"
 HARDWARE="${HP_PERS}/hardware"
+REBOOT="${HP_PERS}/reboot"
 
 ZEROTIER="/var/lib/zerotier-one"
 
@@ -125,7 +126,6 @@ backup() {
 # Evaluate the system STATE as found in the PREFLIGHT file.  Any files requiring modification or
 # removal will first be copied into the HP_PERS persistence backup directory,
 # eg. /var/lib/holoport/backup/initial/...
-REBOOT=
 case "${STATE}" in
     0)  log "Clearing default factory identity configurations, and rebooting."
 	# In the initial "0" State (no previous holoport-preflight run), we need to remove any
@@ -151,7 +151,8 @@ case "${STATE}" in
 	    rm -f /etc/machine-id
 	fi
 	set_state 1
-	REBOOT=1
+	# Any /etc/machine-id change requires a reboot (systemd, etc. depends on this)
+	echo "Changed ZeroTier, SSH Host and /etc/machine-id" >> ${REBOOT}
 	;& # fall thru
 
     # Add each historical STATE here, each falling thru to the next, implementing the checks/fixes
@@ -166,11 +167,16 @@ case "${STATE}" in
         ;;
 esac
 
-if (( REBOOT )); then
-    wrn "Rebooting system"
-    echo "holoport-preflight.service: Rebooting to ensure a unique HoloPort Identity" | wall
-    sleep 5
-    systemctl reboot
+# If we've detected a situation that requires reboot, signalled by creating a
+# /var/lib/holoport/reboot file, give indication of that now.  The actual reboot should be carried
+# out manually, or by other phases of the system (eg. `holo init`).  We depend on
+# boot.init.postMountCommands (in ../modules/base.nix) to remove this file, on the next boot.  This
+# ensures that, once we detect and mitigate possibly cloned machine-id, etc, each time we restart
+# holoport-preflight.service, it will (again) warn the operator to reboot the machine.
+if [ -a "${REBOOT}" ]; then
+    msg=$( cat "${REBOOT}" )
+    wrn "Please reboot system, due to: ${msg}"
+    echo -e "holoport-preflight.service: Please reboot HoloPort, due to:\n\n    ${msg}" | wall
 fi
 
 exit 0
