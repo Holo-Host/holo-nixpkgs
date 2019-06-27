@@ -1,4 +1,4 @@
 [
-  ./boot.nix
-  ./hc-test.nix
+  #./boot.nix
+  #./hc-test.nix
 ]
