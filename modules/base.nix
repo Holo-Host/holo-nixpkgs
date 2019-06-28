@@ -281,8 +281,7 @@ in
       #services.osquery.enable = true;
       #services.osquery.loggerPath = "/var/log/osquery/logs";
       #services.osquery.pidfile = "/var/run/osqueryd.pid";
-      networking.firewall.allowedTCPPorts = [ 80 443 1111 2222 3333 8800 8880 8888 48080 ];
-
+      networking.firewall.allowedTCPPorts = [ 80 443 1111 2222 3333 8800 8880 8881 8888 8900 8901 8902 8999 9999 48080 ];
       # Holochain can't come up until filesystems are available, ZeroTier is started, and the HoloPort
       # is Preflight-checked and Activated (configuration is confirmed to be valid).
       systemd.services.holochain = {
@@ -329,16 +328,28 @@ in
         recommendedGzipSettings = true;
         recommendedProxySettings= true;
         virtualHosts = {
-          "hha.localhost" = {
-            addSSL              = false;
-            enableACME          = false;
-            locations = {
-              "/hha" = {
-	        root            = "/run/current-system/sw/bin/envoy/hha-ui";
-                proxyPass       = "http://127.0.0.1:8800";
+            "holo.hha.locahost" = {
+              addSSL = false;
+              enableACME = false;
+              listen = [{addr = "0.0.0.0"; port = 8900; }];
+              root = "/run/current-system/sw/bin/envoy/hha-ui/index.html";
+              locations = {
+                "/" = {
+                    proxyPass = "http://127.0.0.1:8800";
+                };
               };
             };
-          };
+            "holo.has.locahost" = {
+              addSSL = false;
+              enableACME = false;
+              listen = [{addr = "0.0.0.0"; port = 8901; }];
+              root = "/run/current-system/sw/bin/envoy/has-ui/index.html";
+              locations = {
+                "/" = {
+                    proxyPass = "http://127.0.0.1:8880";
+                };
+              };
+            };
         };
       };
     })
