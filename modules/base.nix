@@ -123,13 +123,17 @@ in
 
     (mkIf (!cfg.isInstallMedium) {
       boot.loader.grub.splashImage = ../artwork/holoport.jpg;
-       swapDevices = [
+      swapDevices = [
         {
            device = "/var/swapfile";
            size = 2000; #MiB
         }
       ];
       boot.loader.grub.memtest86.enable = true;
+      boot.initrd.postMountCommands = ''
+        # This runs before systemd does; clean up any residual holoport-preflight.service reboot flag
+	rm -f /var/lib/holoport/reboot
+      '';
       nix.nixPath = lib.mkForce [
         # The nixpkgs used for nixos-rebuild and all other nix commands
         "nixpkgs=${cfg.channels.nixpkgs}"
@@ -322,9 +326,9 @@ in
       };
 
       services.nginx = {
-        enable                  = true;
+        enable = true;
         recommendedOptimisation = true;
-        recommendedTlsSettings  = true;
+        recommendedTlsSettings = true;
         recommendedGzipSettings = true;
         recommendedProxySettings= true;
         virtualHosts = {
