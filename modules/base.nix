@@ -97,7 +97,7 @@ in
 
     holoport.channels.nixpkgs = mkOption {
       type = types.str;
-      default = "http://holoportbuild.holo.host/job/holoportOs-testnet/testnet/channels.nixpkgs/latest/download/1";
+      default = "http://holoportbuild.holo.host/job/holoportOs-testnet-dev-18_09/testnet-dev/channels.nixpkgs/latest/download/1";
       description = ''
         URL understood by Nix to a nixpkgs/NixOS channel
       '';
@@ -105,7 +105,7 @@ in
 
     holoport.channels.holoport = mkOption {
       type = types.str;
-      default = "http://holoportbuild.holo.host/job/holoportOs-testnet/testnet/channels.holoport-testnet/latest/download/1";
+      default = "http://holoportbuild.holo.host/job/holoportOs-testnet-dev-18_09/testnet-dev/channels.holoport-testnet/latest/download/1";
       description = ''
         URL understood by Nix to the Holoport channel
       '';
@@ -178,7 +178,6 @@ in
         smartmontools
         stress-ng
         yarn
-        yarn2nix
         zeromq4
         rsync
         utillinux
@@ -286,7 +285,7 @@ in
       #services.osquery.enable = true;
       #services.osquery.loggerPath = "/var/log/osquery/logs";
       #services.osquery.pidfile = "/var/run/osqueryd.pid";
-      networking.firewall.allowedTCPPorts = [ 80 443 1111 2222 3333 8800 8880 8888 48080 ];
+      networking.firewall.allowedTCPPorts = [ 80 443 1111 2222 3333 8800 8880 8888 8900 8901 48080 ];
 
       # Holochain can't come up until filesystems are available, ZeroTier is started, and the HoloPort
       # is Preflight-checked and Activated (configuration is confirmed to be valid).
@@ -328,24 +327,36 @@ in
       };
 
       services.nginx = {
-        enable                  = true;
+        enable = true;
         recommendedOptimisation = true;
-        recommendedTlsSettings  = true;
+        recommendedTlsSettings = true;
         recommendedGzipSettings = true;
-        recommendedProxySettings= true;
-        virtualHosts = {
-          "hha.localhost" = {
-            addSSL              = false;
-            enableACME          = false;
-            locations = {
-              "/hha" = {
-	        root            = "/run/current-system/sw/bin/envoy/hha-ui";
-                proxyPass       = "http://127.0.0.1:8800";
+        recommendedProxySettings = true;
+          virtualHosts = {
+            "holo.hha.locahost" = {
+              addSSL = false;
+              enableACME = false;
+              listen = [{addr = "0.0.0.0"; port = 8900; }];
+              root = "/run/current-system/sw/bin/envoy/hha-ui/index.html";
+              locations = {
+                "/" = {
+                    proxyPass = "http://127.0.0.1:8800";
+                };
+              };
+            };
+            "holo.has.locahost" = {
+              addSSL = false;
+              enableACME = false;
+              listen = [{addr = "0.0.0.0"; port = 8901; }];
+              root = "/run/current-system/sw/bin/envoy/has-ui/index.html";
+              locations = {
+                "/" = {
+                    proxyPass = "http://127.0.0.1:8880";
+                };
               };
             };
           };
-        };
-      };
+       };
     })
   ];
 }
