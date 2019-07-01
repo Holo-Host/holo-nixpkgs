@@ -187,11 +187,11 @@ in
         hptst = "${hpplustest}/bin/hpplustest";
         holo =  "/run/wrappers/bin/sudo ${holo-cli}/bin/holo-cli";
         n3h = "${n3h}/bin/n3h";
-        holofuel-pkg = "${envoy}/bin/envoy/holofuel.dna.json";
-        hha-pkg = "${envoy}/bin/envoy/HHA-dna-src.dna.json";
-        has-pkg = "${envoy}/bin/envoy/HAS-dna-src.dna.json";
-        has-ui = "${envoy}/bin/envoy/has-ui";
-        hha-ui = "${envoy}/bin/envoy/hha-ui";
+        holofuel-pkg = "${envoy}/bin/envoy/src/config/.envoy-deps/holofuel.dna.json";
+        hha-pkg = "${envoy}/bin/envoy/src/config/.envoy-deps/holo-hosting.dna.json";
+        has-pkg = "${envoy}/bin/envoy/src/config/.envoy-deps/happ-store.dna.json";
+        has-ui = "${envoy}/bin/envoy/src/config/.envoy-deps/happ-store-ui";
+        hha-ui = "${envoy}/bin/envoy/src/config/.envoy-deps/holo-hosting-ui";
       };
 
       systemd.services.pre-net-led = {
@@ -336,7 +336,7 @@ in
               addSSL = false;
               enableACME = false;
               listen = [{addr = "0.0.0.0"; port = 8900; }];
-              root = "/run/current-system/sw/bin/envoy/hha-ui/index.html";
+              root = "/run/current-system/sw/bin/envoy/src/config/.envoy-deps/happ-store-ui/index.html";
               locations = {
                 "/" = {
                     proxyPass = "http://127.0.0.1:8800";
@@ -347,7 +347,7 @@ in
               addSSL = false;
               enableACME = false;
               listen = [{addr = "0.0.0.0"; port = 8901; }];
-              root = "/run/current-system/sw/bin/envoy/has-ui/index.html";
+              root = "/run/current-system/sw/bin/envoy/src/config/.envoy-deps/happ-store-ui/index.html";
               locations = {
                 "/" = {
                     proxyPass = "http://127.0.0.1:8880";
