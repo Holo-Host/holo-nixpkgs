@@ -311,6 +311,7 @@ in
           description           = "envoy service";
           after                 = [ "local-fs.target" "network.target" "holochain.service" ];
           wantedBy              = [ "multi-user.target" ];
+          path                  = [ pkgs.holochain-conductor ];
           serviceConfig = {
             ExecStart           = ''/run/current-system/sw/bin/node /run/current-system/sw/bin/envoy/lib/index.js'';
             Restart             = "always";
