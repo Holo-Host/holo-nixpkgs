@@ -4,7 +4,7 @@ stdenv.mkDerivation rec {
   name = "envoy";
   src = fetchzip {
     url = https://github.com/samrose/envoy/archive/envoy-v0.0.1.zip;
-    sha256 = "1dvbi5p3njg9sk3xx4sqdsnsz250ginyyvsnghxl25bjw73jcjx7";
+    sha256 = "0ca21w2w2pg8kc1wymiivw4mzd2yja8v91lxv6sdi4n8kr8wc0pw";
   };
   unpackPhase = ":";
   
