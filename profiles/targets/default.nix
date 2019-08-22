@@ -21,6 +21,7 @@ in
 
   environment.systemPackages = [
     (holoport-hardware-test.override { inherit target; })
+    holo-cli
   ];
 
   networking.hostName = lib.mkDefault "holoport";
@@ -50,7 +51,7 @@ in
       addresses = true;
     };
   };
-
+ 
   services.mingetty.autologinUser = "holoport";
 
   services.openssh.enable = true;
