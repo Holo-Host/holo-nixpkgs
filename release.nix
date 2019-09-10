@@ -17,5 +17,6 @@ with pkgs;
   tests = recurseIntoAttrs {
     boot = import ./tests/boot.nix { inherit pkgs; };
     holo-init = import ./tests/holo-init.nix { inherit pkgs; };
+    zerotier = import ./tests/zerotier.nix { inherit pkgs; };
   };
 }
