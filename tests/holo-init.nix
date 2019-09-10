@@ -19,6 +19,8 @@ makeTest {
     $machine->waitForUnit("holo-envoy.service");
     $machine->waitForOpenPort("1111");
     $machine->waitForOpenPort("48080");
+    $machine->waitForOpenPort("3333");
+    $machine->waitForOpenPort("2222");
     $machine->shutdown;
   '';
 
