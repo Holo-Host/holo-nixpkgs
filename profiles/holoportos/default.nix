@@ -21,7 +21,7 @@ in
 
   environment.systemPackages = [
     (holoport-hardware-test.override { inherit target; })
-  ];
+    hello
 
   networking.hostName = lib.mkOverride 1100 "holoportos";
 
@@ -50,7 +50,7 @@ in
       addresses = true;
     };
   };
- 
+
   services.mingetty.autologinUser = "root";
 
   services.openssh.enable = true;
