@@ -1,7 +1,7 @@
 {
   imports = [
-    ../../hardware/holoport-nano
-    ../.
+    ../../hardware/holoport-plus
+    ../../holoportos
   ];
 
   system.holoportos.led-daemon.enable = true;

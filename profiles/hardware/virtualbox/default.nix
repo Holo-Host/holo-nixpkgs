@@ -1,16 +1,13 @@
 { config, pkgs, ... }:
 
 let
-  nixpkgs = import ../../../vendor/nixpkgs.nix;
+  nixpkgs = import ../../../nixpkgs/source.nix;
 in
 
 {
   imports = [
     "${nixpkgs}/nixos/modules/virtualisation/virtualbox-image.nix"
-    ../.
   ];
-
-  nixpkgs.hostPlatform.system = "x86_64-linux";
 
   system.holoportos.target = "virtualbox";
 

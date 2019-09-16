@@ -6,12 +6,17 @@ let
 in
 
 {
-  imports = [ ../. ../master.nix ];
+  imports = [
+    ../minion
+    ../master.nix
+  ];
 
   nix.buildMachines = [
     {
       hostName = "localhost";
       maxJobs = config.nix.maxJobs;
+      sshKey = "/var/lib/hydra/queue-runner/.ssh/id_ed25519";
+      sshUser = "root";
       supportedFeatures = [
         "benchmark"
         "big-parallel"
@@ -21,7 +26,7 @@ in
       system = "x86_64-linux";
     }
     {
-      hostName = "hydra-aarch64-linux.holo.host";
+      hostName = "hydra-minion-1.holo.host";
       maxJobs = 96;
       sshKey = "/var/lib/hydra/queue-runner/.ssh/id_ed25519";
       sshUser = "root";
@@ -34,7 +39,7 @@ in
       system = "aarch64-linux";
     }
     {
-      hostName = "208.52.170.228";
+      hostName = "hydra-minion-2.holo.host";
       maxJobs = 12;
       sshKey = "/var/lib/hydra/queue-runner/.ssh/id_ed25519";
       sshUser = "administrator";

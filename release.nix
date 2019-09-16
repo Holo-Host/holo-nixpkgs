@@ -1,21 +1,34 @@
 { pkgs ? import ./. {} }:
 
 with pkgs;
+with lib;
 
-{
-  holoportos = recurseIntoAttrs {
-    qemu = buildImage ./profiles/holoportos/qemu;
-    virtualbox = buildImage ./profiles/holoportos/virtualbox;
-  };
+let
+  constitute = sets: concatMap (collect isDerivation) sets;
 
-  holoportos-installers = {
-    holoport = buildImage ./profiles/holoportos-installers/holoport;
-    holoport-nano = buildImage ./profiles/holoportos-installers/holoport-nano;
-    holoport-plus = buildImage ./profiles/holoportos-installers/holoport-plus;
-  };
+  overlay = import ./overlays/holo-nixpkgs;
 
-  tests = recurseIntoAttrs {
-    boot = import ./tests/boot.nix { inherit pkgs; };
-    holo-init = import ./tests/holo-init.nix { inherit pkgs; };
+  overlayPackages =
+    recurseIntoAttrs (getAttrs (attrNames (overlay {} {})) pkgs);
+in
+
+with import "${pkgs.path}/pkgs/top-level/release-lib.nix" {
+  nixpkgsArgs.overlays = [ overlay ];
+  supportedSystems = [
+    "aarch64-linux"
+    "x86_64-darwin"
+    "x86_64-linux"
+  ];
+};
+
+let
+  self = mapTestOn (packagePlatforms overlayPackages);
+in
+
+self // {
+  holo-nixpkgs = releaseTools.channel {
+    name = "holo-nixpkgs";
+    src = gitignoreSource ./.;
+    constituents = constitute (attrValues self);
   };
 }

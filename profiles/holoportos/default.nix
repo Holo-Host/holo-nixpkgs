@@ -9,6 +9,7 @@ in
 {
   imports = [
     ../.
+    ../binary-cache.nix
     ../self-aware.nix
   ];
 
@@ -25,15 +26,6 @@ in
   ];
 
   networking.hostName = lib.mkOverride 1100 "holoportos";
-
-  nix.binaryCaches = [
-    "https://cache.holo.host"
-    "https://cache.nixos.org"
-  ];
-
-  nix.binaryCachePublicKeys = [
-    "cache.holo.host-1:lNXIXtJgS9Iuw4Cu6X0HINLu9sTfcjEntnrgwMQIMcE="
-  ];
 
   nix.gc = {
     automatic = true;

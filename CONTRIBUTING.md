@@ -1,26 +1,20 @@
-## Review commit message style guide
+## Branch protection rules
 
-https://nixos.org/nixpkgs/manual/#submitting-changes-making-patches
+`develop` requires signed commits, passing CI and pull request with at least
+one review. Administrators may waive some of restrictions for individual pull
+requests.
 
-## Leverage binary cache
+`staging` bears the same restrictions as `develop`, plus administrators must no
+longer waive any restrictions.
 
-On NixOS, add the following to `/etc/nixos/configuration.nix` and rebuild:
+`master` requires signed commits, passing CI and pull request with at least two
+reviews, both of which must be made against the most recent tip of the branch.
+If any, code owner reviews are mandatory. Change request reviews can't be
+dismissed. Administrators must not waive any restrictions.
 
-```nix
-{
-  nix.binaryCaches = [
-    "https://cache.holo.host"
-  ];
+## Commit message style guide
 
-  nix.binaryCachePublicKeys = [
-    "cache.holo.host-1:lNXIXtJgS9Iuw4Cu6X0HINLu9sTfcjEntnrgwMQIMcE="
-  ];
-}
-```
-
-Otherwise, add `https://cache.holo.host` to `substituters` and
-`cache.holo.host-1:lNXIXtJgS9Iuw4Cu6X0HINLu9sTfcjEntnrgwMQIMcE=` to
-`trusted-public-keys` in `/etc/nix/nix.conf`.
+See: https://nixos.org/nixpkgs/manual/#submitting-changes-making-patches
 
 ## Iterate on overlay packages
 

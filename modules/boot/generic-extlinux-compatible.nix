@@ -16,10 +16,6 @@ let
 in
 
 {
-  disabledModules = [
-    "system/boot/loader/generic-extlinux-compatible"
-  ];
-
   options = {
     boot.loader.generic-extlinux-compatible = {
       enable = mkOption {

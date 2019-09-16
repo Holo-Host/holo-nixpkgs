@@ -23,7 +23,7 @@ let
 
   targets = {
     holoport = mkTarget {
-      profile = "<holo-nixpkgs/profiles/holoportos/holoport>";
+      profile = "<holo-nixpkgs/profiles/hardware/holoport>";
 
       prePhase = ''
         parted /dev/sda --align optimal --script \
@@ -37,7 +37,7 @@ let
     };
 
     holoport-nano = mkTarget {
-      profile = "<holo-nixpkgs/profiles/holoportos/holoport-nano>";
+      profile = "<holo-nixpkgs/profiles/hardware/holoport-nano>";
 
       prePhase = ''
         parted /dev/mmcblk2 --align optimal --script \
@@ -55,7 +55,7 @@ let
     };
 
     holoport-plus = mkTarget {
-      profile = "<holo-nixpkgs/profiles/holoportos/holoport-plus>";
+      profile = "<holo-nixpkgs/profiles/hardware/holoport-plus>";
 
       prePhase = ''
         parted /dev/sda --align optimal --script \

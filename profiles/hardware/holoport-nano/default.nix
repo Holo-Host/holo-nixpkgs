@@ -24,8 +24,6 @@
 
   boot.loader.grub.enable = false;
 
-  nixpkgs.hostPlatform.system = "aarch64-linux";
-
   system.holoportos.led-daemon = {
     device = "/dev/ttyS2";
     operstate = "/sys/class/net/eth0/operstate";

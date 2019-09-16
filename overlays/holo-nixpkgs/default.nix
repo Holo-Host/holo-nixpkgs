@@ -1,4 +1,7 @@
-final: previous: with final;
+final: previous:
+
+with final;
+with lib;
 
 let
   cargo-to-nix = fetchFromGitHub {
@@ -25,8 +28,8 @@ let
   holochain-rust = fetchFromGitHub {
     owner = "holochain";
     repo = "holochain-rust";
-    rev = "71cfd9a977f0431a92d5c3fbf365d336a769e673";
-    sha256 = "1i9wlx6ypy02a828427lprdp0jb6gn3s4smqk8d7gpshc44x6v0p";
+    rev = "0c887a90a6f6d2f0630da3063cbf208c16afb22e";
+    sha256 = "0si6q3486zp6kg081dhgpwfy26y5gb5mx09awp06kr3cr9xvsrxi";
   };
 
   holochainRust = callPackage holochain-rust {};
@@ -55,55 +58,23 @@ in
     inherit (rust.packages.nightly) rustPlatform;
   });
 
-  buildImage = profile:
+  buildHoloPortOS = hardware:
+    buildImage [ holoportos.profile hardware ];
+
+  buildImage = imports:
     let
-      allowCross = config.allowCross or true;
-
-      nixos = import "${pkgs.path}/nixos" {
-        configuration = { config, ... }: {
-	  imports = [ profile ];
-
-	  nixpkgs.localSystem.system = if allowCross
-	    then builtins.currentSystem
-	    else config.nixpkgs.hostPlatform.system;
-	};
+      system = nixos {
+        inherit imports;
       };
 
-      inherit (nixos.config.system) build;
-      inherit (nixos.config.nixpkgs.hostPlatform) system;
-
-      image = if build ? "vm"
-        then build.vm
-        else if build ? "virtualBoxOVA"
-        then build.virtualBoxOVA
-        else if build ? "sdImage"
-        then build.sdImage
-        else if build ? "isoImage"
-        then build.isoImage
-        else throw "${build} doesn't expose any known image format";
-
-      stopgap = drv: if allowCross
-        then drv
-        else runCommand drv.name {} ''
-          mkdir -p $out
-
-          for f in ${drv}/*; do
-            if [ "$f" = "${drv}/nix-support" ]; then
-              cp -r $f $out
-              chmod -R +w $out/$(basename $f)
-            else
-              cp -rs $f $out
-            fi
-          done
-
-          for f in $out/nix-support/*; do
-            substituteInPlace $f --replace ${drv} $out
-          done
-        '';
+      imageNames = filter (name: hasAttr name system) [
+        "isoImage"
+        "sdImage"
+        "virtualBoxOVA"
+        "vm"
+      ];
     in
-    lib.recursiveUpdate (stopgap image) {
-      meta.platforms = [ system ];
-    };
+    head (attrVals imageNames system);
 
   singletonDir = path:
     let
@@ -113,6 +84,12 @@ in
       mkdir $out
       ln -s ${path} $out/${drv.name}
     '';
+
+  tryDefault = x: default:
+    let
+      eval = builtins.tryEval x;
+    in
+    if eval.success then eval.value else default;
 
   writeJSON = config: writeText "config.json" (builtins.toJSON config);
 
@@ -160,6 +137,22 @@ in
   # TODO: upstream to holochain-cli
   holo-keygen = callPackage ./holo-keygen {
     stdenv = stdenvNoCC;
+  };
+
+  holo-nixpkgs-tests = recurseIntoAttrs (import ../../tests {
+    inherit pkgs;
+  });
+
+  holoportos = recurseIntoAttrs {
+    profile = tryDefault <nixos-config> ../../profiles/holoportos;
+
+    qemu = (buildHoloPortOS ../../profiles/hardware/qemu) // {
+      meta.platforms = [ "aarch64-linux" "x86_64-linux" ];
+    };
+
+    virtualbox = (buildHoloPortOS ../../profiles/hardware/virtualbox) // {
+      meta.platforms = [ "x86_64-linux" ];
+    };
   };
 
   holoportos-install = callPackage ./holoportos-install {};

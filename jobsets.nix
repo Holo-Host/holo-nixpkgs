@@ -13,7 +13,7 @@ let
     hidden = false;
     keepnr = 512;
     nixexprinput = "holo-nixpkgs";
-    nixexprpath = "ci.nix";
+    nixexprpath = "release.nix";
   };
 
   branchJobset = ref: sharedJobset // {

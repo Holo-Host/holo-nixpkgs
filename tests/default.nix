@@ -1,0 +1,15 @@
+{ pkgs ? import ../. {} }:
+
+with pkgs;
+
+let
+  testing = import "${pkgs.path}/nixos/lib/testing.nix" {
+    inherit pkgs system;
+  };
+
+  callPackage = newScope (pkgs // testing);
+in
+
+{
+  holo-envoy = callPackage ./holo-envoy {};
+}

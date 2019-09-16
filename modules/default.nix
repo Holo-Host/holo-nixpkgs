@@ -1,7 +1,10 @@
 {
+  disabledModules = [
+    "system/boot/loader/generic-extlinux-compatible"
+  ];
+
   imports = [
     ./boot/generic-extlinux-compatible.nix
-    ./nixpkgs/host-platform.nix
     ./services/holo-envoy.nix
     ./services/holochain-conductor.nix
     ./system/holoportos.nix
