@@ -11,5 +11,6 @@
     ./system/holoportos/auto-upgrade.nix
     ./system/holoportos/install.nix
     ./system/holoportos/led-daemon.nix
+    ./system/holoportos/udiskie.nix
   ];
 }
