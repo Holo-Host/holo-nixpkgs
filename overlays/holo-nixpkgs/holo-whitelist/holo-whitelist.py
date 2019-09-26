@@ -21,7 +21,7 @@ def main():
             'zt_address' : ztjson['address'],
             'email' : loadedjson['email']
     }
-    url = "https://postb.in/1569524307575-7521095054689"
+    url = "https://postman-echo.com/post"
     r = requests.post(url,payload)
     print(r.text)
 
