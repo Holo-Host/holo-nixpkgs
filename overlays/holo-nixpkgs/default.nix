@@ -143,6 +143,11 @@ in
     inherit pkgs;
   });
 
+  holo-whitelist = callPackage ./holo-whitelist {
+    stdenv = stdenvNoCC;
+    python3 = python3.withPackages (ps: [ ps.requests ]);
+  };
+ 
   holoportos = recurseIntoAttrs {
     profile = tryDefault <nixos-config> ../../profiles/holoportos;
 
