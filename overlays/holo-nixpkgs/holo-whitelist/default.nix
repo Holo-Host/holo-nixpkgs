@@ -1,10 +1,10 @@
-{ stdenv, makeWrapper, python3 }:
+{ stdenv, makeWrapper, python3, python3Packages }:
 
 with stdenv.lib;
 
 stdenv.mkDerivation {
   name = "holo-whitelist";
-
+	
   nativeBuildInputs = [ makeWrapper ];
   buildInputs = [ python3 ];
 
