@@ -4,7 +4,7 @@ import requests
 import subprocess
 import sys
 
-URL = "https://postman-echo.com/post"
+URL = "http://authorizer.holohost.net/v1/auth"
 PATH = "/var/lib/data.json"
 
 
