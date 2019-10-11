@@ -14,8 +14,8 @@ let
   gitignore = fetchFromGitHub {
     owner = "hercules-ci";
     repo = "gitignore";
-    rev = "6e7569637d699facfdcde91ab5c94bac06d39edc";
-    sha256 = "1lz09rmr2yza8bv46ff49226jls6q1rl2x0p11q1940rw4k4bwa9";
+    rev = "f9e996052b5af4032fe6150bba4a6fe4f7b9d698";
+    sha256 = "0jrh5ghisaqdd0vldbywags20m2cxpkbbk5jjjmwaw0gr8nhsafv";
   };
 
   holo-envoy = fetchFromGitHub {
@@ -112,13 +112,16 @@ in
     servicelogger = callPackage ./dna-packages/servicelogger {};
   };
 
-  # 
-  # HoloPort Runtime and Hardware Support
-  # 
-
   aurora-led = callPackage ./aurora-led {};
 
   extlinux-conf-builder = callPackage ./extlinux-conf-builder {};
+
+  inherit (callPackage holo-envoy {}) holo-envoy;
+  inherit (holochainRust) holochain-cli holochain-conductor;
+
+  hclient = callPackage ./hclient {};
+
+  holofuel-app = callPackage ./holofuel-app {};
 
   holoport-hardware-test = callPackage ./holoport-hardware-test {};
 
@@ -126,34 +129,15 @@ in
     linux = linux_latest;
   };
 
-  # 
-  # Holo Packages
-  # 
-
-  # - Base Holo Configuration and Initialization
-  holo-config = callPackage ./holo-config {};
-
-  holo-keygen = callPackage ./holo-keygen {
-    stdenv = stdenvNoCC;
-  };
-
   holo-init = callPackage ./holo-init {
     stdenv = stdenvNoCC;
     python3 = python3.withPackages (ps: [ ps.requests ps.retry ]);
   };
 
-
-  # - Hosting Holochain hApps and Routing Their HoloPort I/O
-  inherit (callPackage holo-envoy {}) holo-envoy;
-  inherit (holochainRust) holochain-cli holochain-conductor;
-
-  # - HoloFuel Persisten "Demo" Support
-  hclient = callPackage ./hclient {};
-
-  holofuel-app = callPackage ./holofuel-app {};
-
-  holofuel-demo-configure = callPackage ./holofuel-demo-configure {};
-
+  # TODO: upstream to holochain-cli
+  holo-keygen = callPackage ./holo-keygen {
+    stdenv = stdenvNoCC;
+  };
 
   holo-nixpkgs-tests = recurseIntoAttrs (import ../../tests {
     inherit pkgs;

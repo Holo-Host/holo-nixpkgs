@@ -7,7 +7,7 @@ in
 
 {
   imports = [
-    ../minion
+    ../.
     ../master.nix
   ];
 
