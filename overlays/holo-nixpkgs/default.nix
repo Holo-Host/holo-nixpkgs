@@ -119,8 +119,6 @@ in
   inherit (callPackage holo-envoy {}) holo-envoy;
   inherit (holochainRust) holochain-cli holochain-conductor;
 
-  hclient = callPackage ./hclient {};
-
   holofuel-app = callPackage ./holofuel-app {};
 
   holoport-hardware-test = callPackage ./holoport-hardware-test {};
