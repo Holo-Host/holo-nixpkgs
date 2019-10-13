@@ -8,11 +8,10 @@ HOLO_AUTH_URL = "https://auth.holo.host/v1/confirm-email"
 HOLO_CONFIG_PATH = "/media/keys/holo-config.json"
 
 
-def email():
+def admin_email():
     with open(HOLO_CONFIG_PATH, 'r') as f:
-        loaded_json = json.load(f)
-        email_data = loaded_json['email']
-    return email_data
+        config = json.load(f)
+    return config['v1']['admin']['email']
 
 
 def whitelist_req(email, zerotier_address):
@@ -38,9 +37,8 @@ def main():
     out_hdlr.setLevel(logging.INFO)
     log.addHandler(out_hdlr)
     log.setLevel(logging.INFO)
-    user_email = email()
     address = zerotier_address()
-    request = whitelist_req(user_email, address)
+    request = whitelist_req(admin_email(), address)
     log.info(request.text)
 
 
