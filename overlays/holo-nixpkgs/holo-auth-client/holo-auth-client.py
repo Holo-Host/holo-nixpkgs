@@ -23,9 +23,8 @@ def confirm_email(email, zerotier_address):
 
 def zerotier_address():
     proc = subprocess.run(["zerotier-cli", "-j", "info"], capture_output=True)
-    zt_data = json.loads(proc.stdout)
-    zerotier_address = zt_data['address']
-    return zerotier_address
+    info = json.loads(proc.stdout)
+    return info['address']
 
 
 def main():
