@@ -4,7 +4,7 @@ import requests
 import subprocess
 import sys
 
-URL = "http://authorizer.holohost.net/v1/auth"
+URL = "https://auth.holo.host/v1/confirm-email"
 PATH = "/var/lib/data.json"
 
 
