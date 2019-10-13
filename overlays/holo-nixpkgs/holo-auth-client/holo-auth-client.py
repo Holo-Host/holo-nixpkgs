@@ -14,13 +14,11 @@ def admin_email():
     return config['v1']['admin']['email']
 
 
-def whitelist_req(email, zerotier_address):
-    payload = {
-        'zerotier_address': zerotier_address,
-        'email': email
-    }
-    r = requests.post(HOLO_AUTH_URL, payload)
-    return r
+def confirm_email(email, zerotier_address):
+    return requests.post(HOLO_AUTH_URL, {
+        'email': email,
+        'zerotier_address': zerotier_address
+    })
 
 
 def zerotier_address():
@@ -37,8 +35,7 @@ def main():
     out_hdlr.setLevel(logging.INFO)
     log.addHandler(out_hdlr)
     log.setLevel(logging.INFO)
-    address = zerotier_address()
-    request = whitelist_req(admin_email(), address)
+    request = confirm_email(admin_email(), zerotier_address())
     log.info(request.text)
 
 
