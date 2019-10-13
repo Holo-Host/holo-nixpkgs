@@ -5,7 +5,7 @@ import subprocess
 import sys
 
 URL = "https://auth.holo.host/v1/confirm-email"
-PATH = "/var/lib/data.json"
+PATH = "/media/keys/holo-config.json"
 
 
 def email():
