@@ -29,14 +29,7 @@ def zerotier_address():
 
 
 def main():
-    log = logging.getLogger(__name__)
-    out_hdlr = logging.StreamHandler(sys.stdout)
-    out_hdlr.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
-    out_hdlr.setLevel(logging.INFO)
-    log.addHandler(out_hdlr)
-    log.setLevel(logging.INFO)
-    request = confirm_email(admin_email(), zerotier_address())
-    log.info(request.text)
+    logging.debug(confirm_email(admin_email(), zerotier_address()))
 
 
 if __name__ == "__main__":
