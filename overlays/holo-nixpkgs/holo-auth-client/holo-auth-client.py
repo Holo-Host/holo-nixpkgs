@@ -4,7 +4,7 @@ import requests
 import subprocess
 import sys
 
-URL = "https://auth.holo.host/v1/confirm-email"
+HOLO_AUTH_URL = "https://auth.holo.host/v1/confirm-email"
 HOLO_CONFIG_PATH = "/media/keys/holo-config.json"
 
 
@@ -20,7 +20,7 @@ def whitelist_req(email, zerotier_address):
         'zerotier_address': zerotier_address,
         'email': email
     }
-    r = requests.post(URL, payload)
+    r = requests.post(HOLO_AUTH_URL, payload)
     return r
 
 
