@@ -15,20 +15,20 @@ def email():
     return email_data
 
 
-def whitelist_req(email, zt_address):
+def whitelist_req(email, zerotier_address):
     payload = {
-        'zt_address': zt_address,
+        'zerotier_address': zerotier_address,
         'email': email
     }
     r = requests.post(URL, payload)
     return r
 
 
-def zt_address():
+def zerotier_address():
     proc = subprocess.run(["zerotier-cli", "-j", "info"], capture_output=True)
     zt_data = json.loads(proc.stdout)
-    zt_address = zt_data['address']
-    return zt_address
+    zerotier_address = zt_data['address']
+    return zerotier_address
 
 
 def main():
@@ -39,7 +39,7 @@ def main():
     log.addHandler(out_hdlr)
     log.setLevel(logging.INFO)
     user_email = email()
-    address = zt_address()
+    address = zerotier_address()
     request = whitelist_req(user_email, address)
     log.info(request.text)
 
