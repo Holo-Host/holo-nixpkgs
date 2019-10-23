@@ -76,4 +76,3 @@ Refer to [VirtualBox manual, chapter 1, section 1.15.2](https://www.virtualbox.o
 You can set up an arm64 image using qemu:
 
 http://www.redfelineninja.org.uk/daniel/2018/02/running-an-iso-installer-image-for-arm64-aarch64-using-qemu-and-kvm/
-
