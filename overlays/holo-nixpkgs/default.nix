@@ -112,13 +112,16 @@ in
     servicelogger = callPackage ./dna-packages/servicelogger {};
   };
 
-  # 
-  # HoloPort Runtime and Hardware Support
-  # 
-
   aurora-led = callPackage ./aurora-led {};
 
   extlinux-conf-builder = callPackage ./extlinux-conf-builder {};
+
+  inherit (callPackage holo-envoy {}) holo-envoy;
+  inherit (holochainRust) holochain-cli holochain-conductor;
+
+  hclient = callPackage ./hclient {};
+
+  holofuel-app = callPackage ./holofuel-app {};
 
   holoport-hardware-test = callPackage ./holoport-hardware-test {};
 
@@ -126,15 +129,9 @@ in
     linux = linux_latest;
   };
 
-  # 
-  # Holo Packages
-  # 
-
-  # - Base Holo Configuration and Initialization
-  holo-config = callPackage ./holo-config {};
-
-  holo-keygen = callPackage ./holo-keygen {
+  holo-auth-client = callPackage ./holo-auth-client {
     stdenv = stdenvNoCC;
+    python3 = python3.withPackages (ps: [ ps.requests ]);
   };
 
   holo-init = callPackage ./holo-init {
@@ -142,23 +139,15 @@ in
     python3 = python3.withPackages (ps: [ ps.requests ps.retry ]);
   };
 
-
-  # - Hosting Holochain hApps and Routing Their HoloPort I/O
-  inherit (callPackage holo-envoy {}) holo-envoy;
-  inherit (holochainRust) holochain-cli holochain-conductor;
-
-  # - HoloFuel Persisten "Demo" Support
-  hclient = callPackage ./hclient {};
-
-  holofuel-app = callPackage ./holofuel-app {};
-
-  holofuel-demo-configure = callPackage ./holofuel-demo-configure {};
-
+  # TODO: upstream to holochain-cli
+  holo-keygen = callPackage ./holo-keygen {
+    stdenv = stdenvNoCC;
+  };
 
   holo-nixpkgs-tests = recurseIntoAttrs (import ../../tests {
     inherit pkgs;
   });
-
+ 
   holoportos = recurseIntoAttrs {
     profile = tryDefault <nixos-config> ../../profiles/holoportos;
 

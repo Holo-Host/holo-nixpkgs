@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, nodejs, npmToNix, hclient }:
+{ stdenv, fetchFromGitHub, nodejs, npmToNix }:
 
 stdenv.mkDerivation rec {
   name = "holofuel-app";
@@ -18,10 +18,7 @@ stdenv.mkDerivation rec {
     patchShebangs node_modules
   '';
 
-  buildPhase = ''
-    ln -fs ${hclient}/hclient-${hclient.version}.browser.min.js js/hClient.js
-    node node_modules/webpack/bin/webpack.js
-  '';
+  buildPhase = ":";
 
   installPhase = ''
     mkdir $out
