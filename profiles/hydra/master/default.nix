@@ -15,8 +15,6 @@ in
     {
       hostName = "localhost";
       maxJobs = config.nix.maxJobs;
-      sshKey = "/var/lib/hydra/queue-runner/.ssh/id_ed25519";
-      sshUser = "root";
       supportedFeatures = [
         "benchmark"
         "big-parallel"
@@ -54,7 +52,9 @@ in
 
   services.hydra.extraConfig = ''
     binary_cache_public_uri = https://cache.holo.host
+    evaluator_max_heap_size = ${toString (4 * 1024 * 1024 * 1024)}
     log_prefix = https://cache.holo.host/
+    max_concurrent_evals = 12
     max_output_size = 17179869184
     server_store_uri = https://cache.holo.host?local-nar-cache=/var/cache/hydra/nar-cache
     store_uri = s3://${wasabiBucket}?endpoint=${wasabiEndpoint}&log-compression=br&ls-compression=br&parallel-compression=1&secret-key=/var/lib/hydra/queue-runner/keys/cache.holo.host-1/secret&write-nar-listing=1
