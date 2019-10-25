@@ -16,6 +16,7 @@ stdenvNoCC.mkDerivation {
         --no-out-link)/bin/run-holoportos-vm
     }
 
+
     holoportos-switch() {
       sudo -E nixos-rebuild switch --fast -I nixos-config=/etc/nixos/configuration.nix
     }
