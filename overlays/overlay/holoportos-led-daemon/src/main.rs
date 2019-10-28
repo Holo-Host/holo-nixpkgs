@@ -80,7 +80,7 @@ fn main() {
         }
 
         if !is_aurora {
-            aurora_led(&["--device", &device, "--mode", "static", "--color", "green"]);
+            aurora_led(&["--device", &device, "--mode", "aurora"]);
             is_aurora = true;
         }
     }
