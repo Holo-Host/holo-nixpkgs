@@ -55,7 +55,10 @@ let
 in
 
 {
-  inherit (callPackage cargo-to-nix {}) buildRustPackage cargoToNix;
+  inherit (callPackage cargo-to-nix {})
+    buildRustPackage
+    cargoToNix;
+
   inherit (callPackage gitignore {}) gitignoreSource;
 
   inherit (callPackage hpos-state {})
@@ -64,6 +67,7 @@ in
     hpos-state-gen-web;
 
   inherit (callPackage npm-to-nix {}) npmToNix;
+
   inherit (callPackage "${nixpkgs-mozilla}/package-set.nix" {}) rustChannelOf;
 
   buildDNA = makeOverridable (callPackage ./build-dna {
