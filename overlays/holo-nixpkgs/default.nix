@@ -147,11 +147,6 @@ in
     python3 = python3.withPackages (ps: [ ps.requests ]);
   };
 
-  holo-init = callPackage ./holo-init {
-    stdenv = stdenvNoCC;
-    python3 = python3.withPackages (ps: [ ps.requests ps.retry ]);
-  };
-
   # TODO: upstream to holochain-cli
   holo-keygen = callPackage ./holo-keygen {
     stdenv = stdenvNoCC;
