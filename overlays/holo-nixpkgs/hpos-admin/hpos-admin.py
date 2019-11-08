@@ -4,15 +4,14 @@ from hashlib import sha512
 import json
 import logging
 import os
-from datetime import datetime
 
-from gevent import Greenlet, sleep, subprocess
+from gevent import Greenlet, subprocess
 from gevent.event import Event
-from gevent.subprocess import Popen, PIPE
+from gevent.subprocess import Popen
 
-log = logging.getLogger(__name__)
 
 app = Flask(__name__)
+log = logging.getLogger(__name__)
 
 
 def get_state_path():
@@ -20,8 +19,9 @@ def get_state_path():
 
 
 def get_state_data():
-    with open(get_state_path(), 'r', encoding='utf-8') as f:
+    with open(get_state_path(), 'r') as f:
         return json.loads(f.read())
+
 
 def cas_hash(data):
     dump = json.dumps(data, separators=(',', ':'), sort_keys=True)
@@ -31,74 +31,78 @@ def cas_hash(data):
 @app.route('/v1/config', methods=['GET'])
 def get_config():
     config = get_state_data()['v1']['config']
-    return jsonify(config), 200, { 'x-hpos-admin-cas': cas_hash(config) }
+    return jsonify(config), 200, {'x-hpos-admin-cas': cas_hash(config)}
 
-# APIs that require a nixos-rebuild after mutating HPOS state may trigger it using rebuild.go().
-# This is a gevent-compatible Greenlet scheduler, that ensures only one invocation runs at a time.
 
-class Runner( Greenlet ):
-    """Performs a command (which is/returns a list) on demand from multiple parties, but only once at a
+class Runner(Greenlet):
+    """
+    Performs a command (which is/returns a list) on demand from multiple parties, but only once at a
     time.  In other words, when we detect that we're supposed to start the command, we'll loop
     around and wait 'til anyone else calls (or has already called) self.go().
-
     """
-    def __init__( self, command, *args, **kwds ):
-        self._event		= Event()
-        self._command		= command # callable or list
-        self._done		= False
-        self.trigger		= 0
-        self.counter		= 0
-        super().__init__( *args, **kwds )
+
+    def __init__(self, command, *args, **kwds):
+        self._event = Event()
+        self._command = command  # callable or list
+        self._done = False
+        self.trigger = 0
+        self.counter = 0
+        super().__init__(*args, **kwds)
         log.info(f"{self} Starting")
 
-    def __str__( self ):
+    def __str__(self):
         return f"Runner({self.command})"
 
-    def __del__( self ):
-        self.done		= True
+    def __del__(self):
+        self.done = True
         self.join()
 
     @property
-    def command( self ):
+    def command(self):
         if hasattr(self._command, '__call__'):
             return self._command(self)
         return self._command
 
     @property
-    def done( self ):
+    def done(self):
         return self._done
+
     @done.setter
-    def done( self, value ):
-        self._done		= bool( value )
+    def done(self, value):
+        self._done = bool(value)
         if self._done:
             self.go()
 
-    def go( self ):
-        self.trigger	       += 1
+    def go(self):
+        self.trigger += 1
         self._event.set()
 
-    def _run( self ):
+    def _run(self):
         """Await Event.set() via self.go(), and loop 'til self.done is set"""
         log.info(f"{self}: Ready to go")
         try:
             while self._event.wait() and not self.done:
-                self.counter   += 1
-                log.info(f"{self}: Run {self.counter}, w/ {self.trigger} triggers")
+                self.counter += 1
+                log.info(
+                    f"{self}: Run {self.counter}, w/ {self.trigger} triggers")
                 self._event.clear()
                 # Calls to self.go() *after* this will point will cause a further execution of command!
                 try:
-                    status 	= Popen( self.command )
+                    status = Popen(self.command)
                     status.wait()
                     (log.warning if status.returncode else log.info)(
-                        f"{self}: Run {self.counter} Exit: {status.returncode}" )
+                        f"{self}: Run {self.counter} Exit: {status.returncode}")
                 except Exception as exc:
                     log.warning(
-                        f"{self}: Run {self.counter} Exception: {exc}" )
+                        f"{self}: Run {self.counter} Exception: {exc}")
         finally:
-            log.info(f"{self}: Finished after {self.counter} runs, {self.trigger} triggers")
+            log.info(
+                f"{self}: Finished after {self.counter} runs, {self.trigger} triggers")
 
-rebuild = Runner( ['sudo', 'nixos-rebuild', '--upgrade', 'switch'] )
+
+rebuild = Runner(['sudo', 'nixos-rebuild', '--upgrade', 'switch'])
 rebuild.start()
+
 
 @app.route('/v1/config', methods=['PUT'])
 def put_config():
@@ -115,14 +119,9 @@ def put_config():
 
 
 def zerotier_info():
-    proc = Popen(
-        [ 'sudo', 'zerotier-cli', '-j', 'info' ],
-        stdout=PIPE, stderr=PIPE
-    )
-    stdout, stderr = proc.communicate()
-    assert not proc.returncode, \
-        f"Failed to obtain ZeroTier info: {stderr.decode('utf-8')}"
-    return json.loads(stdout.decode('utf-8'))
+    proc = subprocess.run(['sudo', 'zerotier-cli', '-j', 'info'],
+                          capture_output=True, check=True)
+    return json.loads(proc.stdout)
 
 
 @app.route('/v1/status', methods=['GET'])
@@ -131,6 +130,7 @@ def status():
         'zerotier': zerotier_info()
     })
 
+
 @app.route('/v1/upgrade', methods=['POST'])
 def upgrade():
     rebuild.go()
@@ -138,6 +138,5 @@ def upgrade():
 
 
 if __name__ == '__main__':
-    logging.basicConfig( level=logging.WARNING )
     from gevent.pywsgi import WSGIServer
     WSGIServer(('::1', 5000), app).serve_forever()
