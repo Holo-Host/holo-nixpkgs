@@ -70,3 +70,31 @@ https://hydra.holo.host/job/holo-nixpkgs/master/holoportos.targets.virtualbox.x8
 Refer to [VirtualBox manual, chapter 1, section 1.15.2](https://www.virtualbox.org/manual/ch01.html#ovf-import-appliance).
 
 [nix]: https://nixos.org/nix/
+
+
+## Demo: `holoportos-shell demo`
+
+Generate and run a demo node via qemu.
+
+```
+$ nix-shell
+$ holoportos-shell demo
+```
+
+You should see `hpos-admin.service` running:
+
+```
+$ systemctl status hpos-admin.service
+$ curl -6 http://[::1]:5000/v1/config
+
+$ # missing /tmp/hpos-state.json; Generate one:
+
+$ hpos-state-gen-cli --email a@b.ca --password password > /tmp/hpos-state.json
+https://hcscie3d7cj7c6ty8cgwii7wnemisyepiigvxckzqyoo36bsecfjq8ycp6k3ziz.holohost.net/
+
+$ # now, it should obtain the current config:
+
+$ curl -6 http://[::1]:5000/v1/config
+{"admin":{"email":"a@b.ca","public_key":"zcb2H8VxCbJ1anBGJ/XUNieb8hmzV5G28RavjmDU7HE"}}
+
+```
