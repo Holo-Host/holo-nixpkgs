@@ -31,15 +31,14 @@ def get_state_data():
         return json.loads(f.read())
 
 
+@app.route('/v1/config', methods=['GET'])
+def get_config():
+    return jsonify(get_state_data()['v1']['config'])
+
+
 def cas_hash(data):
     dump = json.dumps(data, separators=(',', ':'), sort_keys=True)
     return b64encode(sha512(dump.encode()).digest())
-
-
-@app.route('/v1/config', methods=['GET'])
-def get_config():
-    config = get_state_data()['v1']['config']
-    return jsonify(config), 200, {'x-hpos-admin-cas': cas_hash(config)}
 
 
 @app.route('/v1/config', methods=['PUT'])
