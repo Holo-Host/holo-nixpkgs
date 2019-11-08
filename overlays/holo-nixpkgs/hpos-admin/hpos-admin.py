@@ -4,7 +4,7 @@ from hashlib import sha512
 import json
 import logging
 import os
-import subprocess
+from gevent import subprocess
 from datetime import datetime
 
 log = logging.getLogger(__name__)
@@ -51,9 +51,14 @@ def put_config():
 
 
 def zerotier_info():
-    proc = subprocess.run(['sudo', 'zerotier-cli', '-j',
-                           'info'], capture_output=True)
-    return json.loads(proc.stdout)
+    proc = subprocess.Popen(
+        [ 'sudo', 'zerotier-cli', '-j', 'info' ],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    stdout, stderr = proc.communicate()
+    assert not proc.returncode, \
+        f"Failed to obtain ZeroTier info: {stderr}"
+    return json.loads(stdout)
 
 
 @app.route('/v1/status', methods=['GET'])
