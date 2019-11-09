@@ -37,10 +37,10 @@ def cas_hash(data):
     dump = json.dumps(data, separators=(',', ':'), sort_keys=True)
     return b64encode(sha512(dump.encode()).digest()).decode()
 
+
 @app.route('/v1/config', methods=['GET'])
 def get_config():
-    state = get_state_data()['v1']['config']
-    return jsonify(state), 200, { 'x-hpos-admin-cas': cas_hash(state) }
+    return jsonify(get_state_data()['v1']['config'])
 
 
 def replace_file_contents(path, data):
