@@ -1,6 +1,6 @@
 from base64 import b64encode
 from flask import Flask, jsonify, request
-from gevent import subprocess, pywsgi, queue, spawn
+from gevent import subprocess, pywsgi, queue, spawn, lock
 from hashlib import sha512
 from tempfile import mkstemp
 import json
@@ -10,6 +10,7 @@ import os
 app = Flask(__name__)
 log = logging.getLogger(__name__)
 rebuild_queue = queue.PriorityQueue()
+lock = lock.Semaphore(1)
 
 
 def rebuild_worker():
@@ -32,14 +33,14 @@ def get_state_data():
         return json.loads(f.read())
 
 
-@app.route('/v1/config', methods=['GET'])
-def get_config():
-    return jsonify(get_state_data()['v1']['config'])
-
-
 def cas_hash(data):
     dump = json.dumps(data, separators=(',', ':'), sort_keys=True)
     return b64encode(sha512(dump.encode()).digest()).decode()
+
+@app.route('/v1/config', methods=['GET'])
+def get_config():
+    state = get_state_data()['v1']['config']
+    return jsonify(state), 200, { 'x-hpos-admin-cas': cas_hash(state) }
 
 
 def replace_file_contents(path, data):
@@ -51,14 +52,15 @@ def replace_file_contents(path, data):
 
 @app.route('/v1/config', methods=['PUT'])
 def put_config():
-    state = get_state_data()
-    if request.headers['x-hpos-admin-cas'] == cas_hash(state['v1']['config']):
+    with lock: # Ensure no race condition in checking state CAS hash, to replacing state
+        state = get_state_data()
+        if request.headers.get('x-hpos-admin-cas') != cas_hash(state['v1']['config']):
+            return '', 409
         state['v1']['config'] = request.get_json(force=True)
         replace_file_contents(get_state_path(), json.dumps(state, indent=2))
-        rebuild(priority=5, args=[])
-        return '', 200
-    else:
-        return '', 409
+    rebuild(priority=5, args=[])
+    return '', 200
+
 
 
 def zerotier_info():
