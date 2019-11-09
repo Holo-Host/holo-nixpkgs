@@ -2,6 +2,7 @@ from base64 import b64encode
 from flask import Flask, jsonify, request
 from gevent import subprocess, pywsgi, queue, spawn
 from hashlib import sha512
+from tempfile import mkstemp
 import json
 import logging
 import os
@@ -38,7 +39,14 @@ def get_config():
 
 def cas_hash(data):
     dump = json.dumps(data, separators=(',', ':'), sort_keys=True)
-    return b64encode(sha512(dump.encode()).digest())
+    return b64encode(sha512(dump.encode()).digest()).decode()
+
+
+def replace_file_contents(path, data):
+    fd, tmp_path = mkstemp(dir=os.path.dirname(path))
+    with open(fd, 'w') as f:
+        f.write(data)
+    os.rename(tmp_path, path)
 
 
 @app.route('/v1/config', methods=['PUT'])
@@ -46,9 +54,7 @@ def put_config():
     state = get_state_data()
     if request.headers['x-hpos-admin-cas'] == cas_hash(state['v1']['config']):
         state['v1']['config'] = request.get_json(force=True)
-        with open(get_state_path() + '.tmp', 'w', encoding='utf-8') as f:
-            f.write(json.dumps(state, indent=2))
-            os.rename(f.name, get_state_path())
+        replace_file_contents(get_state_path(), json.dumps(state, indent=2))
         rebuild(priority=5, args=[])
         return '', 200
     else:
