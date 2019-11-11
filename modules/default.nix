@@ -5,6 +5,7 @@
 
   imports = [
     ./boot/generic-extlinux-compatible.nix
+    ./services/dnscrypt-proxy2.nix
     ./services/holo-envoy.nix
     ./services/hpos-admin.nix
     ./services/holochain-conductor.nix

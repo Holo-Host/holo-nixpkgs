@@ -131,6 +131,8 @@ in
 
   aurora-led = callPackage ./aurora-led {};
 
+  dnscrypt-proxy2 = callPackage ./dnscrypt-proxy2 {};
+
   extlinux-conf-builder = callPackage ./extlinux-conf-builder {};
 
   inherit (callPackage holo-envoy {}) holo-envoy;
