@@ -8,17 +8,18 @@ with pkgs;
     ../binary-cache.nix
     ../self-aware.nix
   ];
-  services.mingetty.autologinUser = "root";
-  security.sudo.wheelNeedsPassword = false;
-
 
   environment.systemPackages = [ pkgs.holo-router-gateway ];
 
   networking.firewall.allowedTCPPorts = [ 443 ];
 
+  networking.hostName = "holoportos";
+
+  security.sudo.wheelNeedsPassword = false;
+
   services.holo-router-gateway.enable = true;
 
-  networking.hostName = "holoportos";
+  services.mingetty.autologinUser = "root";
 
   system.holoportos.network = "test";
 
