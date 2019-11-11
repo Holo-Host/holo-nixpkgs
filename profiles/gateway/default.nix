@@ -7,6 +7,7 @@ with pkgs;
     ../.
     ../binary-cache.nix
     ../self-aware.nix
+    ../zerotier.nix
   ];
 
   environment.systemPackages = [ pkgs.holo-router-gateway ];

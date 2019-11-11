@@ -11,6 +11,7 @@ in
     ../.
     ../binary-cache.nix
     ../self-aware.nix
+    ../zerotier.nix
   ];
 
   boot.loader.grub.splashImage = ./splash.png;
@@ -23,6 +24,8 @@ in
   environment.systemPackages = [
     (holoport-hardware-test.override { inherit target; })
   ];
+
+  networking.firewall.allowedTCPPorts = [ 443 ];
 
   networking.hostName = lib.mkOverride 1100 "holoportos";
 
@@ -53,13 +56,8 @@ in
       enableACME = true;
       onlySSL = true;
       locations."/".root = pkgs.singletonDir "${./index.html}";
-      serverName = "nonexistent.holohost.net";
+      serverName = "localhost";
     };
-  };
-
-  services.zerotierone = {
-    enable = true;
-    joinNetworks = [ "93afae5963c547f1" ];
   };
 
   system.holoportos.autoUpgrade = {
