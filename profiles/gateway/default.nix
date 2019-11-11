@@ -13,7 +13,7 @@ with pkgs;
 
   networking.firewall.allowedTCPPorts = [ 443 ];
 
-  networking.hostName = "holoportos";
+  networking.hostName = lib.mkForce "holoportos";
 
   security.sudo.wheelNeedsPassword = false;
 
