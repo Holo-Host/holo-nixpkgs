@@ -10,7 +10,7 @@ import os
 app = Flask(__name__)
 log = logging.getLogger(__name__)
 rebuild_queue = queue.PriorityQueue()
-lock = lock.Semaphore(1)
+state_lock = lock.Semaphore()
 
 
 def rebuild_worker():
@@ -52,15 +52,15 @@ def replace_file_contents(path, data):
 
 @app.route('/v1/config', methods=['PUT'])
 def put_config():
-    with lock: # Ensure no race condition in checking state CAS hash, to replacing state
+    with state_lock:
         state = get_state_data()
-        if request.headers.get('x-hpos-admin-cas') != cas_hash(state['v1']['config']):
+        if request.headers.get('x-hpos-admin-cas') == cas_hash(state['v1']['config']):
+            state['v1']['config'] = request.get_json(force=True)
+            replace_file_contents(get_state_path(), json.dumps(state, indent=2))
+            rebuild(priority=5, args=[])
+            return '', 200
+        else:
             return '', 409
-        state['v1']['config'] = request.get_json(force=True)
-        replace_file_contents(get_state_path(), json.dumps(state, indent=2))
-    rebuild(priority=5, args=[])
-    return '', 200
-
 
 
 def zerotier_info():
