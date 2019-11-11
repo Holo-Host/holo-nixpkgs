@@ -88,8 +88,6 @@ in
     };
   };
 
-  system.holoportos.network = "test";
-
   users.users.root.openssh.authorizedKeys.keys = lib.mkForce [
     # Matthew Brisebois
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGakK6G+lvSpg3NKfuWNopUlI/Z2keLGBH09jeAVbslO"

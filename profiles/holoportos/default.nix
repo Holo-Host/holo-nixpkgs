@@ -47,13 +47,19 @@ in
 
   services.openssh.enable = true;
 
+  services.nginx = {
+    enable = true;
+    virtualHosts.default = {
+      enableACME = true;
+      onlySSL = true;
+      locations."/".root = pkgs.singletonDir "${./index.html}";
+      serverName = "nonexistent.holohost.net";
+    };
+  };
+
   services.zerotierone = {
     enable = true;
-    joinNetworks = {
-      dev = [ "8286ac0e47fdb6b5" ];
-      live = [];
-      test = [ "93afae5963c547f1" ];
-    }."${config.system.holoportos.network}";
+    joinNetworks = [ "93afae5963c547f1" ];
   };
 
   system.holoportos.autoUpgrade = {

@@ -5,7 +5,7 @@ with lib;
 let
   cfg = config.system.holoportos.install;
 
-  inherit (config.system.holoportos) network target;
+  inherit (config.system.holoportos) target;
 in
 
 {
@@ -33,7 +33,7 @@ in
       default = pkgs.holoportos-install {
         auroraLedDevice = config.system.holoportos.led-daemon.device;
 	inherit (cfg) channelUrl;
-	inherit network target;
+	inherit target;
       };
 
       type = types.package;
