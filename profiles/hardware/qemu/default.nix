@@ -21,5 +21,6 @@ in
     diskSize = 2048;
     graphics = false;
     memorySize = 2048;
+    useBootLoader = false;
   };
 }
