@@ -177,6 +177,12 @@ in
     python3 = python3.withPackages (ps: [ ps.flask ps.gevent ]);
   };
 
+  hpos-init = callPackage ./hpos-init {
+    stdenv = stdenvNoCC;
+    python3 = python3.withPackages (ps: [ ps.magic-wormhole ]);
+  };
+
+
   holoportos-install = callPackage ./holoportos-install {};
 
   holoportos-led-daemon = callPackage ./holoportos-led-daemon {};
