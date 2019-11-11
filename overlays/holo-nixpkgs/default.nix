@@ -146,6 +146,8 @@ in
     linux = linux_latest;
   };
 
+  holo-router-gateway = callPackage ./holo-router-gateway {};
+
   holo-auth-client = callPackage ./holo-auth-client {
     stdenv = stdenvNoCC;
     python3 = python3.withPackages (ps: [ ps.requests ]);
@@ -159,7 +161,7 @@ in
   holo-nixpkgs-tests = recurseIntoAttrs (import ../../tests {
     inherit pkgs;
   });
- 
+
   holoportos = recurseIntoAttrs {
     profile = tryDefault <nixos-config> ../../profiles/holoportos;
 
