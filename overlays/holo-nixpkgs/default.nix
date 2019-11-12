@@ -21,8 +21,8 @@ let
   holo-router = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "holo-router";
-    rev = "7ff48fb73cff1a093898ec783e54d049b3990a9c";
-    sha256 = "1mk566ns2nxs20bj6d77mb85l0w8y80prlnxvxijsqpxng65b0b3";
+    rev = "20a1d37569260185d20a30e4618f311ad2db8cd5";
+    sha256 = "114iqfp0976dkccrpbrlqfn9y7dmghbswrn4ai282fyq0j8dfdiy";
   };
 
   hpos-state = fetchFromGitHub {
