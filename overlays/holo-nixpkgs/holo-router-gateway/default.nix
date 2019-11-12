@@ -4,8 +4,8 @@
     src = fetchFromGitHub {
       owner = "Holo-Host";
       repo = "holo-router";
-      rev = "24e41c5c51c22fa61abba35c456ea781f4aba7de";
-      sha256 = "08vzl580r75bzsw43g273k72i09facg843c6ar9ncx26dmj9d95w";
+      rev = "061ffd852903c11c27908630f42fb2eba70b0755";
+      sha256 = "00wb10hs8h3k0ivbnk1vixhh9mvhqlmwcxqz7xjswhghh0m8piah";
     };
   in
 
