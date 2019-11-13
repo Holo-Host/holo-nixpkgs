@@ -9,6 +9,7 @@
     ./services/holo-envoy.nix
     ./services/hpos-admin.nix
     ./services/holochain-conductor.nix
+    ./services/holo-router-agent.nix
     ./services/holo-router-gateway.nix
     ./system/holoportos.nix
     ./system/holoportos/auto-upgrade.nix
