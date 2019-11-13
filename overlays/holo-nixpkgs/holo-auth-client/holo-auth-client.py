@@ -1,23 +1,28 @@
 import json
 import logging
+import os
 import requests
 import subprocess
 import sys
 
-HOLO_AUTH_URL = "https://auth.holo.host/v1/confirm-email"
-HOLO_CONFIG_PATH = "/media/keys/holo-config.json"
+HOLO_AUTH_URL = "https://authorizer.holohost.net/v1/auth"
+
+
+def state_path():
+    return os.getenv('HPOS_STATE_PATH')
 
 
 def admin_email():
-    with open(HOLO_CONFIG_PATH, 'r') as f:
+    with open(state_path(), 'r') as f:
         config = json.load(f)
-    return config['v1']['admin']['email']
+    return config['v1']['config']['admin']['email']
 
 
 def confirm_email(email, zerotier_address):
-    return requests.post(HOLO_AUTH_URL, {
+    return requests.post(HOLO_AUTH_URL, json={
+        'addr': zerotier_address,
         'email': email,
-        'zerotier_address': zerotier_address
+        'pubkey': 'public_key'
     })
 
 
