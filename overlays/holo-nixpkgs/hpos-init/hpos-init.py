@@ -3,6 +3,8 @@ from twisted.internet import reactor
 from twisted.internet.defer import inlineCallbacks
 import json
 import os
+import subprocess
+import time
 import wormhole
 
 WORMHOLE_ACK = wormhole.util.dict_to_bytes({"answer": {"message_ack": "ok"}})
@@ -22,8 +24,10 @@ def wormhole_reverse_send():
     w = wormhole.create(WORMHOLE_APPID, WORMHOLE_RELAY_URL, reactor)
     w.allocate_code()
 
+    time.sleep(8)
     code = yield w.get_code()
-    print(REVERSE_SEND_INSTRUCTIONS.format(code))
+
+    subprocess.run(['wall', "wormhole send --code {} --text - < hpos-state.json".format(code)])
 
     message = yield w.get_message()
     message = json.loads(message)['offer']['message']

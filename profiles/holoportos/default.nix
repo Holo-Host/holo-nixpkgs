@@ -22,6 +22,8 @@ in
   environment.noXlibs = true;
 
   environment.systemPackages = [
+    holochain-cli
+    holo-router-agent
     (holoport-hardware-test.override { inherit target; })
   ];
 
@@ -47,8 +49,11 @@ in
   };
 
   services.holo-router-agent.enable = true;
+
+  services.holo-auth-client.enable = true;
  
   services.mingetty.autologinUser = "root";
+
 
   services.openssh.enable = true;
 
