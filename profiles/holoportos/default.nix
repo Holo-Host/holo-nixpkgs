@@ -37,8 +37,6 @@ in
 
   security.sudo.wheelNeedsPassword = false;
 
-  services.autofs.enable = true;
-
   services.avahi = {
     enable = true;
 
