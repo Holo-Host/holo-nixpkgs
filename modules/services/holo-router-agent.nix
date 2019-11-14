@@ -24,6 +24,7 @@ in
         ExecStart = "${pkgs.holo-router-agent}/bin/holo-router-agent";
         Type = "oneshot";
         User = "root";
+        WorkingDirectory = "/var/lib/holochain-conductor";
       };
     };
   };
