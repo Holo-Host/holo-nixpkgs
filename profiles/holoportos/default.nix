@@ -48,12 +48,13 @@ in
     };
   };
 
+  services.devmon.enable = true;
+
   services.holo-router-agent.enable = true;
 
   services.holo-auth-client.enable = true;
  
   services.mingetty.autologinUser = "root";
-
 
   services.openssh.enable = true;
 
