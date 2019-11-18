@@ -25,6 +25,7 @@ in
     holochain-cli
     holo-router-agent
     (holoport-hardware-test.override { inherit target; })
+    pkgs.udevil
   ];
 
   networking.firewall.allowedTCPPorts = [ 443 ];
