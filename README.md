@@ -70,3 +70,10 @@ https://hydra.holo.host/job/holo-nixpkgs/master/holoportos.targets.virtualbox.x8
 Refer to [VirtualBox manual, chapter 1, section 1.15.2](https://www.virtualbox.org/manual/ch01.html#ovf-import-appliance).
 
 [nix]: https://nixos.org/nix/
+
+#### QEMU aarch64
+
+You can set up an arm64 image using qemu; see (aarch64-qemu.sh).  Derived from:
+
+http://www.redfelineninja.org.uk/daniel/2018/02/running-an-iso-installer-image-for-arm64-aarch64-using-qemu-and-kvm/
+
