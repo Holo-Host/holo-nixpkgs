@@ -1,6 +1,6 @@
 {
   nix.binaryCaches = [
-    "https://cache.holo.host"
+    "https://cache.holo.host/"
   ];
 
   nix.binaryCachePublicKeys = [
