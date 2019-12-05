@@ -11,7 +11,5 @@ let
 in
 
 {
-  holo-envoy = callPackage ./holo-envoy {};
-
   hpos-admin = callPackage ./hpos-admin {};
 }
