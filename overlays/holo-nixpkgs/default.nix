@@ -183,8 +183,6 @@ in
     nodejs = nodejs-12_x;
   };
 
-  holofuel-demo-configure = callPackage ./holofuel-demo-configure {};
-
   holoport-hardware-test = callPackage ./holoport-hardware-test {};
 
   holoport-nano-dtb = callPackage ./holoport-nano-dtb {

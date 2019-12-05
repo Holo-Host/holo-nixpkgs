@@ -36,7 +36,6 @@ in
   environment.systemPackages = [
     pkgs.emacs26-nox
     pkgs.hpos-state-gen-cli
-    pkgs.holofuel-demo-configure # not needed, except on one "Holo, Ltd" node?
   ];
 
   networking.firewall.allowedTCPPorts = [ 1111 2222 3333 8800 8880 8888 48080 ];
