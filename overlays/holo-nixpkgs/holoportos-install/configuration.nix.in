@@ -1,7 +1,7 @@
 {
   imports = [
     @profile@
-       <holo-nixpkgs/profiles/holoportos>
-       ./hardware-configuration.nix
-       ];
-       }
+    <holo-nixpkgs/profiles/holoportos>
+    ./hardware-configuration.nix
+  ];
+}
