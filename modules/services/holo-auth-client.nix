@@ -35,6 +35,8 @@ in
           zerotier-cli -j listnetworks | jq -r .[0].status
         }
 
+        sleep 10
+
         echo >&2 "Zerotier status, start: $(zerotier_status)"
 
         while [ "$(zerotier_status)" = "REQUESTING_CONFIGURATION" ]; do
