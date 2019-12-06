@@ -28,7 +28,9 @@ in
     ];
 
     systemd.services.holochain-conductor = {
-      after = [ "network.target" ];
+      # Don't start, until keystore derived, Holo auth'ed and Zerotier online
+      requires = [ "holo-auth-client.service" ];
+      after = [ "holo-auth-client.service" ];
       wantedBy = [ "multi-user.target" ];
 
       path = with pkgs; [
