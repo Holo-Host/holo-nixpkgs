@@ -10,7 +10,6 @@ let
     holo-hosting-app
     holofuel
     servicelogger
-    happ-example
   ];
 
   dnaConfig = drv: {
@@ -34,8 +33,6 @@ in
   imports = [ ../. ];
 
   environment.systemPackages = [
-    pkgs.emacs26-nox
-    pkgs.hpos-state-gen-cli
   ];
 
   networking.firewall.allowedTCPPorts = [ 1111 2222 3333 8800 8880 8888 48080 ];
