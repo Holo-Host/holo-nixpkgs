@@ -194,6 +194,8 @@ in
     python3 = python3.withPackages (ps: [ ps.requests ]);
   };
 
+  wrangler = callPackage ./wrangler {};
+
   holo-nixpkgs-tests = recurseIntoAttrs (
     import ../../tests {
       inherit pkgs;
