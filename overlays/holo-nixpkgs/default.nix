@@ -214,8 +214,6 @@ in
 
   holoportos-install = callPackage ./holoportos-install {};
 
-  holoportos-led-daemon = callPackage ./holoportos-led-daemon {};
-
   hpos-admin = callPackage ./hpos-admin {
     stdenv = stdenvNoCC;
     python3 = python3.withPackages (ps: [ ps.flask ps.gevent ]);
@@ -230,6 +228,8 @@ in
     stdenv = stdenvNoCC;
     python3 = python3.withPackages (ps: [ ps.magic-wormhole ]);
   };
+
+  hpos-led-daemon = callPackage ./hpos-led-daemon {};
 
   hpstatus = fetchFromGitHub {
     owner = "Holo-Host";

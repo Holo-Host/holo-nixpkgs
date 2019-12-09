@@ -8,7 +8,7 @@ in
 
 {
   options.system.holoportos.led-daemon = {
-    enable = mkEnableOption "HoloPort LED daemon";
+    enable = mkEnableOption "HPOS LED daemon";
 
     device = mkOption {
       type = types.string;
@@ -19,23 +19,23 @@ in
     };
 
     package = mkOption {
-      default = pkgs.holoportos-led-daemon;
+      default = pkgs.hpos-led-daemon;
       type = types.package;
     };
   };
 
   config = mkIf cfg.enable {
-    systemd.services.holoportos-led-daemon = {
+    systemd.services.hpos-led-daemon = {
       enable = true;
       wantedBy = [ "default.target" ];
 
       serviceConfig = {
-        ExecStart = "${cfg.package}/bin/holoportos-led-daemon --device ${cfg.device} --operstate ${cfg.operstate}";
-        User = "holoportos-led-daemon";
+        ExecStart = "${cfg.package}/bin/hpos-led-daemon --device ${cfg.device} --operstate ${cfg.operstate}";
+        User = "hpos-led-daemon";
       };
     };
 
-    systemd.services.holoportos-led-daemon-down = {
+    systemd.services.hpos-led-daemon-down = {
       restartIfChanged = false;
       unitConfig.X-StopOnRemoval = false;
 
@@ -50,7 +50,7 @@ in
       };
     };
 
-    users.users.holoportos-led-daemon = {
+    users.users.hpos-led-daemon = {
       extraGroups = [ "dialout" ];
     };
   };
