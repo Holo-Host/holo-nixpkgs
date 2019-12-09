@@ -116,6 +116,7 @@ in
     callPackage ./build-dna {
       inherit (llvmPackages_8) lld;
       inherit (rust.packages.nightly) rustPlatform;
+      nodejs = nodejs-12_x;
     }
   );
 
@@ -168,6 +169,7 @@ in
   );
 
   dnaPackages = recurseIntoAttrs {
+    happ-example = callPackage ./dna-packages/happ-example {};
     happ-store = callPackage ./dna-packages/happ-store {};
     holo-hosting-app = callPackage ./dna-packages/holo-hosting-app {};
     holofuel = callPackage ./dna-packages/holofuel {};

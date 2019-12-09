@@ -42,7 +42,7 @@ let
   );
 
   this = runCommand name {} ''
-    cp -Lr ${src} $out
+    cp -r ${src} $out
     chmod +w $out
     ln -s ${holochain-rust} $out/holochain-rust
   '';
@@ -50,7 +50,7 @@ let
   testDir = "${this}/test";
 
   fetchZomeDeps = name: ''
-    ln -s ${cargoToNix "${this}/zomes/${name}/code"} vendor
+    ln -s ${cargoToNix "${this}"} vendor # Expect Cargo.lock in root
   '';
 
   subDirNames = dir: attrNames
@@ -67,6 +67,7 @@ rustPlatform.buildRustPackage (
     nativeBuildInputs = nativeBuildInputs ++ [
       holochainRust.holochain-cli
       holochainRust.holochain-conductor
+      holochainRust.sim2h-server
       jq
       lld
       nodejs
@@ -83,9 +84,9 @@ rustPlatform.buildRustPackage (
   } // optionalAttrs (shell == false) {
     src = this;
 
-    preConfigure = concatStrings (map fetchZomeDeps (subDirNames "${this}/zomes"));
+    preConfigure = fetchZomeDeps "${this}"; # concatStrings (map fetchZomeDeps (subDirNames "${this}/zomes"));
 
-    RUSTFLAGS = "-C linker=lld";
+    #RUSTFLAGS = "-C linker=lld"; # Not required for Cargo.toml in root?
 
     buildPhase = ''
       runHook preBuild
@@ -98,8 +99,11 @@ rustPlatform.buildRustPackage (
     checkPhase = ''
       runHook preCheck
     '' + optionalString (pathExists (stripContext testDir)) ''
-      cp -r ${npmToNix { src = testDir; }} test/node_modules
-      hc test
+      cargo test
+      # TODO: When we are able to again perform DNA end-to-end tests, do so here, eg.:
+      #cp -r ${npmToNix { src = testDir; }} test/node_modules
+      #sim2h_server -p 9000 &
+      #hc test | ( node test/node_modules/faucet/bin/cmd.js || cat )
     '' + ''
       runHook postCheck
     '';

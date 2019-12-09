@@ -1,13 +1,12 @@
-{ runCommand, fetchurl }:
+{ callPackage, fetchFromGitHub }:
 
 let
-  src = fetchurl {
-    url = "https://github.com/Holo-Host/holo-hosting-app/releases/download/v0.4.1-alpha1/holo-hosting-app.dna.json";
-    name = "holo-hosting-app.dna.json";
-    sha256 = "0yxky5g6lb84g4zffqsmahdffz1drq9dqywsvgbzqxilwhsgm2cj";
+  src = fetchFromGitHub {
+    owner = "Holo-Host";
+    repo = "holo-hosting-app";
+    rev = "bbda39876d5bc206712fcbe27fdb5e405006e539";
+    sha256 = "0wf7133cam8s3m6hww5fk29343z2a0xf2qv764radx5pcr02lhs0";
   };
 in
 
-runCommand "holo-hosting-app" {} ''
-  install -D ${src} $out/${src.name}
-''
+(callPackage src {}).holo-hosting-app
