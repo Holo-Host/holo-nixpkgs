@@ -182,7 +182,12 @@ in
   extlinux-conf-builder = callPackage ./extlinux-conf-builder {};
 
   inherit (callPackage holo-envoy {}) holo-envoy;
-  inherit (holochainRust) holochain-cli holochain-conductor sim2h-server;
+
+  inherit (callPackage holochain-rust {})
+    holochain-cli
+    holochain-conductor
+    sim2h-server
+    ;
 
   hclient = callPackage ./hclient {};
 
