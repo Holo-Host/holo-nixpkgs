@@ -46,8 +46,6 @@ let
     sha256 = "1bjkl623r0y2ybibnxma2j1mp8rhr3zwav96f9jq34f2vqyw0vj8";
   };
 
-  holochainRust = callPackage holochain-rust {};
-
   hp-admin = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "hp-admin";
