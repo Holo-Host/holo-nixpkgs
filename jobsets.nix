@@ -36,7 +36,6 @@ let
 
   jobsets = lib.mapAttrs pullRequestToJobset pullRequests // {
     develop = branchJobset "develop";
-    staging = branchJobset "staging";
     master = branchJobset "master";
   };
 in

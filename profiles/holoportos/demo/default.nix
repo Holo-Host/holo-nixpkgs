@@ -32,8 +32,7 @@ in
 {
   imports = [ ../. ];
 
-  environment.systemPackages = [
-  ];
+  environment.systemPackages = [];
 
   networking.firewall.allowedTCPPorts = [ 1111 2222 3333 8800 8880 8888 48080 ];
 

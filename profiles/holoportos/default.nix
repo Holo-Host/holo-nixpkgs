@@ -61,13 +61,60 @@ in
 
   services.nginx = {
     enable = true;
+
     virtualHosts.default = {
+      serverName = "localhost";
       enableACME = true;
       onlySSL = true;
-      locations."/".root = pkgs.singletonDir "${./index.html}";
-      locations."/favicon.ico".root = pkgs.singletonDir "${./favicon.ico}";
-      serverName = "localhost";
+      locations = {
+        "/" = {
+          return = "302 /admin/";
+        };
+
+        "/admin/" = {
+          alias = "${pkgs.hp-admin-ui}/";
+          extraConfig = ''
+            limit_req zone=zone1 burst=30;
+          '';
+        };
+
+        "/api/v1/" = {
+          proxyPass = "http://unix:/run/hpos-admin.sock:/";
+          extraConfig = ''
+            auth_request /auth/;
+          '';
+        };
+
+        "/api/v1/ws/" = {
+          proxyPass = "http://localhost:42233";
+          proxyWebsockets = true;
+        };
+
+        "/auth/" = {
+          proxyPass = "http://localhost:2884";
+          extraConfig = ''
+            internal;
+            proxy_set_header X-Original-URI $request_uri;
+          '';
+        };
+
+        "/holofuel/" = {
+          alias = "${pkgs.holofuel-ui}/";
+          extraConfig = ''
+            limit_req zone=zone1 burst=30;
+          '';
+        };
+
+        "/v1/hosting/" = {
+          proxyPass = "http://127.0.0.1:4656";
+          proxyWebsockets = true;
+        };
+      };
     };
+
+    appendHttpConfig = ''
+      limit_req_zone $binary_remote_addr zone=zone1:1m rate=2r/s;
+    '';
   };
 
   system.holoportos.autoUpgrade = {
