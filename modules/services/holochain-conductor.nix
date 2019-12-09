@@ -29,7 +29,6 @@ in
 
     systemd.services.holochain-conductor = {
       # Don't start, until keystore derived, Holo auth'ed and Zerotier online
-      requires = [ "holo-auth-client.service" ];
       after = [ "holo-auth-client.service" ];
       wantedBy = [ "multi-user.target" ];
 
