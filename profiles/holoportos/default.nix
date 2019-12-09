@@ -53,6 +53,8 @@ in
 
   services.holo-router-agent.enable = true;
 
+  services.hp-admin-crypto-server.enable = true;
+
   services.hpos-admin.enable = true;
 
   services.mingetty.autologinUser = "root";

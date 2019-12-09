@@ -55,6 +55,13 @@ let
     sha256 = "1abna46da9av059kfy10ls0fa6ph8vhh75rh8cv3mvi96m2n06zd";
   };
 
+  hp-admin-crypto = fetchFromGitHub {
+    owner = "Holo-Host";
+    repo = "hp-admin-crypto";
+    rev = "1e9d8fad9382343153497ff2a673f62357dfa066";
+    sha256 = "0ssxra8i7kx7bp6mjs6rmi24qj3jf6zrqp4kz5x0sbqxah23742p";
+  };
+
   hpos-state = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "hpos-state";
@@ -94,6 +101,8 @@ in
     hp-admin-ui
     holofuel-ui
     ;
+
+  inherit (callPackage hp-admin-crypto {}) hp-admin-crypto-server;
 
   inherit (callPackage hpos-state {})
     hpos-state-derive-keystore
