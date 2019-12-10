@@ -98,13 +98,16 @@ rustPlatform.buildRustPackage (
 
     checkPhase = ''
       runHook preCheck
-    '' + optionalString (pathExists (stripContext testDir)) ''
+
       cargo test
-      # TODO: When we are able to again perform DNA end-to-end tests, do so here, eg.:
-      #cp -r ${npmToNix { src = testDir; }} test/node_modules
-      #sim2h_server -p 9000 &
-      #hc test | ( node test/node_modules/faucet/bin/cmd.js || cat )
+
+    '' + optionalString (pathExists (stripContext testDir)) ''
+      cp -r ${npmToNix { src = testDir; }} test/node_modules
+      # TODO: when "memory" tests are reliable, re-enable
+      #APP_SPEC_NETWORK_TYPE=memory hc test \
+      #    | ( node test/node_modules/faucet/bin/cmd.js || cat )
     '' + ''
+
       runHook postCheck
     '';
 
