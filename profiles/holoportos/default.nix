@@ -91,7 +91,10 @@ in
           proxyPass = "http://localhost:42233";
           proxyWebsockets = true;
           extraConfig = ''
-            proxy_set_header X-Original-URI $request_uri;
+            if ($http_cookie ~* "signature=([^;]+)(?:;|$)") {
+              set $signature $1;
+            }
+            proxy_set_header X-Hpos-Admin-Signature $signature; 
           '';
         };
 
