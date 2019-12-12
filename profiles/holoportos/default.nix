@@ -90,6 +90,9 @@ in
         "/api/v1/ws/" = {
           proxyPass = "http://localhost:42233";
           proxyWebsockets = true;
+          extraConfig = ''
+            proxy_set_header X-Original-URI $request_uri;
+          '';
         };
 
         "/auth/" = {
