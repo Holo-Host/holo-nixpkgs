@@ -53,7 +53,8 @@ in
       dnas = map dnaConfig dnas;
       instances = map instanceConfig dnas;
       network = {
-        bootstrap_nodes = [];
+        type = "sim2h";
+        sim2h_url = "wss://sim2h.holochain.org:9000";
       };
       persistence_dir = conductorHome;
       signing_service_uri = "http://localhost:8888";

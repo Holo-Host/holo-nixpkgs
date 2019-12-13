@@ -6,12 +6,10 @@
 , runCommand
 , rustPlatform
 , holochain-cli
-, jq
-, lld
 , nodejs
-, python2
 , which
 }:
+
 { name, src, nativeBuildInputs ? [], doCheck ? true, shell ? false }:
 
 with stdenv.lib;
@@ -33,31 +31,13 @@ let
       then toString <holochain-rust>
       else holochain-cli.src;
 
-  holochainRust = callPackage holochain-rust {};
-
-  stripContext = stringWithContext: builtins.readFile (
-    runCommand "string" {} ''
-      echo -n "${stringWithContext}" > $out
-    ''
-  );
+  holochainPackages = callPackage holochain-rust {};
 
   this = runCommand name {} ''
-    cp -Lr ${src} $out
+    cp -r ${src} $out
     chmod +w $out
     ln -s ${holochain-rust} $out/holochain-rust
   '';
-
-  testDir = "${this}/test";
-
-  fetchZomeDeps = name: ''
-    ln -s ${cargoToNix "${this}/zomes/${name}/code"} vendor
-  '';
-
-  subDirNames = dir: attrNames
-    (
-      filterAttrs (name: type: type == "directory")
-        (builtins.readDir dir)
-    );
 in
 
 rustPlatform.buildRustPackage (
@@ -65,12 +45,10 @@ rustPlatform.buildRustPackage (
     inherit name;
 
     nativeBuildInputs = nativeBuildInputs ++ [
-      holochainRust.holochain-cli
-      holochainRust.holochain-conductor
-      jq
-      lld
+      holochainPackages.holochain-cli
+      holochainPackages.holochain-conductor
+      holochainPackages.sim2h-server
       nodejs
-      python2
       which
     ];
 
@@ -83,9 +61,9 @@ rustPlatform.buildRustPackage (
   } // optionalAttrs (shell == false) {
     src = this;
 
-    preConfigure = concatStrings (map fetchZomeDeps (subDirNames "${this}/zomes"));
-
-    RUSTFLAGS = "-C linker=lld";
+    preConfigure = ''
+      ln -s ${cargoToNix this} vendor
+    '';
 
     buildPhase = ''
       runHook preBuild
@@ -95,25 +73,16 @@ rustPlatform.buildRustPackage (
       runHook postBuild
     '';
 
-    checkPhase = ''
-      runHook preCheck
-    '' + optionalString (pathExists (stripContext testDir)) ''
-      cp -r ${npmToNix { src = testDir; }} test/node_modules
-      hc test
-    '' + ''
-      runHook postCheck
-    '';
-
-    inherit doCheck;
-
     installPhase = ''
       runHook preInstall
 
+      mv dist $out
       mkdir -p $out/nix-support
-      jq -cS < dist/${name}.dna.json > $out/${name}.dna.json
       echo "file binary-dist $out/${name}.dna.json" > $out/nix-support/hydra-build-products
 
       runHook postInstall
     '';
+
+    meta.platforms = [ "x86_64-linux" ];
   }
 )
