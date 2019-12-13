@@ -28,9 +28,11 @@ in
     ];
 
     systemd.services.holochain-conductor = {
-      # Don't start, until keystore derived, Holo auth'ed and Zerotier online
+      # Don't start until keystore derived, Holo auth'ed and Zerotier online.  However, we do *not*
+      # want to restart holo-auth-client if/when this service is restarted, so use "wants" instead
+      # of "requires".
       requires = [ "holo-auth-client.service" ];
-      after = [ "holo-auth-client.service" ];
+      after    = [ "holo-auth-client.service" ];
       wantedBy = [ "multi-user.target" ];
 
       path = with pkgs; [

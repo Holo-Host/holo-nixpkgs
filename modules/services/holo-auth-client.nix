@@ -56,13 +56,15 @@ in
         mkdir -p /var/lib/holochain-conductor
         cd /var/lib/holochain-conductor
 
-        echo >&2 "Deriving Holo keystore to $HPOS_STATE_PATH/holo-keystore..."
+        echo >&2 "Deriving Holo keystore to $PWD/holo-keystore..."
         while ! hpos-state-derive-keystore < $HPOS_STATE_PATH > holo-keystore 2> holo-keystore.pub; do
           echo >&2 "Failed to derive keys from $HPOS_STATE_PATH (retrying):"
-          cat >&2 holo-keystore.pub # include any failure output of derive
+          cat >&2 holo-keystore.pub # log include any failure output from derive-keystore
           sleep 1
         done
         export HOLO_PUBLIC_KEY=$(cat holo-keystore.pub)
+        echo >&2 -n "Derived Holo Public Agent ID: "
+        cat >&2 holo-keystore.pub
 
         #
         # Phase 3: Monitor Zerotier status, triggering Holo Auth if necessary
@@ -87,8 +89,11 @@ in
       '';
 
       serviceConfig = {
+        # This service, if successfully completed, should be considered "active" continually.  This
+        # prevents a service that "wants" or "requires" from restarting it, if they're restarted.
         Type = "oneshot";
         User = "root";
+        RemainAfterExit = true;
       };
     };
   };
