@@ -70,10 +70,6 @@ in
       onlySSL = true;
       locations = {
         "/" = {
-          return = "302 /admin/";
-        };
-
-        "/admin/" = {
           alias = "${pkgs.hp-admin-ui}/";
           extraConfig = ''
             limit_req zone=zone1 burst=30;
