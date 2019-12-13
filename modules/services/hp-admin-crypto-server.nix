@@ -18,8 +18,9 @@ in
 
   config = mkIf cfg.enable {
     systemd.services.hp-admin-crypto-server = {
-      after = [ "holo-auth-client.service" ];
+      # Don't start until holo-keystore derived, Holo auth'ed and Zerotier online.
       requires = [ "holo-auth-client.service" ];
+      after =    [ "holo-auth-client.service" ];
       wantedBy = [ "multi-user.target" ];
       path = [ pkgs.hpos-init ];
 
