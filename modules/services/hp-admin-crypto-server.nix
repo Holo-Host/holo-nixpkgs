@@ -24,6 +24,7 @@ in
       path = [ pkgs.hpos-init ];
 
       script = ''
+        # Iff holo-auth-client.service succeeds, can we reliably call hpos-init and get the path
         HPOS_STATE_PATH=$(hpos-init) ${cfg.package}/bin/hp-admin-crypto-server
       '';
 

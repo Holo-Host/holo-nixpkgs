@@ -33,8 +33,9 @@ in
       script = ''
         #
         # Phase 1: locate `hpos-state.json`; export HPOS_STATE_PATH
-        # NOTE: This *requires* us to be able to communicate via the console, hence the
-        # require/after for systemd-logind.service
+        #
+        # This may *require* us to be able to communicate via the console, hence the require/after
+        # for systemd-logind.service
         #
         echo >&2 "Running HPOS init..."
         while ! HPOS_STATE_PATH=$(hpos-init) || [ -z "$HPOS_STATE_PATH" ]; do
@@ -47,18 +48,28 @@ in
         #
         # Phase 2: Derive Holochain keys; export HOLO_PUBLIC_KEY
         #
+        # If this derive-keystore fails for any reason (eg. due to limited memory), we cannot
+        # proceed, so log the failure and retry.  If we do *not* retry here, then this service will
+        # fail unnecessarily, causing all subsequent dependent services (eg. hp-admin-crypto-server)
+        # to fail.
+        #
         mkdir -p /var/lib/holochain-conductor
         cd /var/lib/holochain-conductor
 
         echo >&2 "Deriving Holo keystore to $HPOS_STATE_PATH/holo-keystore..."
-        if ! hpos-state-derive-keystore < $HPOS_STATE_PATH > holo-keystore 2> holo-keystore.pub; then
-          echo >&2 "Failed to derive keys from $HPOS_STATE_PATH"
-          exit 1
-        fi
+        while ! hpos-state-derive-keystore < $HPOS_STATE_PATH > holo-keystore 2> holo-keystore.pub; do
+          echo >&2 "Failed to derive keys from $HPOS_STATE_PATH (retrying):"
+          cat >&2 holo-keystore.pub # include any failure output of derive
+          sleep 1
+        done
         export HOLO_PUBLIC_KEY=$(cat holo-keystore.pub)
 
         #
         # Phase 3: Monitor Zerotier status, triggering Holo Auth if necessary
+        #
+        # If Zerotier achieves REQUESTING_CONFIGURATION * -> ACCESS_DENIED, we know that this node
+        # has not previously been Authorized on the Holo network, so go know to go execute the
+        # holo-auth-client; otherwise, the node has already been Authorized, and we're done here!
         #
         zerotier_status() {
           zerotier-cli -j listnetworks | jq -r .[0].status
