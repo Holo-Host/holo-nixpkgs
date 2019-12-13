@@ -12,4 +12,5 @@ in
 
 {
   hpos-admin = callPackage ./hpos-admin {};
+  holo-router = callPackage ./holo-router {};
 }
