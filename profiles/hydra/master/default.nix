@@ -122,6 +122,8 @@ in
         types {
           application/javascript js;
           application/wasm wasm;
+          image/png png;
+          image/svg+xml svg;
           text/css css;
           text/html html;
         }
