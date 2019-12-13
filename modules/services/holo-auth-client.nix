@@ -18,7 +18,7 @@ in
 
   config = mkIf cfg.enable {
     systemd.services.holo-auth-client = {
-      after = [ "network.target" "zerotierone.service" "systemd-logind.service" ];
+      after = [ "network.target" "systemd-logind.service" "zerotierone.service" ];
 
       path = with pkgs; [
         hpos-init
@@ -89,12 +89,25 @@ in
       '';
 
       serviceConfig = {
-        # This service, if successfully completed, should be considered "active" continually.  This
-        # prevents a service that "wants" or "requires" from restarting it, if they're restarted.
+        RemainAfterExit = true;
         Type = "oneshot";
         User = "root";
-        RemainAfterExit = true;
       };
+    };
+
+    systemd.services.holochain-conductor = {
+      after = [ "holo-auth-client.service" ];
+      requires = [ "holo-auth-client.service" ];
+    };
+
+    systemd.services.holo-router-agent = {
+      after = [ "holo-auth-client.service" ];
+      requires = [ "holo-auth-client.service" ];
+    };
+
+    systemd.services.hp-admin-crypto-server = {
+      after = [ "holo-auth-client.service" ];
+      requires = [ "holo-auth-client.service" ];
     };
   };
 }

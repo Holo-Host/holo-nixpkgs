@@ -63,8 +63,8 @@ let
   hpos-state = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "hpos-state";
-    rev = "26164a0f79840abfb696fa5bde41f5389dce6143";
-    sha256 = "162k9b1gn5awwb53nkmlikplaynxhd29iw0wc90ag9s26v86pxwx";
+    rev = "62009eeb1fe9be9bb455d3a763acb31a71cf7679";
+    sha256 = "0n8kb0ph3kvyjmqs8jxpg5s82al650cdf0fsp0c8ai2q00ig8gjl";
   };
 
   nixpkgs-mozilla = fetchTarball {

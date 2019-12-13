@@ -18,14 +18,10 @@ in
 
   config = mkIf cfg.enable {
     systemd.services.hp-admin-crypto-server = {
-      # Don't start until holo-keystore derived, Holo auth'ed and Zerotier online.
-      requires = [ "holo-auth-client.service" ];
-      after =    [ "holo-auth-client.service" ];
       wantedBy = [ "multi-user.target" ];
       path = [ pkgs.hpos-init ];
 
       script = ''
-        # Iff holo-auth-client.service succeeds, can we reliably call hpos-init and get the path
         HPOS_STATE_PATH=$(hpos-init) ${cfg.package}/bin/hp-admin-crypto-server
       '';
 

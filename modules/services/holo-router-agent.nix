@@ -18,9 +18,6 @@ in
 
   config = mkIf cfg.enable {
     systemd.services.holo-router-agent = {
-      # Don't start until holo-keystore derived, Holo auth'ed and Zerotier online.
-      requires = [ "holo-auth-client.service" ];
-      after =    [ "holo-auth-client.service" ];
       startAt = "*:0/1";
 
       serviceConfig = {
