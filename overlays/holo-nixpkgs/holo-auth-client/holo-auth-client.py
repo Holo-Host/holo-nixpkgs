@@ -46,9 +46,16 @@ def zerotier_address():
 
 
 def main():
-    confirm_email(admin_email(), zerotier_address())
+    try:
+        auth = confirm_email(admin_email(), zerotier_address())
+        assert 200 <= auth.status_code <= 299, \
+            f"Invalid HTTP code {auth}"
+    except Exception as exc:
+        logging.warning(f"Holo authorization failed: {exc!r}")
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    main()
+    sys.exit( main() )
