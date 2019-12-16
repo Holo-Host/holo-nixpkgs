@@ -11,5 +11,6 @@ let
 in
 
 {
-  hpos-admin = callPackage ./hpos-admin {};
+  #hpos-admin = callPackage ./hpos-admin {};
+  profile-demo = callPackage ./profile-demo {};
 }

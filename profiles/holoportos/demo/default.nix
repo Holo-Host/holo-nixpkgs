@@ -4,7 +4,6 @@ with pkgs;
 
 let
   conductorHome = config.users.users.holochain-conductor.home;
-
   dnas = with dnaPackages; [
     happ-store
     holo-hosting-app
@@ -31,13 +30,9 @@ in
 
 {
   imports = [ ../. ];
-
-  environment.systemPackages = [];
-
+  environment.systemPackages = [ bind ngrok ];
   networking.firewall.allowedTCPPorts = [ 1111 2222 3333 8800 8880 8888 48080 ];
-
   services.holo-envoy.enable = true;
-
   services.holochain-conductor = {
     enable = true;
     config = {

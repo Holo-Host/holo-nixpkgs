@@ -18,7 +18,6 @@ in
   boot.loader.timeout = 1;
 
   documentation.enable = false;
-
   environment.noXlibs = true;
 
   environment.systemPackages = [
