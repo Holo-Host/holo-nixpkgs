@@ -18,8 +18,6 @@ in
 
   config = mkIf cfg.enable {
     systemd.services.hp-admin-crypto-server = {
-      after = [ "holo-auth-client.service" ];
-      requires = [ "holo-auth-client.service" ];
       wantedBy = [ "multi-user.target" ];
       path = [ pkgs.hpos-init ];
 

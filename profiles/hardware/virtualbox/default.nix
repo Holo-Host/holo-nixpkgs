@@ -11,6 +11,8 @@ in
 
   system.holoportos.target = "virtualbox";
 
+  virtualbox.memorySize = 3072;
+
   virtualbox.vmFileName =
     "holoportos-for-${config.system.holoportos.target}.ova";
 
