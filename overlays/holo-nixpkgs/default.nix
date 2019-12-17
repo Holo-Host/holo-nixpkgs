@@ -249,6 +249,7 @@ in
       patches = [
         ./hydra/logo-vertical-align.diff
         ./hydra/no-restrict-eval.diff
+        ./hydra/secure-github.diff
       ];
       meta = super.meta // {
         hydraPlatforms = [ "x86_64-linux" ];

@@ -1,0 +1,42 @@
+diff --git a/src/lib/Hydra/Plugin/GithubPulls.pm b/src/lib/Hydra/Plugin/GithubPulls.pm
+index 6a3cc951..cbaa57e8 100644
+--- a/src/lib/Hydra/Plugin/GithubPulls.pm
++++ b/src/lib/Hydra/Plugin/GithubPulls.pm
+@@ -3,6 +3,7 @@ package Hydra::Plugin::GithubPulls;
+ use strict;
+ use parent 'Hydra::Plugin';
+ use HTTP::Request;
++use File::Slurp;
+ use LWP::UserAgent;
+ use JSON;
+ use Hydra::Helper::CatalystUtils;
+@@ -18,7 +19,7 @@ sub _iterate {
+     my ($url, $auth, $pulls, $ua) = @_;
+     my $req = HTTP::Request->new('GET', $url);
+     $req->header('Accept' => 'application/vnd.github.v3+json');
+-    $req->header('Authorization' => $auth) if defined $auth;
++    $req->header('Authorization' => read_file("/var/lib/hydra/github-authorization/$owner"));
+     my $res = $ua->request($req);
+     my $content = $res->decoded_content;
+     die "Error pulling from the github pulls API: $content\n"
+diff --git a/src/lib/Hydra/Plugin/GithubStatus.pm b/src/lib/Hydra/Plugin/GithubStatus.pm
+index 7db6bb52..b825ea8c 100644
+--- a/src/lib/Hydra/Plugin/GithubStatus.pm
++++ b/src/lib/Hydra/Plugin/GithubStatus.pm
+@@ -3,6 +3,7 @@ package Hydra::Plugin::GithubStatus;
+ use strict;
+ use parent 'Hydra::Plugin';
+ use HTTP::Request;
++use File::Slurp;
+ use JSON;
+ use LWP::UserAgent;
+ use Hydra::Helper::CatalystUtils;
+@@ -74,7 +75,7 @@ sub common {
+                     my $req = HTTP::Request->new('POST', $url);
+                     $req->header('Content-Type' => 'application/json');
+                     $req->header('Accept' => 'application/vnd.github.v3+json');
+-                    $req->header('Authorization' => ($self->{config}->{github_authorization}->{$owner} // $conf->{authorization}));
++                    $req->header('Authorization' => read_file("/var/lib/hydra/github-authorization/$owner"));
+                     $req->content($body);
+                     my $res = $ua->request($req);
+                     print STDERR $res->status_line, ": ", $res->decoded_content, "\n" unless $res->is_success;
