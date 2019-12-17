@@ -199,6 +199,8 @@ in
     python3 = python3.withPackages (ps: [ ps.requests ]);
   };
 
+  holo-cli = callPackage ./holo-cli {};
+
   holo-nixpkgs-tests = recurseIntoAttrs (
     import ../../tests {
       inherit pkgs;
@@ -209,7 +211,7 @@ in
     profile = tryDefault <nixos-config> ../../profiles/holoportos;
 
     qemu = (buildHoloPortOS ../../profiles/hardware/qemu) // {
-      meta.platforms = [ "aarch64-linux" "x86_64-linux" ];
+      meta.platforms = [ "x86_64-linux" ];
     };
 
     virtualbox = (buildHoloPortOS ../../profiles/hardware/virtualbox) // {
@@ -249,6 +251,7 @@ in
       patches = [
         ./hydra/logo-vertical-align.diff
         ./hydra/no-restrict-eval.diff
+        ./hydra/secure-github.diff
       ];
       meta = super.meta // {
         hydraPlatforms = [ "x86_64-linux" ];

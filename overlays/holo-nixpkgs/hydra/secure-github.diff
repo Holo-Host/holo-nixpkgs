@@ -1,0 +1,44 @@
+diff --git a/src/lib/Hydra/Plugin/GithubPulls.pm b/src/lib/Hydra/Plugin/GithubPulls.pm
+index 6a3cc951..e92b4f57 100644
+--- a/src/lib/Hydra/Plugin/GithubPulls.pm
++++ b/src/lib/Hydra/Plugin/GithubPulls.pm
+@@ -6,6 +6,7 @@ use HTTP::Request;
+ use LWP::UserAgent;
+ use JSON;
+ use Hydra::Helper::CatalystUtils;
++use File::Slurp;
+ use File::Temp;
+ use POSIX qw(strftime);
+ 
+@@ -46,7 +47,7 @@ sub fetchInput {
+     return undef if $type ne "githubpulls";
+     # TODO Allow filtering of some kind here?
+     (my $owner, my $repo) = split ' ', $value;
+-    my $auth = $self->{config}->{github_authorization}->{$owner};
++    my $auth = read_file("/var/lib/hydra/github-authorization/$owner");
+     my %pulls;
+     my $ua = LWP::UserAgent->new();
+     _iterate("https://api.github.com/repos/$owner/$repo/pulls?per_page=100", $auth, \%pulls, $ua);
+diff --git a/src/lib/Hydra/Plugin/GithubStatus.pm b/src/lib/Hydra/Plugin/GithubStatus.pm
+index 7db6bb52..58818daf 100644
+--- a/src/lib/Hydra/Plugin/GithubStatus.pm
++++ b/src/lib/Hydra/Plugin/GithubStatus.pm
+@@ -2,6 +2,7 @@ package Hydra::Plugin::GithubStatus;
+ 
+ use strict;
+ use parent 'Hydra::Plugin';
++use File::Slurp;
+ use HTTP::Request;
+ use JSON;
+ use LWP::UserAgent;
+@@ -74,7 +75,8 @@ sub common {
+                     my $req = HTTP::Request->new('POST', $url);
+                     $req->header('Content-Type' => 'application/json');
+                     $req->header('Accept' => 'application/vnd.github.v3+json');
+-                    $req->header('Authorization' => ($self->{config}->{github_authorization}->{$owner} // $conf->{authorization}));
++                    my $token = read_file("/var/lib/hydra/github-authorization/$owner");
++                    $req->header('Authorization' => "$token");
+                     $req->content($body);
+                     my $res = $ua->request($req);
+                     print STDERR $res->status_line, ": ", $res->decoded_content, "\n" unless $res->is_success;
+

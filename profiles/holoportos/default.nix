@@ -4,6 +4,31 @@ with pkgs;
 
 let
   inherit (config.system.holoportos) target;
+
+  conductorHome = config.users.users.holochain-conductor.home;
+
+  dnas = with dnaPackages; [
+    happ-store
+    holo-hosting-app
+    holofuel
+    servicelogger
+  ];
+
+  dnaConfig = drv: {
+    id = drv.name;
+    file = "${drv}/${drv.name}.dna.json";
+    hash = pkgs.dnaHash drv;
+  };
+
+  instanceConfig = drv: {
+    agent = "host-agent";
+    dna = drv.name;
+    id = drv.name;
+    storage = {
+      path = "${conductorHome}/${drv.name}";
+      type = "file";
+    };
+  };
 in
 
 {
@@ -49,9 +74,9 @@ in
 
   services.devmon.enable = true;
 
-  services.holo-auth-client.enable = true;
+  services.holo-auth-client.enable = lib.mkDefault true;
 
-  services.holo-router-agent.enable = true;
+  services.holo-router-agent.enable = lib.mkDefault true;
 
   services.hp-admin-crypto-server.enable = true;
 
@@ -115,8 +140,66 @@ in
     '';
   };
 
-  system.holoportos.autoUpgrade = {
+  services.holochain-conductor = {
     enable = true;
+    config = {
+      agents = [
+        {
+          id = "host-agent";
+          name = "Host Agent";
+          keystore_file = "${conductorHome}/holo-keystore";
+          public_address = "@public_key@";
+        }
+      ];
+      bridges = [];
+      dnas = map dnaConfig dnas;
+      instances = map instanceConfig dnas;
+      network = {
+        type = "sim2h";
+        sim2h_url = "wss://sim2h.holochain.org:9000";
+      };
+      persistence_dir = conductorHome;
+      signing_service_uri = "http://localhost:9676";
+      interfaces = [
+        {
+          id = "master-interface";
+          admin = true;
+          driver = {
+            port = 42211;
+            type = "websocket";
+          };
+        }
+        {
+          id = "internal-interface";
+          admin = false;
+          driver = {
+            port = 42222;
+            type = "websocket";
+          };
+        }
+        {
+          id = "admin-interface";
+          admin = false;
+          driver = {
+            port = 42233;
+            type = "websocket";
+          };
+          instances = map (drv: { id = drv.name; }) dnas;
+        }
+        {
+          id = "hosted-interface";
+          admin = false;
+          driver = {
+            port = 42244;
+            type = "websocket";
+          };
+        }
+      ];
+    };
+  };
+
+  system.holoportos.autoUpgrade = {
+    enable = lib.mkDefault true;
     dates = "*:0/10";
   };
 
