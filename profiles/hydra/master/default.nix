@@ -62,7 +62,7 @@ in
 
     <githubstatus>
       context = Hydra
-      jobs = holo-nixpkgs:.*:holo-nixpkgs
+      jobs = holo-nixpkgs:.*:*
       inputs = holo-nixpkgs
     </githubstatus>
 
