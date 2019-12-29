@@ -1,15 +1,6 @@
-# HoloPortOS
+# Holo Nixpkgs
 
-HoloportOS is an operating system based on [NixOS][nixos] that supports running
-[Holochain][holochain] applications, designed from the ground up to be
-consistent, verifiable, and auditable.
-
-[holochain]: https://holochain.org
-[nixos]: https://nixos.org
-
-## Setup
-
-### Binary cache
+## Binary cache
 
 On NixOS, add the following to `/etc/nixos/configuration.nix` and rebuild:
 
@@ -40,9 +31,21 @@ For single-user installs (`nix-shell -p nix-info --run nix-info` prints
 Otherwise, for multi-user installs, Nix config file is in `/etc/nix/nix.conf`
 and changing it requires root access.
 
-### HoloPortOS
+## HoloPortOS
 
-#### VirtualBox
+HoloportOS is an operating system based on [NixOS][nixos] that supports running
+[Holochain][holochain] applications.
+
+[holochain]: https://holochain.org
+[nixos]: https://nixos.org
+
+### QEMU
+
+If you have Nix installed, checkout the repo, enter `nix-shell` and then run
+`hpos-shell`. That will launch a HoloPortOS VM against current state of your
+local checkout, which is useful for iterative development.
+
+### VirtualBox
 
 Download the latest HoloPortOS VirtualBox OVA:
 https://hydra.holo.host/job/holo-nixpkgs/master/holoportos.targets.virtualbox.x86_64-linux/latest/download-by-type/file/ova
