@@ -1,6 +1,6 @@
 repository:
   name: holo-nixpkgs
-  description: Modules, packages and profiles that drive Holo, Holochain and HoloPortOS
+  description: Modules, packages and profiles that drive Holo, Holochain, and HoloPortOS
   topics: holo, holochain, nix, nixos
   private: false
   has_issues: true
