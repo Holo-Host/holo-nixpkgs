@@ -1,1 +1,1 @@
-import (import ./source.nix)
+import (import ./src)

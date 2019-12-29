@@ -1,5 +1,5 @@
 let
-  nixpkgs = import ../source.nix;
+  nixpkgs = import ../src;
 in
 
 import "${nixpkgs}/nixos"

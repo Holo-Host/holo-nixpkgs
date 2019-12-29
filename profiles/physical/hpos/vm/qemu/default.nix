@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  nixpkgs = import ../../../../../nixpkgs/source.nix;
+  nixpkgs = import ../../../../../nixpkgs/src;
 
   channel = pkgs.releaseTools.channel {
     name = "holo-nixpkgs";
