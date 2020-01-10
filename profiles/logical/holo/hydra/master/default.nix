@@ -55,6 +55,11 @@ in
     max_connections = 1024
   '';
 
+  services.postgresqlBackup = {
+    enable = true;
+    databases = [ "hydra" ];
+  };
+
   services.hydra = {
     enable = true;
     hydraURL = "https://${config.services.nginx.virtualHosts.hydra.serverName}";
