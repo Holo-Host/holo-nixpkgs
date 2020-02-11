@@ -267,7 +267,7 @@ in
 
   magic-wormhole-mailbox-server = python3Packages.callPackage ./magic-wormhole-mailbox-server {};
 
-  nginx = previous.nginx.overrideAttrs (super: {
+  nginxStable = previous.nginxStable.overrideAttrs (super: {
     patches = super.patches ++ [ ./nginx/add-wasm-mime-type.patch ];
   });
 
