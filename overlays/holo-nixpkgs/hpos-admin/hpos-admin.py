@@ -6,6 +6,8 @@ from tempfile import mkstemp
 import json
 import logging
 import os
+import pwd
+import stat
 
 app = Flask(__name__)
 log = logging.getLogger(__name__)
@@ -87,6 +89,10 @@ def unix_socket(path):
         os.remove(path)
     sock.bind(path)
     sock.listen()
+    uid = pwd.getpwnam("root").pw_uid
+    gid = grp.getgrnam("hpos-admin-users").gr_gid
+    os.chown(path, uid, gid)
+    os.chmod(path, stat.S_IRWXU | stat.S_IRWXG)
     return sock
 
 
