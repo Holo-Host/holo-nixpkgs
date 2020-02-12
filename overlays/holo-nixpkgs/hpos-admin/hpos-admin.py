@@ -3,9 +3,11 @@ from flask import Flask, jsonify, request
 from gevent import subprocess, pywsgi, queue, socket, spawn, lock
 from hashlib import sha512
 from tempfile import mkstemp
+import grp
 import json
 import logging
 import os
+import pwd
 
 app = Flask(__name__)
 log = logging.getLogger(__name__)
@@ -87,6 +89,10 @@ def unix_socket(path):
         os.remove(path)
     sock.bind(path)
     sock.listen()
+    uid = pwd.getpwnam("root").pw_uid
+    gid = grp.getgrnam("hpos-admin-users").gr_gid
+    os.chown(path, uid, gid)
+    os.chmod(path, 0o770)
     return sock
 
 
