@@ -207,6 +207,8 @@ in
 
   system.stateVersion = "19.09";
 
+  users.users.nginx.extraGroups = [ "hpos-admin-users" ];
+
   users.users.holo.isNormalUser = true;
 
   users.users.root.hashedPassword = "*";

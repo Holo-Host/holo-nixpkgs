@@ -25,5 +25,7 @@ in
         ExecStart = "${cfg.package}/bin/hpos-admin";
       };
     };
+
+    users.groups.hpos-admin-users = {};
   };
 }
