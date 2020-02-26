@@ -12,6 +12,11 @@ rustPlatform.buildRustPackage {
 
   cargoSha256 = "00fjzzvaiyawds27g4fvwsnq7gcgadam26p07zq11hz0c1dw5krd";
 
+  # needed for newrelic to compile its dependencies
+  # this is a hack to workaround this:
+  # https://github.com/NixOS/nixpkgs/issues/18995
+  hardeningDisable = [ "fortify" ];
+
   nativeBuildInputs = [ perl pcre ];
 
   buildInputs = stdenv.lib.optionals stdenv.isDarwin [
