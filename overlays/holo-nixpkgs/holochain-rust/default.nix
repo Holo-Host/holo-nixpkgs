@@ -1,4 +1,4 @@
-{ stdenv, rustPlatform, fetchFromGitHub, perl, CoreServices, Security, libsodium }:
+{ stdenv, rustPlatform, fetchFromGitHub, perl, CoreServices, Security, libsodium, pcre }:
 
 rustPlatform.buildRustPackage {
   name = "holochain-rust";
@@ -10,9 +10,14 @@ rustPlatform.buildRustPackage {
     sha256 = "01gd19f2xspi07gbnvb3hjlhwrhf6yjhapikrayi4jvp2w603y6g";
   };
 
-  cargoSha256 = "1cfk2z4pbk8dli31wpplczd8a1fy8fyhwa5rsl6yz3jzw9d2kdkk";
+  cargoSha256 = "00fjzzvaiyawds27g4fvwsnq7gcgadam26p07zq11hz0c1dw5krd";
 
-  nativeBuildInputs = [ perl ];
+  # needed for newrelic to compile its dependencies
+  # this is a hack to workaround this:
+  # https://github.com/NixOS/nixpkgs/issues/18995
+  hardeningDisable = [ "fortify" ];
+
+  nativeBuildInputs = [ perl pcre ];
 
   buildInputs = stdenv.lib.optionals stdenv.isDarwin [
     CoreServices
