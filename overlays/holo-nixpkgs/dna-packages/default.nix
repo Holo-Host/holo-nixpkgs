@@ -26,8 +26,8 @@ let
   servicelogger = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "servicelogger";
-    rev = "d4b411bc969e2c56436fb6c3ae5c2a2a62d26a17";
-    sha256 = "0i5a8757sikgcsrf5ppi9lbnisi5iqxh0rphkpqrd52ibpf6nfsz";
+    rev = "7f14de64f760946cbe54822a8ba35ccdc8e56a5d";
+    sha256 = "1l7lwg2h373lvi51vfcbin5wjfmvxl01smnb420vsh8g00mb6aq2";
   };
 in
 
@@ -36,7 +36,7 @@ in
 
   inherit (callPackage holo-hosting-app {}) holo-hosting-app;
 
-  # inherit (callPackage servicelogger {}) servicelogger;
+  inherit (callPackage servicelogger {}) servicelogger;
 
   holofuel = wrapDNA holofuel;
 }
