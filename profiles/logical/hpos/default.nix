@@ -162,7 +162,7 @@ in
       instances = map instanceConfig dnas;
       network = {
         type = "sim2h";
-        sim2h_url = "ws://sim2h-test.holo.host:9001";
+        sim2h_url = "ws://sim2h-test.holo.host:9003";
       };
       persistence_dir = conductorHome;
       signing_service_uri = "http://localhost:9676";
