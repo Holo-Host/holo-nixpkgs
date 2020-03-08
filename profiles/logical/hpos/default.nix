@@ -23,10 +23,7 @@ let
   conductorHome = "/var/lib/holochain-conductor";
 
   dnas = with dnaPackages; [
-    happ-store
-    holo-hosting-app
     holofuel
-    servicelogger
   ];
 
   dnaConfig = drv: {
