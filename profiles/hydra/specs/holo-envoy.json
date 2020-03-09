@@ -1,0 +1,24 @@
+{
+  "checkinterval": 10,
+  "emailoverride": "",
+  "enabled": true,
+  "enableemail": false,
+  "hidden": false,
+  "inputs": {
+    "holo-envoy": {
+      "emailresponsible": false,
+      "type": "git",
+      "value": "https://github.com/Holo-Host/holo-envoy.git develop"
+    },
+    "holo-envoy-pull-requests": {
+      "emailresponsible": false,
+      "type": "githubpulls",
+      "value": "Holo-Host holo-envoy"
+    }
+  },
+  "keepnr": 128,
+  "nixexprinput": "holo-envoy",
+  "nixexprpath": "jobsets.nix",
+  "schedulingshares": 15
+}
+
