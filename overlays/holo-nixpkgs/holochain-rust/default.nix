@@ -1,4 +1,4 @@
-{ stdenv, rustPlatform, fetchFromGitHub, perl, CoreServices, Security, libsodium }:
+{ stdenv, rustPlatform, fetchFromGitHub, pcre, perl, CoreServices, Security, libsodium }:
 
 rustPlatform.buildRustPackage {
   name = "holochain-rust";
@@ -6,13 +6,13 @@ rustPlatform.buildRustPackage {
   src = fetchFromGitHub {
     owner = "holochain";
     repo = "holochain-rust";
-    rev = "v0.0.44-alpha3";
-    sha256 = "18c6y1x7jx5brzghh9q7yfml88sah02x0cshmjzxxb0qy0n52zrl";
+    rev = "a56c2a7bdb6a12e6f574f6e6510634c7099282aa";
+    sha256 = "1ab789hppfi2asjpdkvg2nfndcx27v8yvs1lpnvpngqvk9pnb4gg";
   };
 
-  cargoSha256 = "1r4wb24bgjbhcg9cnlpwr0hva2f153wm2iyl7lmf89bvyx7qalic";
+  cargoSha256 = "16w403az65fi2dyf0g5j7w5rkmfkx318d5dwx4jgq43fgqrxfhfy";
 
-  nativeBuildInputs = [ perl ];
+  nativeBuildInputs = [ pcre perl ];
 
   buildInputs = stdenv.lib.optionals stdenv.isDarwin [
     CoreServices
