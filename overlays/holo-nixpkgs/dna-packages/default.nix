@@ -13,7 +13,7 @@ let
   holofuel = fetchurl {
     url = "https://holo-host.github.io/holofuel/releases/download/v0.20.1-alpha6/holofuel.dna.json";
     name = "holofuel.dna.json";
-    sha256 = "1njd20dxb2cp2f1mb980l56spagiy35hclq4fl3spdidxhxgzbqn";
+    sha256 = "17a0rl5vcp41ni6x4r2pnqwybl1bz55ichhafinsagw2gb7zw70m";
   };
 
   holo-hosting-app = fetchFromGitHub {
