@@ -39,6 +39,13 @@ let
     sha256 = "1qv9h82gl8lcm3kbkkq0gskd38c5msp9lxz5hvaxj6q8amc8884v";
   };
 
+  holo-update-conductor-config = fetchFromGitHub {
+    owner = "Holo-Host";
+    repo = "holo-update-conductor-config";
+    rev = "a4663df929fb539f821ce45947879e4c6ac7329e";
+    sha256 = "1kvlkszh2dxz789s0svz5fnmcac53bblvx0g2v7nlizsp83b85d5";
+  };
+
   hp-admin = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "hp-admin";
@@ -193,6 +200,8 @@ in
   holo-nixpkgs-tests = recurseIntoAttrs (
     import "${holo-nixpkgs.path}/tests" { inherit pkgs; }
   );
+
+  holo-update-conductor-config = callPackage holo-update-conductor-config { };
 
   holochain-cli = holochain-rust;
 
