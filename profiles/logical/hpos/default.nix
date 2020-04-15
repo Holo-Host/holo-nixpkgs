@@ -40,7 +40,7 @@ let
   hostedDnas = with dnaPackages; [
     # list holo hosted DNAs here
     {
-      drv = holofuel;
+      drv = hosted-holofuel;
       happ-url = "https://holofuel.holo.host";
     }
   ];
