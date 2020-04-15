@@ -23,6 +23,7 @@ let
   conductorHome = "/var/lib/holochain-conductor";
 
   dnas = with dnaPackages; [
+    # list self hosted DNAs here
     # happ-store
     # holo-hosting-app
     holofuel
@@ -33,12 +34,30 @@ let
     id = drv.name;
     file = "${drv}/${drv.name}.dna.json";
     hash = pkgs.dnaHash drv;
+    holo-hosted = false;
+  };
+
+  hostedDnas = with dnaPackages; [
+    # list holo hosted DNAs here
+    {
+      drv = holofuel;
+      happ-url = "https://holofuel.holo.host";
+    }
+  ];
+
+  hostedDnaConfig = dna: rec {
+    id = pkgs.dnaHash dna.drv;
+    file = "${dna.drv}/${dna.drv.name}.dna.json";
+    hash = id;
+    holo-hosted = true;
+    happ-url = dna.happ-url;
   };
 
   instanceConfig = drv: {
     agent = "host-agent";
     dna = drv.name;
     id = drv.name;
+    holo-hosted = false;
     storage = {
       path = "${conductorHome}/${drv.name}-${pkgs.dnaHash drv}";
       type = "lmdb";
@@ -163,7 +182,7 @@ in
         }
       ];
       bridges = [];
-      dnas = map dnaConfig dnas;
+      dnas = map dnaConfig dnas ++ map hostedDnaConfig hostedDnas;
       instances = map instanceConfig dnas;
       network = {
         type = "sim2h";
