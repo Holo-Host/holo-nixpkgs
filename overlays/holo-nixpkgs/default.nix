@@ -42,8 +42,8 @@ let
   holo-update-conductor-config = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "holo-update-conductor-config";
-    rev = "a4663df929fb539f821ce45947879e4c6ac7329e";
-    sha256 = "1kvlkszh2dxz789s0svz5fnmcac53bblvx0g2v7nlizsp83b85d5";
+    rev = "2f778899f40f4eb1bc05a4552fe92f51245af298";
+    sha256 = "1ci0y1qgahq0h5mwlh38rvsbw1yb9nk9bngiynsvd010dr5bx4ii";
   };
 
   hp-admin = fetchFromGitHub {
