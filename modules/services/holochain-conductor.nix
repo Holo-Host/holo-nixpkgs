@@ -39,10 +39,17 @@ in
       restartTriggers = [ cfg.config ];
 
       serviceConfig = {
-        DynamicUser = true;
+        User = "holochain-conductor";
         ExecStart = "${cfg.package}/bin/holochain -c /var/lib/holochain-conductor/conductor-config.toml";
         StateDirectory = "holochain-conductor";
       };
+    };
+
+    users.users.holochain-conductor = {
+      isSystemUser = true;
+      home = "/var/lib/holochain-conductor";
+      # ensures directory is owned by user
+      createHome = true;
     };
   };
 }
