@@ -36,8 +36,6 @@ in
           $STATE_DIRECTORY/conductor-config.toml
       '';
 
-      restartTriggers = [ cfg.config ];
-
       serviceConfig = {
         User = "holochain-conductor";
         ExecStart = "${cfg.package}/bin/holochain -c /var/lib/holochain-conductor/conductor-config.toml";
