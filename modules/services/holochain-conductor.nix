@@ -38,6 +38,7 @@ in
 
       serviceConfig = {
         User = "holochain-conductor";
+        Group = "holochain-conductor";
         ExecStart = "${cfg.package}/bin/holochain -c /var/lib/holochain-conductor/conductor-config.toml";
         StateDirectory = "holochain-conductor";
       };
@@ -49,5 +50,7 @@ in
       # ensures directory is owned by user
       createHome = true;
     };
+
+    users.groups.holochain-conductor = {};
   };
 }
