@@ -64,6 +64,7 @@ If you have Nix installed, checkout the repo, enter `nix-shell` and then run
 `hpos-shell`. That will launch a HoloPortOS VM against current state of your
 local checkout, which is useful for iterative development.
 
+
 ### VirtualBox
 
 Download the latest HoloPortOS VirtualBox OVA:
