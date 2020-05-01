@@ -3,7 +3,7 @@
 with pkgs;
 
 let
-  testing = import "${pkgs.path}/nixos/lib/testing.nix" {
+  testing = import "${pkgs.path}/nixos/lib/testing-python.nix" {
     inherit pkgs system;
   };
 

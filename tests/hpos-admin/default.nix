@@ -1,6 +1,6 @@
-{ makeTest, lib, hpos-admin-client, hpos-config-gen-cli }:
+{ makeTestPython, lib, hpos-admin-client, hpos-config-gen-cli }:
 
-makeTest {
+makeTestPython {
   name = "hpos-admin";
 
   machine = {
@@ -28,29 +28,26 @@ makeTest {
   };
 
   testScript = ''
-    startAll;
+    start_all()
 
-    $machine->succeed(
+    machine.succeed(
       "hpos-config-gen-cli --email test\@holo.host --password : --seed-from ${./seed.txt} > /etc/hpos-config.json"
-    );
+    )
 
-    $machine->systemctl("start hpos-admin.service");
-    $machine->waitForUnit("hpos-admin.service");
-    $machine->waitForFile("/run/hpos-admin.sock");
+    machine.systemctl("start hpos-admin.service");
+    machine.wait_for_unit("hpos-admin.service");
+    machine.wait_for_file("/run/hpos-admin.sock");
 
-    $machine->succeed("hpos-admin-client --url=http://localhost put-settings example KbFzEiWEmM1ogbJbee2fkrA1");
+    machine.succeed("hpos-admin-client --url=http://localhost put-settings example KbFzEiWEmM1ogbJbee2fkrA1");
 
-    my $expected_settings = "{" .
-      "'admin': {'email': 'test\@holo.host', 'public_key': 'zQJsyuGmTKhMCJQvZZmXCwJ8/nbjSLF6cEe0vNOJqfM'}, " .
-      "'example': 'KbFzEiWEmM1ogbJbee2fkrA1'" .
-    "}";
+    expected_settings = ("{"
+      "'admin': {'email': 'test\@holo.host', 'public_key': 'zQJsyuGmTKhMCJQvZZmXCwJ8/nbjSLF6cEe0vNOJqfM'}, "
+      "'example': 'KbFzEiWEmM1ogbJbee2fkrA1'"
+    "}")
 
-    my $actual_settings = $machine->succeed("hpos-admin-client --url=http://localhost get-settings");
-    chomp($actual_settings);
+    actual_settings = machine.succeed("hpos-admin-client --url=http://localhost get-settings").strip();
 
-    die "unexpected settings" unless $actual_settings eq $expected_settings;
-
-    $machine->shutdown;
+    assert actual_settings == expected_settings, "unexpected settings"
   '';
 
   meta.platforms = lib.platforms.linux;
