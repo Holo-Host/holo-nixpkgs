@@ -250,7 +250,7 @@ in
   systemd.services.acme-default.serviceConfig.ExecStart =
     lib.mkForce "${holo-router-acme}/bin/holo-router-acme";
 
-  system.stateVersion = "19.09";
+  system.stateVersion = "20.03";
 
   users.users.nginx.extraGroups = [ "hpos-admin-users" ];
 
