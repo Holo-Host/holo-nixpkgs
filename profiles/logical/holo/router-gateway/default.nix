@@ -14,7 +14,7 @@ with pkgs;
     enable = true;
 
     # https://dnscrypt.info/stamps/
-    config.static.holo-router-registry.stamp =
+    settings.static.holo-router-registry.stamp =
       "sdns://AgcAAAAAAAAADTEwNC4xNy4yNDEuNDUAGXJvdXRlci1yZWdpc3RyeS5ob2xvLmhvc3QNL3YxL2Rucy1xdWVyeQ";
   };
 
