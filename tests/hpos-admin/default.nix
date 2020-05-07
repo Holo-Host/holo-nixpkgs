@@ -31,21 +31,27 @@ makeTest {
     start_all()
 
     machine.succeed(
-      "hpos-config-gen-cli --email test\@holo.host --password : --seed-from ${./seed.txt} > /etc/hpos-config.json"
+        "hpos-config-gen-cli --email test\@holo.host --password : --seed-from ${./seed.txt} > /etc/hpos-config.json"
     )
 
-    machine.systemctl("start hpos-admin.service");
-    machine.wait_for_unit("hpos-admin.service");
-    machine.wait_for_file("/run/hpos-admin.sock");
+    machine.systemctl("start hpos-admin.service")
+    machine.wait_for_unit("hpos-admin.service")
+    machine.wait_for_file("/run/hpos-admin.sock")
 
-    machine.succeed("hpos-admin-client --url=http://localhost put-settings example KbFzEiWEmM1ogbJbee2fkrA1");
+    machine.succeed(
+        "hpos-admin-client --url=http://localhost put-settings example KbFzEiWEmM1ogbJbee2fkrA1"
+    )
 
-    expected_settings = ("{"
-      "'admin': {'email': 'test\@holo.host', 'public_key': 'zQJsyuGmTKhMCJQvZZmXCwJ8/nbjSLF6cEe0vNOJqfM'}, "
-      "'example': 'KbFzEiWEmM1ogbJbee2fkrA1'"
-    "}")
+    expected_settings = (
+        "{"
+        "'admin': {'email': 'test\@holo.host', 'public_key': 'zQJsyuGmTKhMCJQvZZmXCwJ8/nbjSLF6cEe0vNOJqfM'}, "
+        "'example': 'KbFzEiWEmM1ogbJbee2fkrA1'"
+        "}"
+    )
 
-    actual_settings = machine.succeed("hpos-admin-client --url=http://localhost get-settings").strip();
+    actual_settings = machine.succeed(
+        "hpos-admin-client --url=http://localhost get-settings"
+    ).strip()
 
     assert actual_settings == expected_settings, "unexpected settings"
   '';
