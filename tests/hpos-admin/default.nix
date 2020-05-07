@@ -1,6 +1,6 @@
-{ makeTestPython, lib, hpos-admin-client, hpos-config-gen-cli }:
+{ makeTest, lib, hpos-admin-client, hpos-config-gen-cli }:
 
-makeTestPython {
+makeTest {
   name = "hpos-admin";
 
   machine = {
