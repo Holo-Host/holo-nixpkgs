@@ -169,8 +169,6 @@ in
     ${remarshal}/bin/json2toml < ${writeJSON config} > $out
   '';
 
-  bump-dna = callPackage bump-dna {};
-
   dnaHash = dna: builtins.readFile (
     runCommand "${dna.name}-hash" {} ''
       ${holochain-rust}/bin/hc hash -p ${dna}/${dna.name}.dna.json \
