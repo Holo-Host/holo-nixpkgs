@@ -247,7 +247,7 @@ in
 
   # FIXME: see https://github.com/NixOS/nixpkgs/issues/31540
   systemd.services.systemd-timesyncd.preStart = ''
-    rm -rf /var/lib/{private/,}systemd/timesyncd
+    rm -rf /var/lib/{private/,}systemd/timesync
   '';
 
   system.stateVersion = "19.09";
