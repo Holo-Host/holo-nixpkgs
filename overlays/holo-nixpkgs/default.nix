@@ -49,8 +49,8 @@ let
   hp-admin = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "hp-admin";
-    rev = "8d46c49dd742bfd8f45590fa5bf882fd120d6d76";
-    sha256 = "16h52858d7glscqpc0vyd9f1shi8z7b65vgqv4ascg58gjx68pvl";
+    rev = "d612a6b916d13c718d6a2bc87387665eee7ad550";
+    sha256 = "0yp3dakm7df6lkyjc4zr0paskvyhzamivakzjgqv3jfvgradba0r";
   };
 
   hp-admin-crypto = fetchFromGitHub {
@@ -315,6 +315,8 @@ in
       };
     };
   };
+
+  wasm-pack = callPackage ./wasm-pack {};
 
   wrangler = callPackage ./wrangler {};
 
