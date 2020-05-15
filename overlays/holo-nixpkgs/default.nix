@@ -12,7 +12,7 @@ let
   };
 
   cargo-to-nix = fetchFromGitHub {
-    owner = "transumption";
+    owner = "Holo-Host";
     repo = "cargo-to-nix";
     rev = "ba6adc0a075dfac2234e851b0d4c2511399f2ef0";
     sha256 = "1rcwpaj64fwz1mwvh9ir04a30ssg35ni41ijv9bq942pskagf1gl";
@@ -73,7 +73,7 @@ let
   };
 
   npm-to-nix = fetchFromGitHub {
-    owner = "transumption";
+    owner = "Holo-Host";
     repo = "npm-to-nix";
     rev = "6d2cbbc9d58566513019ae176bab7c2aeb68efae";
     sha256 = "1wm9f2j8zckqbp1w7rqnbvr8wh6n072vyyzk69sa6756y24sni9a";
