@@ -6,8 +6,8 @@ let
   happ-store = fetchFromGitHub {
     owner = "holochain";
     repo = "happ-store";
-    rev = "a7feb1f701753da2b0b3c1de9d6bc1c13896782b";
-    sha256 = "17d94cwk4xgf6i2xx50bxyk1bq68dc1ps4hi9wjy7f1c2qclgfdy";
+    rev = "b01163fc10cbbdf79ca3e17e8d0d6c07e2b71d3f";
+    sha256 = "0qp7gv38pzya4plvmfm639s38k2dcs3dxdbf2rkhqzinc7a04fp1";
   };
 
   holofuel = fetchurl {
@@ -19,8 +19,8 @@ let
   holo-hosting-app = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "holo-hosting-app";
-    rev = "37013a19c4f2546304e2abea6951e2e06863fcbc";
-    sha256 = "1i43k1wwcpmvx60db2kvbsvfihkfy2nn6iqqwcxz00gqm6pihr2q";
+    rev = "2561bba8612c68f748aef8c313ac37ef5a01b85e";
+    sha256 = "1rkiwc012l8l9mwnbj6246a204nbgbqhmhr5jf3rw83bsyrybs5i";
   };
 
   servicelogger = fetchFromGitHub {
