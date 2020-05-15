@@ -245,6 +245,11 @@ in
   systemd.services.acme-default.serviceConfig.ExecStart =
     lib.mkForce "${holo-router-acme}/bin/holo-router-acme";
 
+  # FIXME: see https://github.com/NixOS/nixpkgs/issues/31540
+  systemd.services.systemd-timesyncd.preStart = ''
+    rm -rf /var/lib/{private/,}systemd/timesync
+  '';
+
   system.stateVersion = "19.09";
 
   users.users.nginx.extraGroups = [ "hpos-admin-users" ];
