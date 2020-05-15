@@ -237,6 +237,10 @@ in
     dates = "*:0/10";
   };
 
+  system.holo-nixpkgs.dev-settings = {
+    enable = true;
+  };
+
   system.holo-nixpkgs.usbReset = {
     enable = lib.mkDefault true;
     filename = "hpos-reset";

@@ -1,5 +1,7 @@
 {
   imports = [ ../. ];
 
-  environment.variables.HPOS_DEVELOPMENT_MODE = "true";
+  system.holo-nixpkgs.dev-settings.settings = {
+    profiles.development.enable = true;
+  };
 }
