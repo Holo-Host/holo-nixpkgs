@@ -26,6 +26,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.etc."dev-settings.toml".text = pkgs.writeTOML cfg.settings;
+    environment.etc."dev-settings.toml".source = pkgs.writeTOML cfg.settings;
   };
 }
