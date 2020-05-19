@@ -39,14 +39,14 @@ let
 
    hostedDnas = with dnaPackages; [
     # list holo hosted DNAs here
-    #{
-    #  drv = hosted-holofuel;
-    #  happ-url = "https://holofuel.holo.host";
-    #  happ-title = "HoloFuel";
-    #  happ-release-version = "v0.1";
-    #  happ-publisher = "Holo Ltd";
-    #  happ-publish-date = "2020/01/31";
-    #}
+    {
+      drv = hosted-holofuel;
+      happ-url = "http://hostedtestfuel.holo.host";
+      happ-title = "HoloFuel";
+      happ-release-version = "v0.1";
+      happ-publisher = "Holo Ltd";
+      happ-publish-date = "2020/01/31";
+    }
   ];
 
   hostedDnaConfig = dna: rec {
