@@ -39,13 +39,6 @@ let
     sha256 = "1qv9h82gl8lcm3kbkkq0gskd38c5msp9lxz5hvaxj6q8amc8884v";
   };
 
-  holo-update-conductor-config = fetchFromGitHub {
-    owner = "Holo-Host";
-    repo = "holo-update-conductor-config";
-    rev = "4102905f6404648024a7cd4f762ea53597aa6430";
-    sha256 = "1ymh56zwf1wd6ka61b5z946z50llx1sl24qi46wkx8y6v8xc16wr";
-  };
-
   hp-admin = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "hp-admin";
@@ -201,7 +194,9 @@ in
     import "${holo-nixpkgs.path}/tests" { inherit pkgs; }
   );
 
-  holo-update-conductor-config = callPackage holo-update-conductor-config { };
+  holo-update-conductor-config = callPackage ./holo-update-conductor-config {
+    inherit (rust.packages.nightly) rustPlatform;
+  };
 
   holochain-cli = holochain-rust;
 
