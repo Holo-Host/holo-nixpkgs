@@ -208,6 +208,8 @@ in
       };
       persistence_dir = conductorHome;
       signing_service_uri = "http://localhost:9676";
+      encryption_service_uri = "http://localhost:9676";
+      decryption_service_uri = "http://localhost:9676";
       interfaces = [
         {
           id = "master-interface";
