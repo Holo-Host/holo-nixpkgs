@@ -35,8 +35,8 @@ let
   holo-envoy = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "holo-envoy";
-    rev = "bf4e08352f9334942fe10b0518c53aecab824ee3";
-    sha256 = "04i7kjgk7ci8zplqs155ashfp9dymclngvsa2bv3wv6yn8anir86";
+    rev = "b7789e5b9b03ac20379aa12bdd4b1f9f67d7eb31";
+    sha256 = "09sqbic1jsqyxkgbc4645mxlkdclm1r9q6nrpgghjgjkl1gsndlw";
   };
 
   holo-router = fetchFromGitHub {
