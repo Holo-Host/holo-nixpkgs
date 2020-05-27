@@ -52,7 +52,13 @@ in
   nix.extraOptions = ''
     builders-use-substitutes = true
   '';
-
+  
+  security.acme = {
+    acceptTerms = true;
+    # REVIEW: maybe a dedicated email for Hydra?
+    email = "oleksii.filonenko@holo.host";
+  };
+  
   services.postgresql.extraConfig = ''
     max_connections = 1024
   '';
