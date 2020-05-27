@@ -72,4 +72,3 @@ https://hydra.holo.host/job/holo-nixpkgs/master/holoportos.targets.virtualbox.x8
 Refer to [VirtualBox manual, chapter 1, section 1.15.2](https://www.virtualbox.org/manual/ch01.html#ovf-import-appliance).
 
 [nix]: https://nixos.org/nix/
-<!-- :) -->
