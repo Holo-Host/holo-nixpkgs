@@ -65,6 +65,8 @@ in
 
   services.hydra = {
     enable = true;
+    # NOTE: necessary to use hydra-{migration,unstable}
+    package = pkgs.hydra;
     hydraURL = "https://${config.services.nginx.virtualHosts.hydra.serverName}";
     logo = ./logo.svg;
     notificationSender = "hydra@holo.host";
