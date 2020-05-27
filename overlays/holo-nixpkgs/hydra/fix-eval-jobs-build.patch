@@ -1,0 +1,68 @@
+From 15a45f1a8a867369bb58991fbcf58366b10cc62d Mon Sep 17 00:00:00 2001
+From: Eelco Dolstra <edolstra@gmail.com>
+Date: Tue, 12 May 2020 16:14:20 +0200
+Subject: [PATCH] Fix build
+
+---
+ src/hydra-eval-jobs/hydra-eval-jobs.cc | 46 ++++++++++++++------------
+ 1 file changed, 25 insertions(+), 21 deletions(-)
+
+diff --git a/src/hydra-eval-jobs/hydra-eval-jobs.cc b/src/hydra-eval-jobs/hydra-eval-jobs.cc
+index f3367e11..89c2ba84 100644
+--- a/src/hydra-eval-jobs/hydra-eval-jobs.cc
++++ b/src/hydra-eval-jobs/hydra-eval-jobs.cc
+@@ -35,29 +35,33 @@ struct MyArgs : MixEvalArgs, MixCommonArgs
+ 
+     MyArgs() : MixCommonArgs("hydra-eval-jobs")
+     {
+-        mkFlag()
+-            .longName("help")
+-            .description("show usage information")
+-            .handler([&]() {
++        addFlag({
++            .longName = "help",
++            .description = "show usage information",
++            .handler = {[&]() {
+                 printHelp(programName, std::cout);
+                 throw Exit();
+-            });
+-
+-        mkFlag()
+-            .longName("gc-roots-dir")
+-            .description("garbage collector roots directory")
+-            .labels({"path"})
+-            .dest(&gcRootsDir);
+-
+-        mkFlag()
+-            .longName("dry-run")
+-            .description("don't create store derivations")
+-            .set(&dryRun, true);
+-
+-        mkFlag()
+-            .longName("flake")
+-            .description("build a flake")
+-            .set(&flake, true);
++            }}
++        });
++
++        addFlag({
++            .longName = "gc-roots-dir",
++            .description = "garbage collector roots directory",
++            .labels = {"path"},
++            .handler = {&gcRootsDir}
++        });
++
++        addFlag({
++            .longName = "dry-run",
++            .description = "don't create store derivations",
++            .handler = {&dryRun, true}
++        });
++
++        addFlag({
++            .longName = "flake",
++            .description = "build a flake",
++            .handler = {&flake, true}
++        });
+ 
+         expectArg("expr", &releaseExpr);
+     }

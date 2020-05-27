@@ -1,0 +1,60 @@
+From 575113396dd55bc56385e103cb1706c499558514 Mon Sep 17 00:00:00 2001
+From: Nikola Knezevic <nikola@knezevic.ch>
+Date: Fri, 15 May 2020 17:58:48 +0200
+Subject: [PATCH 1/2] Handle missing values in declarative jobsets
+
+The current implementation will pass all values to `create_or_update` method. The
+missing values will end up as `undef` (or `NULL`) when assigned to `%update`.
+Thus, for columns that are NOT NULL, when, for example, flakes are not used,
+will result in a horrible:
+
+    DBIx::Class::Storage::DBI::_dbh_execute(): DBI Exception: DBD::Pg::st execute failed:
+    ERROR:  null value in column "type" violates not-null constraint
+
+    DETAIL:  Failing row contains (.jobsets, 118, hydra, hydra jobsets, src, hydra/jobsets.nix, null,
+    null, null, 1589536378, 1, 0, 0, , 3, 30, 100, null, null, 1589536379, null, null). [for Statement
+    "UPDATE jobsets SET checkinterval = ?, description = ?, enableemail = ?, nixexprinput = ?,
+    nixexprpath = ?, type = ? WHERE ( ( name = ? AND project = ? ) )" with ParamValues: 1='30',
+    2='hydra jobsets', 3='0', 4='src', 5='hydra/jobsets.nix', 6=undef, 7='.jobsets', 8='hydra'] at
+    /nix/store/lsf81ip9ybxihk5praf2n0nh14a6i9j0-hydra-0.1.19700101.DIRTY/libexec/hydra/lib/Hydra/Helper/AddBuilds.pm line 50
+
+This change just omits adding such values to `%update`, which results in
+PostgreSQL assigning the default values.
+---
+ src/lib/Hydra/Helper/AddBuilds.pm | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/lib/Hydra/Helper/AddBuilds.pm b/src/lib/Hydra/Helper/AddBuilds.pm
+index e26115c3..ca161350 100644
+--- a/src/lib/Hydra/Helper/AddBuilds.pm
++++ b/src/lib/Hydra/Helper/AddBuilds.pm
+@@ -43,6 +43,8 @@ sub updateDeclarativeJobset {
+     );
+     my %update = ( name => $jobsetName );
+     foreach my $key (@allowed_keys) {
++        # do not pass missing data to let psql assign the default value
++        next unless defined $declSpec->{$key};
+         $update{$key} = $declSpec->{$key};
+         delete $declSpec->{$key};
+     }
+
+From e9922c460e5b0c861d9fb56dce6bab45d97b4a57 Mon Sep 17 00:00:00 2001
+From: Nikola Knezevic <nikola@knezevic.ch>
+Date: Fri, 15 May 2020 18:02:29 +0200
+Subject: [PATCH 2/2] Add missing SQL upgrade script for NOT NULL on `type`
+
+`type` column in `Jobsets` is defined as NOT NULL. However, the original upgrade
+script adding this column ommited the constraint.
+---
+ src/sql/upgrade-66.sql | 2 ++
+ 1 file changed, 2 insertions(+)
+ create mode 100644 src/sql/upgrade-66.sql
+
+diff --git a/src/sql/upgrade-66.sql b/src/sql/upgrade-66.sql
+new file mode 100644
+index 00000000..27bfa8a0
+--- /dev/null
++++ b/src/sql/upgrade-66.sql
+@@ -0,0 +1,2 @@
++update Jobsets set type = 0 where type is null;
++alter table Jobsets alter column type set not null;

@@ -257,6 +257,8 @@ in
     super: {
       doCheck = false;
       patches = [
+        ./hydra/fix-declarative-jobsets-type.patch
+        ./hydra/fix-eval-jobs-build.patch
         ./hydra/logo-vertical-align.diff
         ./hydra/no-restrict-eval.diff
         ./hydra/secure-github.diff
