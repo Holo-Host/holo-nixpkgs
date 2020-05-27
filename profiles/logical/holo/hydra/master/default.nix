@@ -105,7 +105,8 @@ in
         "/".proxyPass = "http://localhost:${toString config.services.hydra.port}";
         "/favicon.ico".root = ./favicon;
       };
-      serverName = "hydra.holo.host";
+      # FIXME: remove after 20.03 is tested
+      serverName = "hydra-2003.holo.host";
     };
 
     # First HoloPort/HoloPort+ batch points to Hydra-based Nix channel on
