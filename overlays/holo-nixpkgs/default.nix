@@ -253,9 +253,7 @@ in
     reboot
   '';
 
-  hydra = let
-    previousHydra = previous.hydra-migration;
-  in previousHydra.overrideAttrs (
+  hydra = previous.hydra-unstable.overrideAttrs (
     super: {
       doCheck = false;
       patches = [
