@@ -1,0 +1,23 @@
+{
+  "checkinterval": 10,
+  "emailoverride": "",
+  "enabled": true,
+  "enableemail": false,
+  "hidden": false,
+  "inputs": {
+    "holoport": {
+      "emailresponsible": false,
+      "type": "git",
+      "value": "https://github.com/Holo-Host/holoportOS.git"
+    },
+    "nixpkgs": {
+      "emailresponsible": false,
+      "type": "git",
+      "value": "https://github.com/NixOS/nixpkgs.git release-19.09"
+    }
+  },
+  "keepnr": 128,
+  "nixexprinput": "holoport",
+  "nixexprpath": "jobsets.nix",
+  "schedulingshares": 15
+}
