@@ -18,6 +18,6 @@
   },
   "keepnr": 128,
   "nixexprinput": "holoport",
-  "nixexprpath": "jobsets.nix",
+  "nixexprpath": "default.nix",
   "schedulingshares": 15
 }
