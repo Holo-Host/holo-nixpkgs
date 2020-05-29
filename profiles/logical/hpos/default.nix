@@ -169,7 +169,7 @@ in
         };
 
         "/hosting/" = {
-          proxyPass = "http://127.0.0.1:4656";
+          proxyPass = "http://127.0.0.1:4656/";
           proxyWebsockets = true;
         };
       };
