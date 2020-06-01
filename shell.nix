@@ -22,6 +22,10 @@ mkShell {
     hpos-switch() {
       sudo -E nixos-rebuild switch --fast -I nixos-config=/etc/nixos/configuration.nix
     }
+
+    hp-test() {
+      sudo -E nixos-rebuild test -I nixos-config=/etc/nixos/configuration.nix
+    }
   '';
 
   NIX_PATH = builtins.concatStringsSep ":" [
