@@ -6,8 +6,8 @@ let
   happ-store = fetchFromGitHub {
     owner = "holochain";
     repo = "happ-store";
-    rev = "b01163fc10cbbdf79ca3e17e8d0d6c07e2b71d3f";
-    sha256 = "0qp7gv38pzya4plvmfm639s38k2dcs3dxdbf2rkhqzinc7a04fp1";
+    rev = "3d45c26cedd48192e6dfe14d92d812c8dcc41ca5";
+    sha256 = "1x5q074j4hj84r0nkvg85ssk8f1h2y34j112w1j9crrnmf90c9g5";
   };
 
   holofuel = fetchurl {
@@ -19,8 +19,8 @@ let
   holo-hosting-app = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "holo-hosting-app";
-    rev = "2561bba8612c68f748aef8c313ac37ef5a01b85e";
-    sha256 = "1rkiwc012l8l9mwnbj6246a204nbgbqhmhr5jf3rw83bsyrybs5i";
+    rev = "1534045fd03d197e5237a8f80740bb3a464d6334";
+    sha256 = "1wc1ydvbxy6i774fz3d7rm2bxwi5f54wlynh91jsm55b8jkwrxgq";
   };
 
   servicelogger = fetchFromGitHub {
@@ -32,11 +32,11 @@ let
 in
 
 {
-  # inherit (callPackage happ-store {}) happ-store;
+  inherit (callPackage happ-store {}) happ-store;
 
-  # inherit (callPackage holo-hosting-app {}) holo-hosting-app;
+  inherit (callPackage holo-hosting-app {}) holo-hosting-app;
 
-  # inherit (callPackage servicelogger {}) servicelogger;
+  inherit (callPackage servicelogger {}) servicelogger;
 
   holofuel = wrapDNA holofuel;
 }
