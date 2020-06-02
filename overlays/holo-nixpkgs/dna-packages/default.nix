@@ -32,11 +32,11 @@ let
 in
 
 {
-  inherit (callPackage happ-store {}) happ-store;
+  # inherit (callPackage happ-store {}) happ-store;
 
-  inherit (callPackage holo-hosting-app {}) holo-hosting-app;
+  # inherit (callPackage holo-hosting-app {}) holo-hosting-app;
 
-  inherit (callPackage servicelogger {}) servicelogger;
+  # inherit (callPackage servicelogger {}) servicelogger;
 
   holofuel = wrapDNA holofuel;
 }

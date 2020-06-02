@@ -31,7 +31,7 @@ makeTest {
     $machine->waitForUnit("holochain-conductor.service");
     $machine->waitForOpenPort("42211");
 
-    my $expected_dnas = "happ-store\nholo-hosting-app\nholofuel\nservicelogger\n";
+    #my $expected_dnas = "holofuel\n";
     my $actual_dnas = $machine->succeed(
       "holo admin --port 42211 interface | jq -r '.[2].instances[].id'"
     );
