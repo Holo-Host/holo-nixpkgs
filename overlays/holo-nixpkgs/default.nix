@@ -104,10 +104,6 @@ in
 
   inherit (callPackage holo-auth {}) holo-auth-client;
   
-  inherit (callPackage holo-envoy {})
-    holo-envoy
-    ;
-
   inherit (callPackage holo-router {})
     holo-router-agent
     holo-router-gateway
@@ -207,6 +203,10 @@ in
   };
 
   holo-cli = callPackage ./holo-cli {};
+
+  holo-envoy = callPackage ./holo-envoy {
+    inherit (rust.packages.nightly) rustPlatform;
+  };
 
   holo-nixpkgs.path = gitignoreSource ../..;
 
