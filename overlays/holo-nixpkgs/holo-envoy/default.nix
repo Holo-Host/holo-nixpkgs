@@ -1,4 +1,14 @@
-{ stdenv, rustPlatform, fetchFromGitHub, nodejs-12_x, npmToNix }:
+{ stdenv
+, rustPlatform
+, fetchFromGitHub
+, dnaPackages
+, holochain-rust
+, makeWrapper
+, nodejs
+, npmToNix
+, ps
+, python
+}:
 
 stdenv.mkDerivation rec {
   name = "holo-envoy";
@@ -9,7 +19,23 @@ stdenv.mkDerivation rec {
     sha256 = "1r6vjs3ycw4q3d23w3ik5zxcghqzks27147s78p4pg2gb0fxsvn0";
   };
 
-  nativeBuildInputs = [ nodejs-12_x ];
+  buildInputs = [
+    holochain-rust
+    python
+  ] ++ (with dnaPackages; [
+    happ-store
+    holo-hosting-app
+    hosted-holofuel
+    # holofuel
+    servicelogger
+  ]);
+
+  nativeBuildInputs = [
+    makeWrapper
+    nodejs
+    # REVIEW: why do we need this? ask @mjbrisebois
+    ps
+  ];
 
   preConfigure = ''
     cp -r ${npmToNix { inherit src; }} node_modules
@@ -22,8 +48,10 @@ stdenv.mkDerivation rec {
   '';
 
   installPhase = ''
-    mkdir $out
-    mv * $out
+      mkdir $out
+      mv build node_modules rpc-websocket-wrappers server.js $out
+      makeWrapper ${nodejs}/bin/node $out/bin/${name} \
+        --add-flags $out/server.js
   '';
 
   fixupPhase = ''
@@ -31,7 +59,8 @@ stdenv.mkDerivation rec {
   '';
 
   checkPhase = ''
-    npm run test
+      make test-nix
+      make stop-sim2h
   '';
 
   # HACK: consider flipping it on when test timeout issues are resolved
