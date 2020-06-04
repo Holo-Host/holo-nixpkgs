@@ -31,7 +31,7 @@ in
         ${pkgs.hpos-config-into-keystore}/bin/hpos-config-into-keystore \
           < $HPOS_CONFIG_PATH > /tmp/holo-keystore 2> /tmp/holo-keystore.pub
         export HOLO_KEYSTORE_HCID=$(cat /tmp/holo-keystore.pub)
-        if [[ ! -f $STATE_DIRECTORY/conductor-config.toml || ! -n $HPOS_DEVELOPMENT_MODE ]]; then
+        if [[ ! -f $STATE_DIRECTORY/conductor-config.toml ]]; then
           ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeTOML cfg.config} \
             | ${pkgs.holo-update-conductor-config}/bin/holo-update-conductor-config \
             $STATE_DIRECTORY/conductor-config.toml
