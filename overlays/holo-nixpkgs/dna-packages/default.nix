@@ -16,18 +16,13 @@ let
     sha256 = "159g4d0fhmb4kfi7v4ndizamj6ajfmxxv57ylzkr9q8sdyjb5l8i";
   };
 
-  servicelogger = fetchFromGitHub {
-    owner = "Holo-Host";
-    repo = "servicelogger";
-    rev = "33fa8304ea00284b73f454d05d61817db53e2869";
-    sha256 = "0b5whd5hgh7zdgf9ppw7z4691ypw5qqim7cv1nx1hqhiyxy8cimh";
-  };
+
 in
 
 {
   inherit (callPackage happ-store {}) happ-store;
 
-  inherit (callPackage servicelogger {}) servicelogger;
+
 
   holofuel = wrapDNA holofuel;
 }
