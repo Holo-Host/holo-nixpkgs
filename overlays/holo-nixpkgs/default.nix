@@ -11,6 +11,13 @@ let
     sha256 = "00d9c6f0hh553hgmw01lp5639kbqqyqsz66jz35pz8xahmyk5wmw";
   };
 
+  bump-dna = fetchFromGitHub {
+    owner = "Holo-Host";
+    repo = "bump-dna";
+    rev = "f97d963a3cef41b30a646ada9ba55349d104ed2c";
+    sha256 = "1kpa3r8cwik9r3k3l6p1n3cl0g4bqwm0wp23mgr4ac41x7xpndyk";
+  };
+
   cargo-to-nix = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "cargo-to-nix";
@@ -78,6 +85,8 @@ in
     aorura-cli
     aorura-emu
     ;
+
+  inherit (callPackage bump-dna {}) bump-dna-cli;
 
   inherit (callPackage cargo-to-nix {})
     buildRustPackage
