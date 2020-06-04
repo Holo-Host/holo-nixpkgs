@@ -28,5 +28,6 @@ mkShell {
     "holo-nixpkgs=${root}"
     "nixpkgs=${pkgs.path}"
     "nixpkgs-overlays=${root}/overlays"
+    "nixos-config=/etc/nixos/configuration.nix"
   ];
 }
