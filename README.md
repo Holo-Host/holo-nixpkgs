@@ -2,7 +2,8 @@
 
 Modules, packages and profiles that drive Holo, Holochain, and HoloPortOS.
 
-This should trigger hydra
+- This should trigger hydra
+- this is a new try
 
 ## Binary cache
 
