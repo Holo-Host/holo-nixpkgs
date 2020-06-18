@@ -39,6 +39,7 @@ branches:
       restrictions:
         users:
           - peeech
+          - filalex77
         teams: []
   - name: master
     protection:
@@ -57,4 +58,24 @@ branches:
       restrictions:
         users:
           - peeech
+          - filalex77
+        teams: []
+  - name: hydra
+    protection:
+      required_pull_request_reviews:
+        required_approving_review_count: 2
+        dismiss_stale_reviews: true
+        require_code_owner_reviews: true
+        dismissal_restrictions:
+          users: []
+          teams: []
+      required_status_checks:
+        strict: true
+        contexts:
+          - Hydra
+      enforce_admins: true
+      restrictions:
+        users:
+          - peeech
+          - filalex77
         teams: []
