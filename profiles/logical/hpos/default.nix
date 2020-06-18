@@ -37,11 +37,15 @@ let
     holo-hosted = false;
   };
 
-  hostedDnas = with dnaPackages; [
+   hostedDnas = with dnaPackages; [
     # list holo hosted DNAs here
     #{
     #  drv = hosted-holofuel;
     #  happ-url = "https://holofuel.holo.host";
+    #  happ-title = "HoloFuel";
+    #  happ-release-version = "v0.1";
+    #  happ-publisher = "Holo Ltd";
+    #  happ-publish-date = "2020/01/31";
     #}
   ];
 
@@ -51,6 +55,10 @@ let
     hash = id;
     holo-hosted = true;
     happ-url = dna.happ-url;
+    happ-title = dna.happ-title;
+    happ-release-version = dna.happ-release-version;
+    happ-publisher = dna.happ-publisher;
+    happ-publish-date = dna.happ-publish-date;
   };
 
   instanceConfig = drv: {
