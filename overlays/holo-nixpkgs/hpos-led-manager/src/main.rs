@@ -53,9 +53,9 @@ fn main() -> Fallible<()> {
 
         let hpos_config_found = Path::new("/run/hpos-init/hpos-config.json").exists();
 
-        // let TLS_certificate_valid = check that certificate is valid without querying simp_le or acme service
+        let TLS_certificate_valid = false // Check that certificate is valid without querying simp_le or acme service
 
-        // let update_required = current_holo_nixpkgs_revision == hydra_channel_holo_nixpkgs_revision. We could use this delta to show when a HoloPort is in the update process?
+        let update_required = false // Current_holo_nixpkgs_revision == hydra_channel_holo_nixpkgs_revision. We could use this delta to show when a HoloPort is in the update process?
 
         let system_error = false // If any system services are throwing errors
         let hosting_error = false // Can be replaced with errors to do with DNAs if holochain can report them
