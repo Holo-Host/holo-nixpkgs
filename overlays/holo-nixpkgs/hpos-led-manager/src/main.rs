@@ -53,9 +53,13 @@ fn main() -> Fallible<()> {
 
         let hpos_config_found = Path::new("/run/hpos-init/hpos-config.json").exists();
 
-        let state = match (online, hpos_config_found) {
-            (false, _) => State::Flash(Color::Purple),
-            (true, false) => State::Static(Color::Blue),
+        let state = match (critical_error, service_error, !online, update_required, !hpos_config_found, !TLS_certificate_received) {
+            (true, _) => State::Flash(Color::Red),
+            (false, true, _) => State::Flash(Color::Yellow),
+            (false, false, true, _) => State::Flash(Color::Purple),
+            (false, false, false, true, _) => State::Static(Color::Blue),
+            (false, false, false, false, true, _) => State::Flash(Color::Green),
+            (false, false, false, false, false, true) => State::Static(Color::Green),
             _ => State::Aurora,
         };
 
