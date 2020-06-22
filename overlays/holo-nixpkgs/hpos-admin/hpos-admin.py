@@ -75,7 +75,7 @@ def put_settings():
 
 def hosted_happs():
     conductor_config = toml.load('/var/lib/holochain-conductor/conductor-config.toml')
-    [dna for dna in conductor_config['dnas'] if dna['holo-hosted']]
+    return [dna for dna in conductor_config['dnas'] if dna['holo-hosted']]
 
 
 @app.route('/hosted_happs', methods=['GET'])
