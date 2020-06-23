@@ -11,9 +11,9 @@ let
   };
 
   holofuel = fetchurl {
-    url = "https://holo-host.github.io/holofuel/releases/download/v0.21.0-alpha1/holofuel.dna.json";
+    url = "https://holo-host.github.io/holofuel/releases/download/v0.21.1-alpha1/holofuel.dna.json";
     name = "holofuel.dna.json";
-    sha256 = "1s5h1mwvsdagpyzaz8qgkdh0hvv3gnyf4f7jh3laihqcqblh4bbv";
+    sha256 = "0ym2ch327qm4hhxvhlkhkdzqrzv8b4ifyqbzpwddgh3z9hgccm2f";
   };
 
   holo-hosting-app = fetchFromGitHub {
