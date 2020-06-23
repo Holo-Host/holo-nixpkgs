@@ -6,7 +6,7 @@ rustPlatform.buildRustPackage {
   src = fetchFromGitHub {
     owner = "holochain";
     repo = "holochain-rust";
-    rev = "647d4b2b5e99b48f21edf08abd374a88b113a8be";
+    rev = "d982ff36de00e2fa210b6ae458b5701681337a3f";
     sha256 = "1bx2n2rck360442p5q6qvnpzgqbqkicdhi5yhi4j9jxppdxb31lh";
   };
 
