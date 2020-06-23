@@ -49,8 +49,8 @@ let
   hp-admin = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "hp-admin";
-    rev = "c3621831e91c9f4b0e4559ea3326476edfe1fa84";
-    sha256 = "1nn2dcvg09v61q8mmrj26izdycpsfgslsv8r4rj1raskrrlnwrb6";
+    rev = "9a78429abf4f6de1893fdc3da7bc495bf26bae58";
+    sha256 = "166s337vqmn0rghzip9gmmcp5hh30h4r0rvh1j5lk09pdqpzgly6";
   };
 
   hp-admin-crypto = fetchFromGitHub {
