@@ -1,4 +1,4 @@
-{ makeTest, lib, hpos-admin-client, hpos-config-gen-cli, zerotierone }:
+{ makeTest, lib, hpos-admin-client, hpos-config-gen-cli }:
 
 makeTest {
   name = "hpos-admin";
@@ -11,7 +11,6 @@ makeTest {
     environment.systemPackages = [
       hpos-admin-client
       hpos-config-gen-cli
-      zerotierone
     ];
 
     services.hpos-admin.enable = true;
@@ -50,9 +49,6 @@ makeTest {
     chomp($actual_settings);
 
     die "unexpected settings" unless $actual_settings eq $expected_settings;
-
-    my $actual_status = $machine->succeed("hpos-admin-client --url=http://localhost get-status");
-    chomp($actual_status);
 
     $machine->shutdown;
   '';
