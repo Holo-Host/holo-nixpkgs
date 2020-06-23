@@ -227,13 +227,16 @@ in
     logical = "${holo-nixpkgs.path}/profiles/logical/hpos";
     physical = "${holo-nixpkgs.path}/profiles/physical/hpos";
 
-    qemu = (hpos.buildImage [ "${hpos.physical}/vm/qemu" ]) // {
-      meta.platforms = [ "x86_64-linux" ];
-    };
+    # NOTE: these are disabled due to long Hydra build times
+    # and comparatively insubstantial importance
 
-    virtualbox = (hpos.buildImage [ "${hpos.physical}/vm/virtualbox" ]) // {
-      meta.platforms = [ "x86_64-linux" ];
-    };
+    # qemu = (hpos.buildImage [ "${hpos.physical}/vm/qemu" ]) // {
+    #   meta.platforms = [ "x86_64-linux" ];
+    # };
+    #
+    # virtualbox = (hpos.buildImage [ "${hpos.physical}/vm/virtualbox" ]) // {
+    #   meta.platforms = [ "x86_64-linux" ];
+    # };
   };
 
   hpos-admin = callPackage ./hpos-admin {
