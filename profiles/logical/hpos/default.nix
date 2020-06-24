@@ -104,7 +104,7 @@ in
 
   services.holo-router-agent.enable = lib.mkDefault true;
 
-  services.hp-admin-crypto-server.enable = true;
+  services.hp-admin-crypto-server.enable = false;
 
   services.hpos-admin.enable = true;
 
@@ -115,64 +115,9 @@ in
   services.nginx = {
     enable = true;
 
-    virtualHosts.default = {
-      enableACME = true;
-      onlySSL = true;
-      locations = {
-        "/" = {
-          alias = "${pkgs.hp-admin-ui}/";
-          extraConfig = ''
-            limit_req zone=zone1 burst=30;
-          '';
-        };
-
-        "~ ^/admin(?:/.*)?$" = {
-            extraConfig = ''
-              rewrite ^/admin.*$ / last;
-              return 404;
-            '';
-        };
-
-        "~ ^/holofuel(?:/.*)?$" = {
-            extraConfig = ''
-              rewrite ^/holofuel.*$ / last;
-              return 404;
-            '';
-        };
-
-        "/api/v1/" = {
-          proxyPass = "http://unix:/run/hpos-admin.sock:/";
-        };
-
-        "/api/v1/ws/" = {
-          proxyPass = "http://127.0.0.1:42233";
-          proxyWebsockets = true;
-          extraConfig = ''
-            auth_request /auth/;
-          '';
-        };
-
-        "/auth/" = {
-          proxyPass = "http://127.0.0.1:2884";
-          extraConfig = ''
-            internal;
-            proxy_set_header X-Original-URI $request_uri;
-            proxy_set_header X-Original-Method $request_method;
-            proxy_pass_request_body off;
-            proxy_set_header Content-Length "";
-          '';
-        };
-
-        "/hosting/" = {
-          proxyPass = "http://127.0.0.1:4656";
-          proxyWebsockets = true;
-        };
+    virtualHosts.localhost = {
+        locations."/".proxyPass = "http://unix:/run/hpos-admin.sock:/";
       };
-    };
-
-    appendHttpConfig = ''
-      limit_req_zone $binary_remote_addr zone=zone1:1m rate=2r/s;
-    '';
   };
 
   services.holochain-conductor = {
