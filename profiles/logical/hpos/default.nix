@@ -165,17 +165,12 @@ in
             proxy_set_header Content-Length "";
           '';
         };
-
-        "/hosting/" = {
-          proxyPass = "http://127.0.0.1:4656";
-          proxyWebsockets = true;
-        };
       };
 
       virtualHosts.localhost = {
         locations."/".proxyPass = "http://unix:/run/hpos-admin.sock:/";
       };
-      
+
     };
 
     appendHttpConfig = ''
