@@ -22,6 +22,7 @@ in
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
+        Environment = "LOG_LEVEL=silly";
         ExecStart = "${cfg.package}/bin/holo-envoy";
       };
     };
