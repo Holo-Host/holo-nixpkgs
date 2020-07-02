@@ -26,10 +26,12 @@ in
         HOME = "/root";
       } // config.networking.proxy.envVars;
 
-      path = with pkgs; [ config.nix.package git gzip gnutar xz ];
+      path = with pkgs; [ config.nix.package git gzip gnutar xz curl jq perl ];
 
       script = ''
         ${config.nix.package.out}/bin/nix-channel --update
+        channel_name=$(${config.nix.package.out}/bin/nix-channel --list | cut -d '/' -f 7)
+        curl -L -H Content-Type:application/json https://hydra.holo.host/jobset/holo-nixpkgs/$channel_name/latest-eval | jq -r '.jobsetevalinputs | ."holo-nixpkgs" | .revision' | perl -pe 'chomp' > /root/.nix-revision
         ${config.system.build.nixos-rebuild}/bin/nixos-rebuild switch
       '';
 
