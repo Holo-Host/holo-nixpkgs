@@ -29,6 +29,17 @@ struct Args {
     flag_state: PathBuf,
 }
 
+#[tokio::main]
+async fn main() -> Result<()> {
+    let res = reqwest::get("http://httpbin.org/get").await?;
+    println!("Status: {}", res.status());
+    println!("Headers:\n{:#?}", res.headers());
+
+    let body = res.text().await?;
+    println!("Body:\n{}", body);
+    Ok(())
+}
+
 fn main() -> Fallible<()> {
     let args: Args = Docopt::new(USAGE)?
         .argv(env::args())
@@ -53,7 +64,13 @@ fn main() -> Fallible<()> {
 
         let hpos_config_found = Path::new("/run/hpos-init/hpos-config.json").exists();
 
-        let TLS_certificate_valid = false // Check that certificate is valid without querying simp_le or acme service
+        let hydra_channel = fs::read_to_string("/root/.nix-channel")
+                            .expect("Something went wrong reading the file");
+
+        let local_revision = fs::read_to_string("/root/.nix-revision")
+                            .expect("Something went wrong reading the file");
+
+        let TLS_certificate_valid = false // Check that certificate is valid by checking /var/lib/acme/default > account_reg.json | body.status
 
         let update_required = false // Current_holo_nixpkgs_revision == hydra_channel_holo_nixpkgs_revision. We could use this delta to show when a HoloPort is in the update process?
 
