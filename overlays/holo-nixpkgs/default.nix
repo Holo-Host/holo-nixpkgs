@@ -39,12 +39,12 @@ let
     sha256 = "1c8p9xjhfxgh11vf55fwkglffv0qjc8gzc98kybqznhm81l8y2fl";
   };
 
-  holo-envoy = fetchFromGitHub {
-    owner = "Holo-Host";
-    repo = "holo-envoy";
-    rev = "a551e441ac966cf04c23453efba4e5191a78c7fb";
-    sha256 = "1r6vjs3ycw4q3d23w3ik5zxcghqzks27147s78p4pg2gb0fxsvn0";
-  };
+  holo-envoy = /home/matthew/projects/envoy;# fetchFromGitHub {
+  #   owner = "Holo-Host";
+  #   repo = "holo-envoy";
+  #   rev = "a551e441ac966cf04c23453efba4e5191a78c7fb";
+  #   sha256 = "1r6vjs3ycw4q3d23w3ik5zxcghqzks27147s78p4pg2gb0fxsvn0";
+  # };
 
   holo-router = fetchFromGitHub {
     owner = "Holo-Host";
