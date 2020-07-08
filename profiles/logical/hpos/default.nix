@@ -27,7 +27,7 @@ let
     # happ-store
     # holo-hosting-app
     holofuel
-    # servicelogger
+    servicelogger
   ];
 
   dnaConfig = drv: {
@@ -37,7 +37,7 @@ let
     holo-hosted = false;
   };
 
-   hostedDnas = with dnaPackages; [
+  hostedDnas = with dnaPackages; [
     # list holo hosted DNAs here
     {
       drv = hosted-holofuel;
@@ -172,6 +172,16 @@ in
           proxyPass = "http://127.0.0.1:4656/";
           proxyWebsockets = true;
         };
+
+        "/hc/master/" = {
+          proxyPass = "http://127.0.0.1:42211/";
+          proxyWebsockets = true;
+        };
+
+        "/hc/admin/" = {
+          proxyPass = "http://127.0.0.1:42233/";
+          proxyWebsockets = true;
+        };
       };
     };
 
@@ -197,14 +207,25 @@ in
       ];
       bridges = [];
       dnas = map dnaConfig dnas ++ map hostedDnaConfig hostedDnas;
-      instances = map instanceConfig dnas;
+      instances = (map instanceConfig dnas) ++ [
+        {
+          id = "${pkgs.dnaHash dnaPackages.hosted-holofuel}::servicelogger";
+          dna = dnaPackages.servicelogger.name;
+          agent = "host-agent";
+          holo-hosted = false;
+          storage = {
+            path = "${conductorHome}/${pkgs.dnaHash dnaPackages.hosted-holofuel}::servicelogger";
+            type = "lmdb";
+          };
+        }
+      ];
       network = {
         type = "sim2h";
         sim2h_url = "ws://public.sim2h.net:9000";
       };
       logger = {
         state_dump = false;
-        type = "info";
+        type = "debug";
       };
       persistence_dir = conductorHome;
       signing_service_uri = "http://localhost:9676";
@@ -226,6 +247,11 @@ in
             port = 42222;
             type = "websocket";
           };
+          instances = [
+            {
+              id = "${pkgs.dnaHash dnaPackages.hosted-holofuel}::servicelogger";
+            }
+          ];
         }
         {
           id = "admin-interface";

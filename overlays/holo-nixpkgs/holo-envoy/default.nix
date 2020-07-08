@@ -8,16 +8,18 @@
 , npmToNix
 , ps
 , python
+, fetchgit
 }:
 
 stdenv.mkDerivation rec {
   name = "holo-envoy";
-  src = fetchFromGitHub {
-    owner = "Holo-Host";
-    repo = "holo-envoy";
-    rev = "a551e441ac966cf04c23453efba4e5191a78c7fb";
-    sha256 = "1r6vjs3ycw4q3d23w3ik5zxcghqzks27147s78p4pg2gb0fxsvn0";
-  };
+  src = /home/matthew/projects/envoy;
+  #   fetchFromGitHub {
+  #   owner = "Holo-Host";
+  #   repo = "holo-envoy";
+  #   rev = "a551e441ac966cf04c23453efba4e5191a78c7fb";
+  #   sha256 = "1r6vjs3ycw4q3d23w3ik5zxcghqzks27147s78p4pg2gb0fxsvn0";
+  # };
 
   buildInputs = [
     holochain-rust
