@@ -30,21 +30,21 @@ struct Args {
     flag_state: PathBuf,
 }
 
-fn get_hydra_channel() {
-    let hydra_channel = fs::read_to_string("/root/.nix-channel")
+#[tokio::get_hydra_revision]
+async fn get_hydra_revision() {
+    let channel = fs::read_to_string("/root/.nix-channel")  // need to parse this for the channel name 
                             .expect("Something went wrong reading the file");
-}
 
+                           
+        eval_url = "https://hydra.holo.host/jobset/holo-nixpkgs/" + channel + "/latest-eval"
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
 
-#[tokio::main]
-async fn main() -> Result<()> {
-    let res = reqwest::get("http://httpbin.org/get").await?;
-    println!("Status: {}", res.status());
-    println!("Headers:\n{:#?}", res.headers());
-
-    let body = res.text().await?;
-    println!("Body:\n{}", body);
-    Ok(())
+    let res = reqwest::get(eval_url).await?; // How to add headers here?
+    let eval_summary: Value = serde_json::from_str(res)?; 
+    return revision["jobsetevalinputs"]["holo-nixpkgs"]["revision"]
 }
 
 fn main() -> Fallible<()> {
@@ -58,6 +58,8 @@ fn main() -> Fallible<()> {
     let mut state_prev: State = Default::default();
     let state_path = args.flag_state;
     let state_temp_path = state_path.with_extension("tmp");
+
+    // Run get_hydra_revision once every 5 minutes if running it in the loop is too taxing?
 
     loop {
         let router_gateway_addrs = "router-gateway.holo.host:80".to_socket_addrs();
@@ -79,8 +81,8 @@ fn main() -> Fallible<()> {
         let TLS_certificate: Value = serde_json::from_reader("/var/lib/acme/default/account_reg.json")?; 
         let TLS_certificate_valid = TLS_certificate["body"]["status"] == "valid" // Note that the TLS_certificate returns a borrow (&value)
 
-        let system_error = false // If any system services are throwing errors
-        let hosting_error = false // Can be replaced with errors to do with DNAs if holochain can report them
+        let system_error = false // true if any of the following services are in a failed state: holochain-conductor.service, hp-admin-crypto-server.service, hpos-admin.service, nginx.service, zerotierone.service. Important: FAILED only not missing. holochain-conductor might not be on Nano at first.
+        let hosting_error = false // true if the following services are in a failed state: holo-auth-client.service, hpos-init.service, 
 
         let state = match (system_error, hosting_error, !online, update_required, !hpos_config_found, !TLS_certificate_valid) {
             (true, _) => State::Flash(Color::Red),
