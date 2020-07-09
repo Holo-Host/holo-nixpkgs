@@ -2,6 +2,7 @@ use aorura::*;
 use docopt::Docopt;
 use failure::*;
 use serde::*;
+use serde_json::{Result, Value};
 
 use std::env;
 use std::fs;
@@ -28,6 +29,12 @@ struct Args {
     flag_device: PathBuf,
     flag_state: PathBuf,
 }
+
+fn get_hydra_channel() {
+    let hydra_channel = fs::read_to_string("/root/.nix-channel")
+                            .expect("Something went wrong reading the file");
+}
+
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -64,15 +71,13 @@ fn main() -> Fallible<()> {
 
         let hpos_config_found = Path::new("/run/hpos-init/hpos-config.json").exists();
 
-        let hydra_channel = fs::read_to_string("/root/.nix-channel")
-                            .expect("Something went wrong reading the file");
-
+        let hydra_revision = get_hydra_revision()
         let local_revision = fs::read_to_string("/root/.nix-revision")
                             .expect("Something went wrong reading the file");
+        let update_required = local_revision == hydra_revision // If this lights up then it's likely the updater isn't working properly
 
-        let TLS_certificate_valid = false // Check that certificate is valid by checking /var/lib/acme/default > account_reg.json | body.status
-
-        let update_required = false // Current_holo_nixpkgs_revision == hydra_channel_holo_nixpkgs_revision. We could use this delta to show when a HoloPort is in the update process?
+        let TLS_certificate: Value = serde_json::from_reader("/var/lib/acme/default/account_reg.json")?; 
+        let TLS_certificate_valid = TLS_certificate["body"]["status"] == "valid" // Note that the TLS_certificate returns a borrow (&value)
 
         let system_error = false // If any system services are throwing errors
         let hosting_error = false // Can be replaced with errors to do with DNAs if holochain can report them
