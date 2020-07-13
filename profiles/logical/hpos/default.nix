@@ -86,7 +86,7 @@ in
 
   environment.noXlibs = true;
 
-  environment.systemPackages = [ hpos-reset bump-dna-cli hpos-admin-client git ];
+  environment.systemPackages = [ hpos-reset bump-dna-cli hpos-admin-client hpos-update jq curl perl git ];
 
   networking.firewall.allowedTCPPorts = [ 443 ];
 
