@@ -113,6 +113,8 @@ in
     hpos-config-is-valid
     ;
 
+  inherit (callPackage hpos-update {}) hpos-update-cli;
+
   inherit (callPackage npm-to-nix {}) npmToNix;
 
   inherit (callPackage "${nixpkgs-mozilla}/package-set.nix" {}) rustChannelOf;
@@ -257,26 +259,9 @@ in
     reboot
   '';
 
-  hpos-update = writeShellScriptBin "hpos-update" ''
-    set -e
-    if [[ $# -eq 0 ]] ; then
-      echo 'hpos-update needs to be run with a channel name or number, e.g.: hpos-update master'
-      exit 0
-    fi
-
-    echo 'Switching HoloPort to channel:' $1
-    nix-channel --add https://hydra.holo.host/channel/custom/holo-nixpkgs/$1/holo-nixpkgs
-    nix-channel --update
-
-    if [[ $? -ne 0 ]] ; then
-      echo 'Error updating to channel:' $1
-      exit 1
-    fi
-
-    curl -L -H Content-Type:application/json https://hydra.holo.host/jobset/holo-nixpkgs/$1/latest-eval | jq -r '.jobsetevalinputs | ."holo-nixpkgs" | .revision' | perl -pe 'chomp' > /root/.nix-revision
-    nixos-rebuild switch
-    echo 'Successfully updated HoloPort to channel:' $1
-  '';
+  hpos-update = callPackage ./hpos-update {
+    stdenv = stdenvNoCC;
+  };
 
   hydra = previous.hydra.overrideAttrs (
     super: {
