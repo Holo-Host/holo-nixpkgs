@@ -113,8 +113,6 @@ in
     hpos-config-is-valid
     ;
 
-  inherit (callPackage hpos-update {}) hpos-update-cli;
-
   inherit (callPackage npm-to-nix {}) npmToNix;
 
   inherit (callPackage "${nixpkgs-mozilla}/package-set.nix" {}) rustChannelOf;
