@@ -257,6 +257,8 @@ in
     reboot
   '';
 
+  inherit (callPackage ./hpos-update {}) hpos-update-cli;
+
   hydra = previous.hydra.overrideAttrs (
     super: {
       doCheck = false;
