@@ -3,6 +3,7 @@ use docopt::Docopt;
 use failure::*;
 use serde::*;
 use serde_json::{Result, Value};
+use reqwest::Error;
 
 use std::env;
 use std::fs;
@@ -12,7 +13,6 @@ use std::thread::sleep;
 use std::time::Duration;
 
 const POLLING_INTERVAL: u64 = 1;
-
 const USAGE: &'static str = "
 Usage: hpos-led-manager --device <path> --state <path>
        hpos-led-manager --help
@@ -30,21 +30,26 @@ struct Args {
     flag_state: PathBuf,
 }
 
-#[tokio::get_hydra_revision]
-async fn get_hydra_revision() {
-    let channel = fs::read_to_string("/root/.nix-channel")  // need to parse this for the channel name 
+#[tokio::get_hydra_revision] 
+async fn get_hydra_revision(http_client) { // do these variables have to be mut?
+    let channel = fs::read_to_string("/root/.nix-channel") 
                             .expect("Something went wrong reading the file");
-
+    let channel_name = channel.split('/').nth(6)
                            
-        eval_url = "https://hydra.holo.host/jobset/holo-nixpkgs/" + channel + "/latest-eval"
-        headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
+    let eval_url = "https://hydra.holo.host/jobset/holo-nixpkgs/" + channel_name + "/latest-eval"
+    let headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+    }
 
-    let res = reqwest::get(eval_url).await?; // How to add headers here?
-    let eval_summary: Value = serde_json::from_str(res)?; 
-    return revision["jobsetevalinputs"]["holo-nixpkgs"]["revision"]
+    let res = http_client
+        .get(eval_url)
+        .header(headers)
+        .send()
+        .await?
+        .json()?;
+
+    return res["jobsetevalinputs"]["holo-nixpkgs"]["revision"]
 }
 
 fn main() -> Fallible<()> {
@@ -58,6 +63,7 @@ fn main() -> Fallible<()> {
     let mut state_prev: State = Default::default();
     let state_path = args.flag_state;
     let state_temp_path = state_path.with_extension("tmp");
+    let client = reqwest::Client::new();
 
     // Run get_hydra_revision once every 5 minutes if running it in the loop is too taxing?
 
