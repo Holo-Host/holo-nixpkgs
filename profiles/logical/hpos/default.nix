@@ -86,7 +86,7 @@ in
 
   environment.noXlibs = true;
 
-  environment.systemPackages = [ hpos-reset bump-dna-cli hpos-admin-client git ];
+  environment.systemPackages = [ hpos-reset bump-dna-cli hpos-admin-client hpos-update-cli ];
 
   networking.firewall.allowedTCPPorts = [ 443 ];
 
@@ -202,7 +202,7 @@ in
       };
       logger = {
         state_dump = false;
-        type = "info";
+        type = "debug";
       };
       persistence_dir = conductorHome;
       signing_service_uri = "http://localhost:9676";

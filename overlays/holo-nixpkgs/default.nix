@@ -49,8 +49,8 @@ let
   hp-admin = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "hp-admin";
-    rev = "8d46c49dd742bfd8f45590fa5bf882fd120d6d76";
-    sha256 = "16h52858d7glscqpc0vyd9f1shi8z7b65vgqv4ascg58gjx68pvl";
+    rev = "96facdc8fd28adfca1bd9e01919c4b7cab1f37a9";
+    sha256 = "0217x8p1576xxbk58xqymdhvfg73vs2hld3008kxxil4pz5s0iya";
   };
 
   hp-admin-crypto = fetchFromGitHub {
@@ -253,9 +253,11 @@ in
   };
 
   hpos-reset = writeShellScriptBin "hpos-reset" ''
-    rm -rf /var 
+    rm -rf /var
     reboot
   '';
+
+  inherit (callPackage ./hpos-update {}) hpos-update-cli;
 
   hydra = previous.hydra.overrideAttrs (
     super: {
