@@ -197,6 +197,10 @@ in
 
   holo-cli = callPackage ./holo-cli {};
 
+  holo-envoy = callPackage ./holo-envoy {
+    inherit (rust.packages.nightly) rustPlatform;
+  };
+
   holo-nixpkgs.path = gitignoreSource ../..;
 
   holo-nixpkgs-tests = recurseIntoAttrs (

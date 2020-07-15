@@ -27,7 +27,7 @@ let
     # happ-store
     # holo-hosting-app
     holofuel
-    # servicelogger
+    servicelogger
   ];
 
   dnaConfig = drv: {
@@ -39,14 +39,14 @@ let
 
    hostedDnas = with dnaPackages; [
     # list holo hosted DNAs here
-    #{
-    #  drv = hosted-holofuel;
-    #  happ-url = "https://holofuel.holo.host";
-    #  happ-title = "HoloFuel";
-    #  happ-release-version = "v0.1";
-    #  happ-publisher = "Holo Ltd";
-    #  happ-publish-date = "2020/01/31";
-    #}
+    {
+      drv = hosted-holofuel;
+      happ-url = "http://hostedtestfuel.holo.host";
+      happ-title = "HoloFuel";
+      happ-release-version = "v0.1";
+      happ-publisher = "Holo Ltd";
+      happ-publish-date = "2020/01/31";
+    }
   ];
 
   hostedDnaConfig = dna: rec {
@@ -101,6 +101,8 @@ in
   security.sudo.wheelNeedsPassword = false;
 
   services.holo-auth-client.enable = lib.mkDefault true;
+
+  services.holo-envoy.enable = true;
 
   services.holo-router-agent.enable = lib.mkDefault true;
 
@@ -170,6 +172,16 @@ in
           proxyPass = "http://127.0.0.1:4656";
           proxyWebsockets = true;
         };
+
+        "/hc/master/" = {
+          proxyPass = "http://127.0.0.1:42211/";
+          proxyWebsockets = true;
+        };
+
+        "/hc/admin/" = {
+          proxyPass = "http://127.0.0.1:42233/";
+          proxyWebsockets = true;
+        };
       };
     };
 
@@ -195,7 +207,18 @@ in
       ];
       bridges = [];
       dnas = map dnaConfig dnas ++ map hostedDnaConfig hostedDnas;
-      instances = map instanceConfig dnas;
+      instances = map instanceConfig dnas ++ [
+        {
+          id = "${pkgs.dnaHash dnaPackages.hosted-holofuel}::servicelogger";
+          dna = dnaPackages.servicelogger.name;
+          agent = "host-agent";
+          holo-hosted = false;
+          storage = {
+            path = "${conductorHome}/${pkgs.dnaHash dnaPackages.hosted-holofuel}::servicelogger";
+            type = "lmdb";
+          };
+        }
+      ];
       network = {
         type = "sim2h";
         sim2h_url = "ws://public.sim2h.net:9000";
@@ -206,6 +229,8 @@ in
       };
       persistence_dir = conductorHome;
       signing_service_uri = "http://localhost:9676";
+      encryption_service_uri = "http://localhost:9676";
+      decryption_service_uri = "http://localhost:9676";
       interfaces = [
         {
           id = "master-interface";
@@ -222,6 +247,11 @@ in
             port = 42222;
             type = "websocket";
           };
+          instances = [
+            {
+              id = "${pkgs.dnaHash dnaPackages.hosted-holofuel}::servicelogger";
+            }
+          ];
         }
         {
           id = "admin-interface";
