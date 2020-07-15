@@ -73,16 +73,4 @@ Refer to [VirtualBox manual, chapter 1, section 1.15.2](https://www.virtualbox.o
 
 ## HPOS profiles
 
-There's a number of profiles you can activate on your HPOS that alter behavior of your machine. They are listed in `profiles/logical/hpos/README.md`. To activate given profile on your machine add their location to the list of `imports` in `/etc/nixos/configuration.nix`. For example to activate `development` profile modify your `imports` to read:
-```nix
-{
-  imports = [
-    <holo-nixpkgs/profiles/targets/holoport>
-    <holo-nixpkgs/profiles/logical/hpos/development>
-    ./hardware-configuration.nix
-  ];
-
-  ...
-}
-```
-<!-- :) -->
+There's a number of profiles you can activate on your HPOS that alter behavior of your machine. Instructions, list of profiles and their features can be found in `profiles/logical/hpos/README.md`.

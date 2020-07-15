@@ -1,11 +1,13 @@
-{ config, lib, pkgs, ... }:
+# TODO: remove this around 2020-07-08 (#513)
 
-with pkgs;
+{ lib }:
 
 {
   imports = [ ../. ];
 
-  services.openssh.enable = true;
-
-  users.users.root.openssh.authorizedKeys.keyFiles = [ ./authorized_keys ];
+  # NOTE: uses /modules/profiles/development.nix
+  profiles.development = {
+    enable = lib.mkDefault true;
+    features.ssh.enable = true;
+  };
 }

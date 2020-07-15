@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./profiles/development.nix
     ./services/aorura-emu.nix
     ./services/automount.nix
     ./services/dnscrypt-proxy2.nix

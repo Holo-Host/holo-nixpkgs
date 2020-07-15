@@ -86,7 +86,7 @@ in
 
   environment.noXlibs = true;
 
-  environment.systemPackages = [ hpos-reset bump-dna-cli ];
+  environment.systemPackages = [ hpos-reset bump-dna-cli hpos-admin-client ];
 
   networking.firewall.allowedTCPPorts = [ 443 ];
 
@@ -172,6 +172,10 @@ in
         };
       };
     };
+
+    virtualHosts.localhost = {
+        locations."/".proxyPass = "http://unix:/run/hpos-admin.sock:/";
+      };
 
     appendHttpConfig = ''
       limit_req_zone $binary_remote_addr zone=zone1:1m rate=2r/s;

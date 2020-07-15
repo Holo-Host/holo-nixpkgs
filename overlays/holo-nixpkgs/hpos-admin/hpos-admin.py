@@ -8,6 +8,7 @@ import json
 import os
 import subprocess
 import toml
+import requests
 
 app = Flask(__name__)
 rebuild_queue = queue.PriorityQueue()
@@ -75,14 +76,57 @@ def put_settings():
 
 def hosted_happs():
     conductor_config = toml.load('/var/lib/holochain-conductor/conductor-config.toml')
-    [dna for dna in conductor_config['dnas'] if dna['holo-hosted']]
+    return [dna for dna in conductor_config['dnas'] if dna['holo-hosted']]
+
+
+def hosted_instances():
+    conductor_config = toml.load('/var/lib/holochain-conductor/conductor-config.toml')
+    return [instance for instance in conductor_config['instances'] if instance['holo-hosted']]
 
 
 @app.route('/hosted_happs', methods=['GET'])
 def get_hosted_happs():
+
+    hosted_happs_list = hosted_happs()
+    hosted_instances_list = hosted_instances()
+    
+    if len(hosted_happs_list) > 0:
+        for hosted_happ in hosted_happs_list:
+            if len(hosted_instances_list) > 0:
+                num_instances = sum(hosted_happ['id'] == hosted_instance['id'] for hosted_instance in hosted_instances_list)
+            else: 
+                num_instances = 0
+            hosted_happ['number_instances'] = num_instances
+
     return jsonify({
-        'hosted_happs': hosted_happs()
+        'hosted_happs': hosted_happs_list
     })
+
+
+def hydra_channel():
+    with open('/root/.nix-channels') as f:
+        channel_url = f.read()
+    return channel_url.split('/')[6]
+
+
+def hydra_revision():
+    channel = hydra_channel()
+    eval_url = 'https://hydra.holo.host/jobset/holo-nixpkgs/' + channel + '/latest-eval'
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
+    eval_summary = requests.get(eval_url, headers=headers).json()
+    return eval_summary['jobsetevalinputs']['holo-nixpkgs']['revision']
+
+
+def local_revision():
+    try:
+        with open('/root/.nix-revision') as f:
+            local_revision = f.read()
+    except:
+        local_revision = 'unversioned'
+    return local_revision
 
 
 def zerotier_info():
@@ -94,6 +138,15 @@ def zerotier_info():
 @app.route('/status', methods=['GET'])
 def status():
     return jsonify({
+        'holo_nixpkgs':{
+            'channel': {
+                'name': hydra_channel(),
+                'rev': hydra_revision()
+            },
+            'current_system': {
+                'rev': local_revision()
+            }
+        },
         'zerotier': zerotier_info()
     })
 
@@ -102,6 +155,14 @@ def status():
 def upgrade():
     rebuild(priority=1, args=['--upgrade'])
     return '', 200
+
+
+@app.route('/reset', methods=['POST'])
+def reset():
+    try:
+        subprocess.run(['hpos-reset'], check=True)
+    except CalledProcessError:
+        return '', 500
 
 
 def unix_socket(path):
