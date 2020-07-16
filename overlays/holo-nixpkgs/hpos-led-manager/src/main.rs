@@ -107,6 +107,9 @@ fn main() -> Fallible<()> {
         .expect("Something went wrong reading nix-revision");
         let update_required = local_revision == hydra_revision // If this lights up then it's likely the updater isn't working properly
 
+        let TLS_certificate: Value = serde_json::from_reader("/var/lib/acme/default/account_reg.json")?; 
+        let TLS_certificate_valid = TLS_certificate["body"]["status"] == "valid" // Note that the TLS_certificate returns a borrow (&value)
+
         let state = match (online, hpos_config_found) {
             (false, _) => State::Flash(Color::Purple),
             (true, false) => State::Static(Color::Blue),
