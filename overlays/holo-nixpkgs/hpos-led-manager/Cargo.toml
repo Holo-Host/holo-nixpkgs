@@ -10,6 +10,7 @@ serde = { version = "1.0.101", features = ["derive"] }
 serde_json = "1.0.44"
 reqwest = { version = "0.10", features = ["json"] }
 tokio = { version = "0.2", features = ["full"] }
+anyhow = "1.0"
 
 [dependencies.aorura]
 git = "https://github.com/Holo-Host/aorura.git"
