@@ -5,10 +5,10 @@
 
   services.holo-router-agent.enable = false;
 
-  services.holochain-conductor.config.network = {
-    type = "sim2h";
-    sim2h_url = "wss://localhost:9000";
-  };
+  # services.holochain-conductor.config.network = {
+  #   type = "sim2h";
+  #   sim2h_url = "wss://localhost:9000";
+  # };
 
   services.hpos-init.enable = false;
 
