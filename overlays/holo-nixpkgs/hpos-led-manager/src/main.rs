@@ -13,6 +13,7 @@ use std::thread::sleep;
 use std::time::Duration;
 
 const POLLING_INTERVAL: u64 = 1;
+const HYDRA_POLLING_INTERVAL: u64 = 300;
 const USAGE: &'static str = "
 Usage: hpos-led-manager --device <path> --state <path>
        hpos-led-manager --help
@@ -30,27 +31,42 @@ struct Args {
     flag_state: PathBuf,
 }
 
+// Check the hydra revision of holo-nixpkgs. Used to compare with local revision to see if not updated.
 #[tokio::get_hydra_revision] 
-async fn get_hydra_revision(http_client) { // do these variables have to be mut?
+async fn get_hydra_revision(http_client) { 
     let channel = fs::read_to_string("/root/.nix-channel") 
-                            .expect("Something went wrong reading the file");
-    let channel_name = channel.split('/').nth(6)
-                           
+    .expect("Something went wrong reading .nix-channel");
+    let channel_name = channel.split('/').nth(6)                        
     let eval_url = "https://hydra.holo.host/jobset/holo-nixpkgs/" + channel_name + "/latest-eval"
-    let headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-    }
 
-    let res = http_client
-        .get(eval_url)
-        .header(headers)
-        .send()
-        .await?
-        .json()?;
-
-    return res["jobsetevalinputs"]["holo-nixpkgs"]["revision"]
+    http_client
+    .get(eval_url)
+    .header(header::ACCEPT, "application/json")
+    .header(header::CONTENT_TYPE, "application/json")
+    .send()
+    .await?
+    .json()?;
 }
+
+fn request_error_handler(e: reqwest::Error) {
+    if e.is_http() {
+        match e.url() {
+            None => println!("No Url given"),
+            Some(url) => println!("Problem making request to: {}", url),
+        }
+    }
+    // Inspect the internal error and output it
+    if e.is_serialization() {
+       let serde_error = match e.get_ref() {
+            None => return,
+            Some(err) => err,
+        };
+        println!("problem parsing information {}", serde_error);
+    }
+    if e.is_redirect() {
+        println!("server redirecting too many times or making loop");
+    }
+ }
 
 fn main() -> Fallible<()> {
     let args: Args = Docopt::new(USAGE)?
@@ -65,9 +81,11 @@ fn main() -> Fallible<()> {
     let state_temp_path = state_path.with_extension("tmp");
     let client = reqwest::Client::new();
 
-    // Run get_hydra_revision once every 5 minutes if running it in the loop is too taxing?
+    let mut counter: u64 = 0;
+    let mut hydra_revision = "none";
 
     loop {
+    
         let router_gateway_addrs = "router-gateway.holo.host:80".to_socket_addrs();
         let online = match router_gateway_addrs {
             Ok(mut addrs) => match addrs.next() {
@@ -78,10 +96,18 @@ fn main() -> Fallible<()> {
         };
 
         let hpos_config_found = Path::new("/run/hpos-init/hpos-config.json").exists();
-
-        let hydra_revision = get_hydra_revision()
+        
+        // Run get_hydra_revision once every 5 minutes if running it in the loop is too taxing?
+        if counter % 5000 == 1 {
+            match get_hydra_revision() {
+                Err(e) => request_error_handler(e),
+                Ok(res)  => hydra_revision = res["jobsetevalinputs"]["holo-nixpkgs"]["revision"],
+            };
+            counter += 1;
+        }
+               
         let local_revision = fs::read_to_string("/root/.nix-revision")
-                            .expect("Something went wrong reading the file");
+                            .expect("Something went wrong reading nix-revision");
         let update_required = local_revision == hydra_revision // If this lights up then it's likely the updater isn't working properly
 
         let TLS_certificate: Value = serde_json::from_reader("/var/lib/acme/default/account_reg.json")?; 
@@ -103,7 +129,7 @@ fn main() -> Fallible<()> {
         if state != state_prev {
             led.set(state)?;
             state_prev = state;
-        }
+        };
 
         fs::write(&state_temp_path, serde_json::to_vec(&state)?)?;
         fs::rename(&state_temp_path, &state_path)?;
