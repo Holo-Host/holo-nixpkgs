@@ -1,10 +1,12 @@
-{ lib, rustPlatform, gitignoreSource }:
+{ lib, rustPlatform, gitignoreSource, pkg-config, openssl }:
 
 rustPlatform.buildRustPackage {
   name = "hpos-led-manager";
   src = gitignoreSource ./.;
 
-  cargoSha256 = "16rz9d7wr9svcnm8jgssdw1kk6vyihw0jl5x8k7nw7jkm64ch123";
+  buildInputs = [ pkg-config openssl ];
+
+  cargoSha256 = "0xyp5vrhxyafymv3xfajwspn61k4g6w9iaf470r9mbxgvblw9lkr";
   doCheck = false;
 
   meta.platforms = lib.platforms.linux;
