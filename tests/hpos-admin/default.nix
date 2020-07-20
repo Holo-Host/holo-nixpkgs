@@ -61,9 +61,18 @@ makeTest {
     "]}";
 
     my $actual_hosted_happs = $machine->succeed("hpos-admin-client --url=http://localhost get-hosted-happs");
-    chomp($actual_hosted_happs); 
+    chomp($actual_hosted_happs);
 
     die "unexpected_hosted_happs_list" unless $actual_hosted_happs eq $expected_hosted_happs;
+
+    my $expected_hosted_happs = "{'hosted_happs': [" .
+        "{'file': 'app_spec.dna.json', 'happ-url': 'www.test1.com', 'hash': 'QmaJiTs75zU7kMFYDkKgrCYaH8WtnYNkmYX3tPt7ycbtRq', 'holo-hosted': True, 'id': 'QmaJiTs75zU7kMFYDkKgrCYaH8WtnYNkmYX3tPt7ycbtRq', 'number_instances': 2}, " .
+        "{'file': 'bridge/callee.dna.json', 'happ-url': 'www.test2.com', 'hash': 'QmQ6zcwmVkcJ56A8aT7ptrJSDUsdwi7gt2KFtxJzQLzDX3', 'holo-hosted': True, 'id': 'QmQ6zcwmVkcJ56A8aT7ptrJSDUsdwi7gt2KFtxJzQLzDX3', 'number_instances': 1}" .
+    "]}";
+    my $actual_hosted_stats = $machine->succeed("hpos-admin-client --url=http://localhost get-hosted-stats");
+    chomp($actual_hosted_stats);
+
+
 
     $machine->shutdown;
   '';
