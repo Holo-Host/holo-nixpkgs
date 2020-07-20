@@ -21,6 +21,7 @@ let
   '';
 
   conductorHome = "/var/lib/holochain-conductor";
+  holofuelHhaHash = "QmWvWtw1P2nduQqk8uKpfhAeUd72bSU2gFH7TLrQm1Bbfw";
 
   dnas = with dnaPackages; [
     # list self hosted DNAs here
@@ -209,12 +210,12 @@ in
       dnas = map dnaConfig dnas ++ map hostedDnaConfig hostedDnas;
       instances = map instanceConfig dnas ++ [
         {
-          id = "${pkgs.dnaHash dnaPackages.hosted-holofuel}::servicelogger";
+          id = "${holofuelHhaHash}::servicelogger";
           dna = dnaPackages.servicelogger.name;
           agent = "host-agent";
           holo-hosted = false;
           storage = {
-            path = "${conductorHome}/${pkgs.dnaHash dnaPackages.hosted-holofuel}::servicelogger";
+            path = "${conductorHome}/${holofuelHhaHash}::servicelogger";
             type = "lmdb";
           };
         }
@@ -249,7 +250,7 @@ in
           };
           instances = [
             {
-              id = "${pkgs.dnaHash dnaPackages.hosted-holofuel}::servicelogger";
+              id = "${holofuelHhaHash}::servicelogger";
             }
           ];
         }
