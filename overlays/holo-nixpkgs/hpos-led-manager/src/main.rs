@@ -102,7 +102,7 @@ fn main() -> Result<()> {
         let tls_certificate_valid = tls_certificate["body"]["status"] == "valid"; // Note that the TLS_certificate returns a borrow (&value)
 
         let system_error = false; // true if any of the following services are in a failed state: holochain-conductor.service, hp-admin-crypto-server.service, hpos-admin.service, nginx.service, zerotierone.service. Important: FAILED only not missing. holochain-conductor might not be on Nano at first.
-        let hosting_error = false; // true if the following services are in a failed state: holo-auth-client.service, hpos-init.service,
+        let hosting_error = false; // true if the following services are in a failed state: holo-auth-client.service, hpos-init.service
 
         let state = match (
             system_error,
