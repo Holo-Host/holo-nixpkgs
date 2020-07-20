@@ -12,7 +12,5 @@
 
   services.hpos-led-manager.devicePath = "/dev/ttyUSB0";
 
-  services.holochain-conductor.overrideAttrs (oldAttrs: {
-    enable = false;
-  })
+  services.holochain-conductor.enable = lib.mkForce false;
 }
