@@ -1,5 +1,6 @@
 from base64 import b64encode
 from flask import Flask, jsonify, request
+from functools import reduce
 from gevent import subprocess, pywsgi, queue, socket, spawn, lock
 from gevent.subprocess import CalledProcessError
 from hashlib import sha512
@@ -13,7 +14,7 @@ import asyncio
 import websockets
 
 
-PROFILES_TOML_PATH = '/etc/nixos/hpos-admin-features.toml'
+PROFILES_TOML_PATH = '/etc/nixos/hp-admin-features.toml'
 
 
 app = Flask(__name__)
@@ -78,6 +79,61 @@ def put_settings():
         replace_file_contents(get_state_path(), state_json)
     rebuild(priority=5, args=[])
     return '', 200
+
+
+# Toggling HPOS features
+
+
+def read_profiles():
+    return toml.load(PROFILES_TOML_PATH)
+
+
+def write_profiles(profiles):
+    toml.dump(profiles, PROFILES_TOML_PATH)
+
+
+def set_feature_state(profile, feature, enable = True):
+    profiles = read_profiles()
+    profiles.update({
+        profile: {
+            'features': {
+                feature: {
+                    'enable': enable
+                }
+            }
+        }
+    })
+    write_profiles(profiles)
+    return jsonify({
+        'enabled': enable
+    })
+
+
+@app.route('/profiles', methods=['GET'])
+def get_profiles():
+    return jsonify({
+        'profiles': read_profiles()
+    })
+
+
+@app.route('/profiles/<profile>/features/<feature>', methods=['GET'])
+def get_feature_state(profile, feature):
+    profiles = read_profiles()
+    keys = [profile, 'features', feature, 'enable']
+    enabled = reduce(lambda d, key: d.get(key) if d else None, keys, profiles)
+    return jsonify({
+        'enabled': enabled
+    })
+
+
+@app.route('/profiles/<profile>/features/<feature>', methods=['PUT'])
+def enable_feature(profile, feature):
+    return set_feature_state(profile, feature, True)
+
+
+@app.route('/profiles/<profile>/features/<feature>', methods=['DELETE'])
+def disable_feature(profile, feature):
+    return set_feature_state(profile, feature, False)
 
 
 def hosted_happs():

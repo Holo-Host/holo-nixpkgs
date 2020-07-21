@@ -81,6 +81,13 @@ makeTest {
     die "unexpected_hosted_happs_number_instances" if (index($actual_hosted_happs, $expected_number_instances) == -1);
     die "unexpected_hosted_happs_stats" if (index($actual_hosted_happs, $expected_stats) == -1);
 
+    my $ssh_enabled = $machine->succeed("hpos-admin-client --url=http://localhost get-feature-state development ssh");
+    die "ssh should not be enabled by default" unless index($ssh_enabled, "false") != -1;
+
+    $machine->succeed("hpos-admin-client --url=http://localhost enable-feature development ssh");
+    $ssh_enabled = $machine->succeed("hpos-admin-client --url=http://localhost get-feature-state development ssh");
+    die "ssh should be enabled after calling enable-feature" unless index($ssh_enabled, "true") != -1;
+
     $machine->shutdown;
 
   '';
