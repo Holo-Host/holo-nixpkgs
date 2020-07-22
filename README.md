@@ -17,7 +17,6 @@ On NixOS, add the following to `/etc/nixos/configuration.nix` and rebuild:
   ];
 }
 ```
-
 Otherwise, add `https://cache.holo.host/` to `substituters` and
 `cache.holo.host-1:lNXIXtJgS9Iuw4Cu6X0HINLu9sTfcjEntnrgwMQIMcE=` to
 `trusted-public-keys` in Nix config file:
