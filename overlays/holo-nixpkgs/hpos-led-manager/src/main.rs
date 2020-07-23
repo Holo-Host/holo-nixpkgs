@@ -37,7 +37,7 @@ struct Args {
 async fn get_hydra_revision() -> anyhow::Result<serde_json::Value> {
     println!("Checking latest hydra revision");
     let channel_file = fs::read_to_string("/root/.nix-channels")?;
-    println!("Found channel file");
+
     let channel_name = channel_file
         .split('/')
         .nth(6)
@@ -46,7 +46,7 @@ async fn get_hydra_revision() -> anyhow::Result<serde_json::Value> {
         "https://hydra.holo.host/jobset/holo-nixpkgs/{}/latest-eval",
         channel_name
     );
-    println!("Got check URL at {}. Making request", eval_url);
+
     let res = reqwest::Client::new()
         .get(&eval_url)
         .header(header::ACCEPT, "application/json")
@@ -84,7 +84,7 @@ fn main() -> Result<()> {
             },
             Err(_) => false,
         };
-        println!("Checking hpos_config");
+
         let hpos_config_found = Path::new("/run/hpos-init/hpos-config.json").exists();
 
         if counter % HYDRA_POLLING_INTERVAL == 0 {
@@ -95,12 +95,11 @@ fn main() -> Result<()> {
             counter = 0;
         }
         counter += 1;
-        println!("Checking local nix revision");
+
         let local_revision = fs::read_to_string("/root/.nix-revision")
             .expect("Something went wrong reading nix-revision");
         let update_required = local_revision == hydra_revision; // If this lights up then it's likely the updater isn't working properly
 
-        println!("Checking account_reg.json");
         let tls_certificate_raw = fs::read_to_string("/var/lib/acme/default/account_reg.json")
             .expect("Something went wrong reading certificate");
         let tls_certificate: Value = serde_json::from_str(&tls_certificate_raw)?;
@@ -130,7 +129,7 @@ fn main() -> Result<()> {
             led.set(state).map_err(|e| e.compat())?;
             state_prev = state;
         }
-        println!("Writing to state path");
+
         fs::write(&state_temp_path, serde_json::to_vec(&state)?)?;
         fs::rename(&state_temp_path, &state_path)?;
 
