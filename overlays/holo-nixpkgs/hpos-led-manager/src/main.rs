@@ -98,7 +98,7 @@ fn main() -> Result<()> {
 
         let local_revision = fs::read_to_string("/root/.nix-revision")
             .expect("Something went wrong reading nix-revision");
-        let update_required = local_revision == hydra_revision; // If this lights up then it's likely the updater isn't working properly
+        let update_required = local_revision != hydra_revision; // If this lights up then it's likely the updater isn't working properly
 
         let tls_certificate_raw = fs::read_to_string("/var/lib/acme/default/account_reg.json")
             .expect("Something went wrong reading certificate");
