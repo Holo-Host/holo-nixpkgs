@@ -36,7 +36,7 @@ struct Args {
 #[tokio::main]
 async fn get_hydra_revision() -> anyhow::Result<serde_json::Value> {
     println!("Checking latest hydra revision");
-    let channel_file = fs::read_to_string("/root/.nix-channel")?;
+    let channel_file = fs::read_to_string("/root/.nix-channels")?;
     println!("Found channel file");
     let channel_name = channel_file
         .split('/')
