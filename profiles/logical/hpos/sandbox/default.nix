@@ -10,6 +10,8 @@
     sim2h_url = "wss://localhost:9000";
   };
 
+  services.holochain-conductor.config.enable = true;
+
   services.hpos-init.enable = false;
 
   services.sim2h-server.enable = true;

@@ -1,4 +1,4 @@
-{ makeTest, lib, hpos-admin-client, hpos-config-gen-cli }:
+{ makeTest, lib, hpos, hpos-admin-client, hpos-config-gen-cli, hpos-config-into-keystore, jq }:
 
 makeTest {
   name = "hpos-admin";
@@ -11,9 +11,12 @@ makeTest {
     environment.systemPackages = [
       hpos-admin-client
       hpos-config-gen-cli
+      hpos-config-into-keystore
+      jq
     ];
 
     services.hpos-admin.enable = true;
+    services.holochain-conductor.config.enable = true;
 
     services.nginx = {
       enable = true;
@@ -25,6 +28,8 @@ makeTest {
     systemd.services.hpos-admin.environment.HPOS_CONFIG_PATH = "/etc/hpos-config.json";
 
     users.users.nginx.extraGroups = [ "hpos-admin-users" ];
+
+    virtualisation.memorySize = 3072;
   };
 
   testScript = ''
@@ -33,6 +38,18 @@ makeTest {
     $machine->succeed(
       "hpos-config-gen-cli --email test\@holo.host --password : --seed-from ${./seed.txt} > /etc/hpos-config.json"
     );
+
+    $machine->systemctl("restart holochain-conductor.service");
+    $machine->waitForUnit("holochain-conductor.service");
+    $machine->waitForOpenPort("42211");
+    $machine->waitForOpenPort("42222");
+
+    my $expected_dnas = "happ-store\nholo-hosting-app\nholofuel\nservicelogger\n";
+    my $actual_dnas = $machine->succeed(
+      "holo admin --port 42211 interface | jq -r '.[2].instances[].id'"
+    );
+
+    die "unexpected dnas" unless $actual_dnas eq $expected_dnas;
 
     $machine->systemctl("start hpos-admin.service");
     $machine->waitForUnit("hpos-admin.service");
@@ -64,14 +81,6 @@ makeTest {
     chomp($actual_hosted_happs);
 
     die "unexpected_hosted_happs_list" unless $actual_hosted_happs eq $expected_hosted_happs;
-
-    my $expected_hosted_happs = "{'hosted_happs': [" .
-        "{'file': 'app_spec.dna.json', 'happ-url': 'www.test1.com', 'hash': 'QmaJiTs75zU7kMFYDkKgrCYaH8WtnYNkmYX3tPt7ycbtRq', 'holo-hosted': True, 'id': 'QmaJiTs75zU7kMFYDkKgrCYaH8WtnYNkmYX3tPt7ycbtRq', 'number_instances': 2}, " .
-        "{'file': 'bridge/callee.dna.json', 'happ-url': 'www.test2.com', 'hash': 'QmQ6zcwmVkcJ56A8aT7ptrJSDUsdwi7gt2KFtxJzQLzDX3', 'holo-hosted': True, 'id': 'QmQ6zcwmVkcJ56A8aT7ptrJSDUsdwi7gt2KFtxJzQLzDX3', 'number_instances': 1}" .
-    "]}";
-    my $actual_hosted_stats = $machine->succeed("hpos-admin-client --url=http://localhost get-hosted-stats");
-    chomp($actual_hosted_stats);
-
 
 
     $machine->shutdown;

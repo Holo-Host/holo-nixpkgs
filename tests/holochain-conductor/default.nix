@@ -5,6 +5,7 @@ makeTest {
 
   machine = {
     imports = [ (import "${hpos.logical}/sandbox") ];
+    /* imports = [ (import ../../profiles) ]; */
 
     environment.systemPackages = [
       holo-cli
@@ -12,6 +13,9 @@ makeTest {
       hpos-config-into-keystore
       jq
     ];
+
+
+    systemd.services.hpos-admin.environment.HPOS_CONFIG_PATH = "/etc/hpos-config.json";
 
     virtualisation.memorySize = 3072;
   };
@@ -21,10 +25,6 @@ makeTest {
 
     $machine->succeed(
       "hpos-config-gen-cli --email test\@holo.host --password : --seed-from ${./seed.txt} > /etc/hpos-config.json"
-    );
-
-    $machine->succeed(
-      "hpos-config-into-keystore < /etc/hpos-config.json > /var/lib/holochain-conductor/holo-keystore 2> /var/lib/holochain-conductor/holo-keystore.pub"
     );
 
     $machine->systemctl("restart holochain-conductor.service");
