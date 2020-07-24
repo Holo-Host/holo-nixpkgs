@@ -12,5 +12,5 @@ in
 
 {
   hpos-admin = callPackage ./hpos-admin {};
-  /* holochain-conductor = callPackage ./holochain-conductor {}; */
+  holochain-conductor = callPackage ./holochain-conductor {};
 }
