@@ -54,7 +54,6 @@ async fn get_hydra_revision() -> anyhow::Result<serde_json::Value> {
         .await?;
 
     let json = res.json().await?;
-    println!("Hydra response is: {}", json);
     Ok(json)
 }
 
@@ -71,7 +70,7 @@ fn main() -> Result<()> {
     let state_path = args.flag_state;
     let state_temp_path = state_path.with_extension("tmp");
 
-    let mut counter: u64 = 0;
+    let mut counter: u64 = 240; // Give it a minute on boot due to DNS error: device is busy
     let mut revision_json;
     let mut hydra_revision = "none";
     println!("Initialisation complete. Starting loop");
@@ -87,7 +86,7 @@ fn main() -> Result<()> {
 
         let hpos_config_found = Path::new("/run/hpos-init/hpos-config.json").exists();
 
-        if counter % HYDRA_POLLING_INTERVAL == 0 {
+        if counter % HYDRA_POLLING_INTERVAL == 0 {  
             revision_json = get_hydra_revision()?;
             hydra_revision = revision_json["jobsetevalinputs"]["holo-nixpkgs"]["revision"]
                 .as_str()
@@ -111,11 +110,6 @@ fn main() -> Result<()> {
 
         let system_error = false; // true if any of the following services are in a failed state: holochain-conductor.service, hp-admin-crypto-server.service, hpos-admin.service, nginx.service, zerotierone.service. Important: FAILED only not missing. holochain-conductor might not be on Nano at first.
         let hosting_error = false; // true if the following services are in a failed state: holo-auth-client.service, hpos-init.service
-
-        println!("!online is {}", !online);
-        println!("update_required is {}", update_required);
-        println!("!hpos_config_found is {}", !hpos_config_found);
-        println!("!tls_certificate_valid is {}", !tls_certificate_valid);
 
         let state = match (
             system_error,
