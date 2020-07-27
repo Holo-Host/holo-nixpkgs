@@ -5,7 +5,6 @@ makeTest {
 
   machine = {
     imports = [ (import "${hpos.logical}/sandbox") ];
-    /* imports = [ (import ../../profiles) ]; */
 
     environment.systemPackages = [
       holo-cli
@@ -31,7 +30,7 @@ makeTest {
     $machine->waitForUnit("holochain-conductor.service");
     $machine->waitForOpenPort("42211");
 
-    my $expected_dnas = "holofuel\n";
+    my $expected_dnas = "holofuel\nservicelogger\n";
     my $actual_dnas = $machine->succeed(
       "holo admin --port 42211 interface | jq -r '.[2].instances[].id'"
     );
