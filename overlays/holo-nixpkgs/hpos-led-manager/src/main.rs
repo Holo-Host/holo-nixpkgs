@@ -12,7 +12,7 @@ use std::path::{Path, PathBuf};
 use std::thread::sleep;
 use std::time::Duration;
 
-const HYDRA_POLLING_INTERVAL: u64 = 300;
+const HYDRA_POLLING_INTERVAL: u64 = 60;
 const POLLING_INTERVAL: u64 = 1;
 
 const USAGE: &str = "

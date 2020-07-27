@@ -30,7 +30,7 @@ in
 
     systemd.services.hpos-led-manager = {
       path = [ pkgs.zerotierone ];
-      after = [ "network.target" ];
+      after = [ "network-online.target" ];
       serviceConfig = {
         ExecStart = "${cfg.package}/bin/hpos-led-manager --device ${cfg.devicePath} --state ${cfg.statePath}";
         ExecStopPost = "${pkgs.aorura-cli}/bin/aorura-cli ${cfg.devicePath} --set flash:blue";
