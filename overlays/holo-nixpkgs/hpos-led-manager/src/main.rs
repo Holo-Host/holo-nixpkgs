@@ -70,7 +70,7 @@ fn main() -> Result<()> {
     let state_path = args.flag_state;
     let state_temp_path = state_path.with_extension("tmp");
 
-    let mut counter: u64 = 240; // Give it a minute on boot due to DNS error: device is busy
+    let mut counter: u64 = 0; // Give it a minute on boot due to DNS error: device is busy
     let mut revision_json;
     let mut hydra_revision = "none";
     println!("Initialisation complete. Starting loop");
