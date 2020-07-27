@@ -55,10 +55,6 @@ let
     hash = id;
     holo-hosted = true;
     happ-url = dna.happ-url;
-    happ-title = dna.happ-title;
-    happ-release-version = dna.happ-release-version;
-    happ-publisher = dna.happ-publisher;
-    happ-publish-date = dna.happ-publish-date;
   };
 
   instanceConfig = drv: {
