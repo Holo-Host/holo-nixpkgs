@@ -108,6 +108,11 @@ fn main() -> Result<()> {
         let system_error = false; // true if any of the following services are in a failed state: holochain-conductor.service, hp-admin-crypto-server.service, hpos-admin.service, nginx.service, zerotierone.service. Important: FAILED only not missing. holochain-conductor might not be on Nano at first.
         let hosting_error = false; // true if the following services are in a failed state: holo-auth-client.service, hpos-init.service
 
+        println!("!online is {}", !online);
+        println!("update_required is {}", update_required);
+        println!("!hpos_config_found is {}", !hpos_config_found);
+        println!("!tls_certificate_valid is {}", !tls_certificate_valid);
+
         let state = match (
             system_error,
             hosting_error,
@@ -129,7 +134,7 @@ fn main() -> Result<()> {
             led.set(state).map_err(|e| e.compat())?;
             state_prev = state;
         }
-
+        
         fs::write(&state_temp_path, serde_json::to_vec(&state)?)?;
         fs::rename(&state_temp_path, &state_path)?;
 
