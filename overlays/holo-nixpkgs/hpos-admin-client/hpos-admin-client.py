@@ -46,6 +46,30 @@ def put_settings(ctx, k, v):
     assert res.status_code == requests.codes.ok
 
 
+@cli.command(help='Get state of an HPOS feature')
+@click.argument('profile')
+@click.argument('feature')
+@click.pass_context
+def get_feature_state(ctx, profile, feature):
+    print(request(ctx, 'GET', f'/profiles/{profile}/features/{feature}').json())
+
+
+@cli.command(help='Enable an HPOS feature')
+@click.argument('profile')
+@click.argument('feature')
+@click.pass_context
+def enable_feature(ctx, profile, feature):
+    print(request(ctx, 'PUT', f'/profiles/{profile}/features/{feature}').json())
+
+
+@cli.command(help='Disable an HPOS feature')
+@click.argument('profile')
+@click.argument('feature')
+@click.pass_context
+def disable_feature(ctx, profile, feature):
+    print(request(ctx, 'DELETE', f'/profiles/{profile}/features/{feature}').json())
+
+
 @cli.command(help='Get HoloPortOS status data')
 @click.pass_context
 def get_status(ctx):
