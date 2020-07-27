@@ -66,5 +66,15 @@ def factory_reset(ctx):
         print("Failed to reset device")
 
 
+@cli.command(help='Initiate a software upgrade')
+@click.pass_context
+def start_upgrade(ctx):
+    res = request(ctx, 'POST', '/upgrade')
+    if res.status_code == 200:
+        print("Upgrade successful")
+    if res.status_code == 500:
+        print("Failed to upgrade device")
+
+
 if __name__ == '__main__':
     cli(obj={})

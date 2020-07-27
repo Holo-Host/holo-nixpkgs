@@ -23,7 +23,7 @@ def rebuild_worker():
 
 
 def rebuild(priority, args):
-    rebuild_queue.put((priority, ['nixos-rebuild', 'switch'] + args))
+    rebuild_queue.put((priority, ['hpos-update'] + args))
 
 
 def get_state_path():
@@ -137,6 +137,7 @@ def zerotier_info():
 
 @app.route('/status', methods=['GET'])
 def status():
+    print("test")
     return jsonify({
         'holo_nixpkgs':{
             'channel': {
@@ -153,8 +154,12 @@ def status():
 
 @app.route('/upgrade', methods=['POST'])
 def upgrade():
-    rebuild(priority=1, args=['--upgrade'])
-    return '', 200
+    print('Calling upgrade route')
+    try:
+        rebuild(priority=1, args=[hydra_channel()])
+        return '', 200
+    except CalledProcessError:
+        return '', 500
 
 
 @app.route('/reset', methods=['POST'])
