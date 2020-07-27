@@ -6,7 +6,6 @@ use serde::*;
 use serde_json::Value;
 
 use std::env;
-use std::fmt;
 use std::fs;
 use std::net::{TcpStream, ToSocketAddrs};
 use std::path::{Path, PathBuf};
@@ -55,7 +54,7 @@ async fn get_hydra_revision() -> anyhow::Result<serde_json::Value> {
         .await?;
 
     let json = res.json().await?;
-    println("Hydra response is: ", json)
+    println!("Hydra response is: {}", json);
     Ok(json)
 }
 
