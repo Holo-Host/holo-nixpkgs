@@ -55,6 +55,7 @@ async fn get_hydra_revision() -> anyhow::Result<serde_json::Value> {
         .await?;
 
     let json = res.json().await?;
+    println("Hydra response is: ", json)
     Ok(json)
 }
 
@@ -100,10 +101,14 @@ fn main() -> Result<()> {
             .expect("Something went wrong reading nix-revision");
         let update_required = local_revision != hydra_revision; // If this lights up then it's likely the updater isn't working properly
 
-        let tls_certificate_raw = fs::read_to_string("/var/lib/acme/default/account_reg.json")
+        let mut tls_certificate_valid = false;
+        let tls_certificate_found = Path::new("/var/lib/acme/default/account_reg.json").exists();
+        if tls_certificate_found {
+            let tls_certificate_raw = fs::read_to_string("/var/lib/acme/default/account_reg.json")
             .expect("Something went wrong reading certificate");
-        let tls_certificate: Value = serde_json::from_str(&tls_certificate_raw)?;
-        let tls_certificate_valid = tls_certificate["body"]["status"] == "valid"; // Note that the TLS_certificate returns a borrow (&value)
+            let tls_certificate: Value = serde_json::from_str(&tls_certificate_raw)?;
+            tls_certificate_valid = tls_certificate["body"]["status"] == "valid"; // Note that the TLS_certificate returns a borrow (&value)
+        } 
 
         let system_error = false; // true if any of the following services are in a failed state: holochain-conductor.service, hp-admin-crypto-server.service, hpos-admin.service, nginx.service, zerotierone.service. Important: FAILED only not missing. holochain-conductor might not be on Nano at first.
         let hosting_error = false; // true if the following services are in a failed state: holo-auth-client.service, hpos-init.service
