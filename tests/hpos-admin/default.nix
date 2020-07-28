@@ -63,7 +63,7 @@ makeTest {
     "]}";
 
     my $actual_hosted_happs = $machine->succeed("hpos-admin-client --url=http://localhost get-hosted-happs");
-    chomp($actual_hosted_happs); 
+    chomp($actual_hosted_happs);
 
     die "unexpected_hosted_happs_list" unless $actual_hosted_happs eq $expected_hosted_happs;
 
@@ -71,5 +71,5 @@ makeTest {
 
   '';
 
-  meta.platforms = lib.platforms.linux;
+  meta.platforms = [ "x86_64-linux" ];
 }
