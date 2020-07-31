@@ -1,4 +1,4 @@
-{ stdenv, makeWrapper, gitignoreSource, jq, perl, git }:
+{ stdenv, makeWrapper, gitignoreSource, curl, jq, git, nix, perl }:
 
 with stdenv.lib;
 
@@ -13,7 +13,7 @@ with stdenv.lib;
     installPhase = ''
       install -Dm 755 hpos-update.sh $out/bin/${name}
       wrapProgram $out/bin/${name} \
-      --prefix PATH : ${makeBinPath [ jq git perl ]}
+      --prefix PATH : ${makeBinPath [ curl jq git nix perl ]}
     '';
 
     meta.platforms = platforms.linux;

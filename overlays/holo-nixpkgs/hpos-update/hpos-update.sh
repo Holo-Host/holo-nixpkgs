@@ -1,6 +1,6 @@
 #!/bin/sh
 # Simple shell script for switching nix channel and running a manual update
-# type bump-dna for help
+# run hpos-update for help
 ##
 
 set -e
