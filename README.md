@@ -28,6 +28,7 @@ substituters = https://cache.holo.host/ https://cache.nixos.org/
 trusted-public-keys = cache.holo.host-1:lNXIXtJgS9Iuw4Cu6X0HINLu9sTfcjEntnrgwMQIMcE= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
 ```
 
+
 For single-user installs (`nix-shell -p nix-info --run nix-info` prints
 `multi-user: no`), Nix config file is in `~/.config/nix/nix.conf`.
 
