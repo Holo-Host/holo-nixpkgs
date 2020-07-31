@@ -53,6 +53,7 @@ makeTest {
       "'admin': {'email': 'test\@holo.host', 'public_key': 'zQJsyuGmTKhMCJQvZZmXCwJ8/nbjSLF6cEe0vNOJqfM'}, " .
       "'example': 'KbFzEiWEmM1ogbJbee2fkrA1'" .
     "}";
+
     my $actual_settings = $machine->succeed("hpos-admin-client --url=http://localhost get-settings");
     chomp($actual_settings);
     die "unexpected settings" unless $actual_settings eq $expected_settings;
@@ -64,7 +65,7 @@ makeTest {
 
     my $actual_hosted_happs = $machine->succeed("hpos-admin-client --url=http://localhost get-hosted-happs");
     chomp($actual_hosted_happs);
-    print $actual_hosted_happs.hosted_happs;
+    print $actual_hosted_happs;
 
     die "unexpected_hosted_happs_list" unless $actual_hosted_happs eq $expected_hosted_happs;
 
