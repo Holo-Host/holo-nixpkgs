@@ -54,6 +54,7 @@ makeTest {
       "mkdir /var/lib/holochain-conductor && cp ${./conductor-config.toml} /var/lib/holochain-conductor/conductor-config.toml"
     );
 
+
     $machine->waitForFile("/var/lib/holochain-conductor/conductor-config.toml");
     my $expected_hosted_happs = "{'hosted_happs': [" .
         "{'file': 'app_spec.dna.json', 'happ-url': 'www.test1.com', 'hash': 'QmaJiTs75zU7kMFYDkKgrCYaH8WtnYNkmYX3tPt7ycbtRq', 'holo-hosted': True, 'id': 'QmaJiTs75zU7kMFYDkKgrCYaH8WtnYNkmYX3tPt7ycbtRq', 'number_instances': 2}, " .
@@ -61,7 +62,7 @@ makeTest {
     "]}";
 
     my $actual_hosted_happs = $machine->succeed("hpos-admin-client --url=http://localhost get-hosted-happs");
-    chomp($actual_hosted_happs); 
+    chomp($actual_hosted_happs);
 
     die "unexpected_hosted_happs_list" unless $actual_hosted_happs eq $expected_hosted_happs;
 
