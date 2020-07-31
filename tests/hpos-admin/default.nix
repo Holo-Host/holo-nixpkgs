@@ -63,6 +63,7 @@ makeTest {
         "{'file': '/var/lib/holochain-conductor/dnas/QmYsqPLynaKQPzq5JKF3GGU6EkTpeMe39BYy7EoMUkDrVh.dna.json', 'happ-publish-date': '2020/01/31', 'happ-publisher': 'Holo Ltd', 'happ-release-version': 'v0.1', 'happ-title': 'HoloFuel', 'happ-url': 'https://holofuel.holo.host', 'hash': 'QmYsqPLynaKQPzq5JKF3GGU6EkTpeMe39BYy7EoMUkDrVh', 'holo-hosted': True, 'id': 'QmYsqPLynaKQPzq5JKF3GGU6EkTpeMe39BYy7EoMUkDrVh', 'number_instances': 1, 'stats': {'traffic': {'start_date': None, 'total_zome_calls': 0, 'value': []}}}" .
     "]}";
 
+
     my $actual_hosted_happs = $machine->succeed("hpos-admin-client --url=http://localhost get-hosted-happs");
     chomp($actual_hosted_happs);
     print $actual_hosted_happs;
