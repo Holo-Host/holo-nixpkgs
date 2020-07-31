@@ -65,7 +65,7 @@ makeTest {
     chomp($actual_hosted_happs);
 
     die "unexpected_hosted_happs_list" unless $actual_hosted_happs eq $expected_hosted_happs;
-
+ 
     $machine->shutdown;
   '';
 
