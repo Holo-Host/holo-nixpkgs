@@ -49,8 +49,8 @@ let
   hp-admin = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "hp-admin";
-    rev = "ece31922410e1d18c3f346524f5342967e3a6504";
-    sha256 = "0f0gnj6zmal08r8gydpx4ajh59437p6gkia5sp8bfrq9jwxzs3rx";
+    rev = "4c370b242402e274377cdd25f48963d4b2d7647e";
+    sha256 = "1gq3zxi9wnr6rifcan4fcr24swyfp2h8zyshszmkiwkn0l2mcgnd";
   };
 
   hp-admin-crypto = fetchFromGitHub {
@@ -238,7 +238,7 @@ in
 
   hpos-admin = callPackage ./hpos-admin {
     stdenv = stdenvNoCC;
-    python3 = python3.withPackages (ps: with ps; [ flask gevent toml requests ]);
+    python3 = python3.withPackages (ps: with ps; [ http-parser flask gevent toml requests websockets ]);
   };
 
   hpos-admin-client = callPackage ./hpos-admin-client {

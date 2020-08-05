@@ -50,7 +50,7 @@ To track `develop`:
 - `nix-channel --add https://hydra.holo.host/channel/custom/holo-nixpkgs/develop/holo-nixpkgs`
 - `nix-channel --update`
 (change `develop` above to appropriate repo branch... e.g. `master`,
-`rc-version`)
+`staging`)
 
 Your HoloPort or HPOS VM should now upgrade to your desired channel at the next
 auto-upgrade interval.
