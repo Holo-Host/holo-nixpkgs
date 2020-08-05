@@ -59,7 +59,7 @@ makeTest {
 
     ## Testing hosted_happs api when there is not instances running (So the traffic happs should be 0)
     my $expected_hosted_happs = "{'hosted_happs': [" .
-        "{'file': '/var/lib/holochain-conductor/dnas/QmRBjeKTsVscQFsUVxdGHadUn9zr7wri7RVknpdHK3xtjD.dna.json', 'happ-publish-date': '2020/01/31', 'happ-publisher': 'Holo Ltd', 'happ-release-version': 'v0.1', 'happ-title': 'HoloFuel', 'happ-url': 'https://holofuel.holo.host', 'hash': 'QmRBjeKTsVscQFsUVxdGHadUn9zr7wri7RVknpdHK3xtjD', 'holo-hosted': True, 'id': 'QmRBjeKTsVscQFsUVxdGHadUn9zr7wri7RVknpdHK3xtjD', 'number_instances': 1, 'stats': {'traffic': {'start_date': None, 'total_zome_calls': 0, 'value': []}}}" .
+        "{'file': '/var/lib/holochain-conductor/dnas/QmXNHUfKNMWdZDwrzX7ZZuP7BDpoziphmpQTztYbS5VQk6.dna.json', 'happ-publish-date': '2020/01/31', 'happ-publisher': 'Holo Ltd', 'happ-release-version': 'v0.1', 'happ-title': 'HoloFuel', 'happ-url': 'https://holofuel.holo.host', 'hash': 'QmXNHUfKNMWdZDwrzX7ZZuP7BDpoziphmpQTztYbS5VQk6', 'holo-hosted': True, 'id': 'QmXNHUfKNMWdZDwrzX7ZZuP7BDpoziphmpQTztYbS5VQk6', 'number_instances': 1, 'stats': {'traffic': {'start_date': None, 'total_zome_calls': 0, 'value': []}}}" .
     "]}";
 
     my $actual_hosted_happs = $machine->succeed("hpos-admin-client --url=http://localhost get-hosted-happs");
