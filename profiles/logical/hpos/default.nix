@@ -21,7 +21,7 @@ let
   '';
 
   conductorHome = "/var/lib/holochain-conductor";
-  holofuelHhaHash = "QmWvWtw1P2nduQqk8uKpfhAeUd72bSU2gFH7TLrQm1Bbfw";
+  holofuelHhaHash = "QmWvWtw1P2nduQqk8uKpfhAeUd72bSU2gFH7TLrQm1Zoel";
 
   dnas = with dnaPackages; [
     # list self hosted DNAs here
@@ -42,7 +42,7 @@ let
     # list holo hosted DNAs here
     {
       drv = hosted-holofuel;
-      happ-url = "http://hostedtestfuel.holo.host";
+      happ-url = "http://testfuel.holo.host";
       happ-title = "HoloFuel";
       happ-release-version = "v0.1";
       happ-publisher = "Holo Ltd";
