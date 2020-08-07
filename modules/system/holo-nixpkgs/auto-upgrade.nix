@@ -16,15 +16,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    systemd.services.holo-nixpkgs-auto-upgrade = {
-      serviceConfig.Type = "oneshot";
-      unitConfig.X-StopOnRemoval = false;
-      restartIfChanged = false;
-
-      environment = config.nix.envVars // {
-        inherit (config.environment.sessionVariables) NIX_PATH;
-        HOME = "/root";
-      } // config.networking.proxy.envVars;
+    systemd.services.holo-nixpkgs-auto-upgrade = config.systemd.services.nixos-rebuild // {
 
       path = with pkgs; [ config.nix.package git gzip gnutar xz curl jq perl ];
 
