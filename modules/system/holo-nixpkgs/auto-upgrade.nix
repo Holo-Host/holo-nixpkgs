@@ -17,6 +17,7 @@ in
 
   config = mkIf cfg.enable {
     systemd.services.holo-nixpkgs-auto-upgrade = config.systemd.services.nixos-rebuild // {
+      after = [ "network.target" ];
 
       path = with pkgs; [ config.nix.package git gzip gnutar xz curl jq perl ];
 
