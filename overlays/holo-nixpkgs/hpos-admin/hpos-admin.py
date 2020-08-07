@@ -29,8 +29,12 @@ def rebuild_worker():
         subprocess.run(cmd)
 
 
-def rebuild(priority, args):
-    rebuild_queue.put((priority, ['nixos-rebuild', 'switch'] + args))
+def rebuild(priority):
+    rebuild_queue.put((priority, ['systemctl', 'start', 'nixos-rebuild.service']))
+
+
+def rebuild_upgrade(priority):
+    rebuild_queue.put((priority, ['systemctl', 'start', 'holo-nixpkgs-auto-upgrade.service']))
 
 
 def get_state_path():
@@ -77,7 +81,7 @@ def put_settings():
         except CalledProcessError:
             return '', 400
         replace_file_contents(get_state_path(), state_json)
-    rebuild(priority=5, args=[])
+    rebuild(priority=5)
     return '', 200
 
 
@@ -236,7 +240,7 @@ def status():
 
 @app.route('/upgrade', methods=['POST'])
 def upgrade():
-    rebuild(priority=1, args=['--upgrade'])
+    rebuild_upgrade(priority=1)
     return '', 200
 
 
