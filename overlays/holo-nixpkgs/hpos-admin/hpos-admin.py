@@ -128,7 +128,7 @@ def get_profiles():
 def get_feature_state(profile, feature):
     profiles = read_profiles()
     keys = [profile, 'features', feature, 'enable']
-    enabled = reduce(lambda d, key: d.get(key) if d else None, keys, profiles)
+    enabled = reduce(lambda d, key: d.get(key) if d else None, keys, profiles) or False
     return jsonify({
         'enabled': enabled
     })
