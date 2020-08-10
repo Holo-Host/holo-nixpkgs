@@ -4,6 +4,7 @@ from functools import reduce
 from gevent import subprocess, pywsgi, queue, socket, spawn, lock
 from gevent.subprocess import CalledProcessError
 from hashlib import sha512
+from pathlib import Path
 from tempfile import mkstemp
 import json
 import os
@@ -89,7 +90,10 @@ def put_settings():
 
 
 def read_profiles():
-    return toml.load(PROFILES_TOML_PATH)
+    if Path(PROFILES_TOML_PATH).is_file():
+        return toml.load(PROFILES_TOML_PATH)
+    else:
+        return {}
 
 
 def write_profiles(profiles):
