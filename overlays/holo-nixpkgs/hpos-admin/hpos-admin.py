@@ -82,7 +82,8 @@ def put_settings():
         except CalledProcessError:
             return '', 400
         replace_file_contents(get_state_path(), state_json)
-    rebuild(priority=5)
+    # FIXME: see next FIXME
+    # rebuild(priority=5)
     return '', 200
 
 
@@ -244,8 +245,9 @@ def status():
 
 @app.route('/upgrade', methods=['POST'])
 def upgrade():
-    rebuild_upgrade(priority=1)
-    return '', 200
+    # FIXME: calling nixos-rebuild fails
+    # rebuild_upgrade(priority=1)
+    return '', 503 # service unavailable
 
 
 @app.route('/reset', methods=['POST'])
