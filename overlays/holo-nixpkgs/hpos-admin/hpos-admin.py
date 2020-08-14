@@ -54,6 +54,9 @@ def cas_hash(data):
     return b64encode(sha512(dump.encode()).digest()).decode()
 
 
+def dig(dictionary, keys, default = None):
+    return reduce(lambda acc, key: acc.get(key) if acc else None, keys, dictionary) or default
+
 @app.route('/config', methods=['GET'])
 def get_settings():
     return jsonify(get_state_data()['v1']['settings'])
@@ -82,6 +85,8 @@ def put_settings():
         except CalledProcessError:
             return '', 400
         replace_file_contents(get_state_path(), state_json)
+        ssh_enabled = dig(state, ['v1', 'settings', 'holoportos', 'sshAccess'], default=False)
+        set_ssh_state(ssh_enabled)
     # FIXME: see next FIXME
     # rebuild(priority=5)
     return '', 200
@@ -118,6 +123,10 @@ def set_feature_state(profile, feature, enable = True):
     })
 
 
+def set_ssh_state(enable: bool):
+    set_feature_state('development', 'ssh', enable)
+
+
 @app.route('/profiles', methods=['GET'])
 def get_profiles():
     return jsonify({
@@ -128,8 +137,7 @@ def get_profiles():
 @app.route('/profiles/<profile>/features/<feature>', methods=['GET'])
 def get_feature_state(profile, feature):
     profiles = read_profiles()
-    keys = [profile, 'features', feature, 'enable']
-    enabled = reduce(lambda d, key: d.get(key) if d else None, keys, profiles) or False
+    enabled = dig(profiles, [profile, 'features', feature, 'enable'], default=False)
     return jsonify({
         'enabled': enabled
     })
