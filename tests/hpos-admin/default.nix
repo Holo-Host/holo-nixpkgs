@@ -58,16 +58,28 @@ makeTest {
     die "unexpected settings" unless $actual_settings eq $expected_settings;
 
     ## Testing hosted_happs api when there is not instances running (So the traffic happs should be 0)
-    my $expected_hosted_happs = "{'hosted_happs': [" .
-        "{'file': '/var/lib/holochain-conductor/dnas/QmXNHUfKNMWdZDwrzX7ZZuP7BDpoziphmpQTztYbS5VQk6.dna.json', 'happ-publish-date': '2020/01/31', 'happ-publisher': 'Holo Ltd', 'happ-release-version': 'v0.1', 'happ-title': 'HoloFuel', 'happ-url': 'https://holofuel.holo.host', 'hash': 'QmXNHUfKNMWdZDwrzX7ZZuP7BDpoziphmpQTztYbS5VQk6', 'holo-hosted': True, 'id': 'QmXNHUfKNMWdZDwrzX7ZZuP7BDpoziphmpQTztYbS5VQk6', 'number_instances': 1, 'stats': {'traffic': {'start_date': None, 'total_zome_calls': 0, 'value': []}}}" .
-    "]}";
+    my $expected_file = "'file': '/var/lib/holochain-conductor/dnas/";
+    my $expected_date = "'happ-publish-date': '2020/01/31'";
+    my $expected_publisher = "'happ-publisher': 'Holo Ltd'";
+    my $expected_url ="'happ-url': 'https://holofuel.holo.host'";
+    my $expected_title = "'happ-title': 'HoloFuel'";
+    my $expected_hosted = "'holo-hosted': True";
+    my $expected_number_instances = "'number_instances': 1";
+    my $expected_stats = "'stats': {'traffic': {'start_date': None, 'total_zome_calls': 0, 'value': []}";
 
     my $actual_hosted_happs = $machine->succeed("hpos-admin-client --url=http://localhost get-hosted-happs");
     chomp($actual_hosted_happs);
 
     print $actual_hosted_happs.hosted_happs;
 
-    die "unexpected_hosted_happs_list" unless $actual_hosted_happs eq $expected_hosted_happs;
+    die "unexpected_hosted_happs_file" if (index($actual_hosted_happs, $expected_file) == -1);
+    die "unexpected_hosted_happs_date" if (index($actual_hosted_happs, $expected_date) == -1);
+    die "unexpected_hosted_happs_publisher" if (index($actual_hosted_happs, $expected_publisher) == -1);
+    die "unexpected_hosted_happs_url" if (index($actual_hosted_happs, $expected_url) == -1);
+    die "unexpected_hosted_happs_title" if (index($actual_hosted_happs, $expected_title) == -1);
+    die "unexpected_hosted_happs_hosted" if (index($actual_hosted_happs, $expected_hosted) == -1);
+    die "unexpected_hosted_happs_number_instances" if (index($actual_hosted_happs, $expected_number_instances) == -1);
+    die "unexpected_hosted_happs_stats" if (index($actual_hosted_happs, $expected_stats) == -1);
 
     $machine->shutdown;
 
