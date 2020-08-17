@@ -4,6 +4,7 @@ Modules, packages and profiles that drive Holo, Holochain, and HoloPortOS.
 
 ## Binary cache
 
+
 On NixOS, add the following to `/etc/nixos/configuration.nix` and rebuild:
 
 ```nix
