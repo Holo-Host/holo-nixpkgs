@@ -57,7 +57,6 @@ def get_status(ctx):
 def get_hosted_happs(ctx):
     print(request(ctx, 'GET', '/hosted_happs').json())
 
-
 @cli.command(help='Initiate a factory reset')
 @click.pass_context
 def factory_reset(ctx):

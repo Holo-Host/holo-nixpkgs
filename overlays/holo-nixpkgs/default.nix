@@ -49,8 +49,8 @@ let
   hp-admin = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "hp-admin";
-    rev = "8d46c49dd742bfd8f45590fa5bf882fd120d6d76";
-    sha256 = "16h52858d7glscqpc0vyd9f1shi8z7b65vgqv4ascg58gjx68pvl";
+    rev = "4c370b242402e274377cdd25f48963d4b2d7647e";
+    sha256 = "1gq3zxi9wnr6rifcan4fcr24swyfp2h8zyshszmkiwkn0l2mcgnd";
   };
 
   hp-admin-crypto = fetchFromGitHub {
@@ -242,7 +242,7 @@ in
 
   hpos-admin = callPackage ./hpos-admin {
     stdenv = stdenvNoCC;
-    python3 = python3.withPackages (ps: with ps; [ flask gevent toml requests ]);
+    python3 = python3.withPackages (ps: with ps; [ http-parser flask gevent toml requests websockets ]);
   };
 
   hpos-admin-client = callPackage ./hpos-admin-client {
@@ -257,9 +257,11 @@ in
   };
 
   hpos-reset = writeShellScriptBin "hpos-reset" ''
-    rm -rf /var 
+    rm -rf /var
     reboot
   '';
+
+  inherit (callPackage ./hpos-update {}) hpos-update-cli;
 
   hydra = previous.hydra.overrideAttrs (
     super: {
