@@ -57,6 +57,7 @@ def cas_hash(data):
 def dig(dictionary, keys, default = None):
     return reduce(lambda acc, key: acc.get(key) if acc else None, keys, dictionary) or default
 
+
 @app.route('/config', methods=['GET'])
 def get_settings():
     return jsonify(get_state_data()['v1']['settings'])
@@ -103,7 +104,8 @@ def read_profiles():
 
 
 def write_profiles(profiles):
-    toml.dump(profiles, PROFILES_TOML_PATH)
+    with open(PROFILES_TOML_PATH, 'w') as f:
+        f.write(toml.dumps(profiles))
 
 
 def set_feature_state(profile, feature, enable = True):
