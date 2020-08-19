@@ -21,7 +21,7 @@
 
   boot.loader.generic-extlinux-compatible = {
     enable = true;
-    dtbDir = pkgs.holoport-nano-dtb;
+    # dtbDir = pkgs.holoport-nano-dtb;
   };
 
   boot.loader.grub.enable = false;
