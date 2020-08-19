@@ -11,6 +11,4 @@
   services.automount.enable = true;
 
   services.hpos-led-manager.devicePath = "/dev/ttyUSB0";
-
-  services.holochain-conductor.enable = lib.mkForce false;
 }
