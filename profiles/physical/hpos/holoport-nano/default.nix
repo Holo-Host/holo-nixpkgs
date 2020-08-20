@@ -26,7 +26,7 @@
 
   boot.loader.grub.enable = false;
 
-  hardware.deviceTree.package = pkgs.holoport-nano-dtb;
+  # hardware.deviceTree.package = pkgs.holoport-nano-dtb;
 
   services.automount.enable = true;
 
