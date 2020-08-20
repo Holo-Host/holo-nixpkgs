@@ -194,6 +194,7 @@ in
     sim2h = holo.buildProfile "sim2h";
     wormhole-relay = holo.buildProfile "wormhole-relay";
   };
+  extlinux-conf-builder = callPackage ./extlinux-conf-builder {};
 
   holo-cli = callPackage ./holo-cli {};
 

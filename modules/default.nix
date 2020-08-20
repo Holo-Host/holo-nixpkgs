@@ -1,8 +1,13 @@
 { lib, ... }:
 
 {
+  disabledModules = [
+    "system/boot/loader/generic-extlinux-compatible"
+  ];
+
   imports = [
     ./profiles/development.nix
+    ./boot/generic-extlinux-compatible.nix
     ./services/aorura-emu.nix
     ./services/automount.nix
     ./services/dnscrypt-proxy2.nix
