@@ -165,10 +165,6 @@ in
 
   writeJSON = config: writeText "config.json" (builtins.toJSON config);
 
-  writeTOML = config: runCommand "config.toml" {} ''
-    ${remarshal}/bin/json2toml < ${writeJSON config} > $out
-  '';
-
   dnaHash = dna: builtins.readFile (
     runCommand "${dna.name}-hash" {} ''
       ${holochain-rust}/bin/hc hash -p ${dna}/${dna.name}.dna.json \
@@ -239,7 +235,7 @@ in
 
   hpos-admin = callPackage ./hpos-admin {
     stdenv = stdenvNoCC;
-    python3 = python3.withPackages (ps: with ps; [ flask gevent toml requests ]);
+    python3 = python3.withPackages (ps: with ps; [ flask gevent requests ]);
   };
 
   hpos-admin-client = callPackage ./hpos-admin-client {
