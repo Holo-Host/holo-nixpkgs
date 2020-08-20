@@ -7,20 +7,6 @@ let
 in
 
 {
-  options.services.sim2h-server = {
-    enable = mkEnableOption "Holo Envoy";
-
-    package = mkOption {
-      default = pkgs.holochain-rust;
-      type = types.package;
-    };
-
-    port = mkOption {
-      default = 9000;
-      type = types.int;
-    };
-  };
-
   config = mkIf cfg.enable {
     systemd.services.sim2h-server = {
       after = [ "network.target" ];
