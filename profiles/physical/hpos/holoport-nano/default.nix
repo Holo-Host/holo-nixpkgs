@@ -32,6 +32,4 @@
 
   services.hpos-led-manager.devicePath = "/dev/ttyS2";
 
-  services.holochain-conductor.enable = lib.mkForce false;
-
 }

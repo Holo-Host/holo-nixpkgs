@@ -11,13 +11,6 @@ let
     sha256 = "00d9c6f0hh553hgmw01lp5639kbqqyqsz66jz35pz8xahmyk5wmw";
   };
 
-  bump-dna = fetchFromGitHub {
-    owner = "Holo-Host";
-    repo = "bump-dna";
-    rev = "f97d963a3cef41b30a646ada9ba55349d104ed2c";
-    sha256 = "1kpa3r8cwik9r3k3l6p1n3cl0g4bqwm0wp23mgr4ac41x7xpndyk";
-  };
-
   cargo-to-nix = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "cargo-to-nix";
@@ -85,8 +78,6 @@ in
     aorura-cli
     aorura-emu
     ;
-
-  inherit (callPackage bump-dna {}) bump-dna-cli;
 
   inherit (callPackage cargo-to-nix {})
     buildRustPackage
@@ -165,23 +156,6 @@ in
 
   writeJSON = config: writeText "config.json" (builtins.toJSON config);
 
-  writeTOML = config: runCommand "config.toml" {} ''
-    ${remarshal}/bin/json2toml < ${writeJSON config} > $out
-  '';
-
-  dnaHash = dna: builtins.readFile (
-    runCommand "${dna.name}-hash" {} ''
-      ${holochain-rust}/bin/hc hash -p ${dna}/${dna.name}.dna.json \
-        | tail -1 \
-        | cut -d ' ' -f 3- \
-        | tr -d '\n' > $out
-    ''
-  );
-
-  dnaPackages = recurseIntoAttrs (
-    import ./dna-packages final previous
-  );
-
   holo = recurseIntoAttrs {
     buildProfile = profile: buildImage [
       "${holo-nixpkgs.path}/profiles/logical/holo/${profile}"
@@ -203,19 +177,6 @@ in
   holo-nixpkgs-tests = recurseIntoAttrs (
     import "${holo-nixpkgs.path}/tests" { inherit pkgs; }
   );
-
-  holo-update-conductor-config = callPackage ./holo-update-conductor-config {
-    inherit (rust.packages.nightly) rustPlatform;
-  };
-
-  holochain-cli = holochain-rust;
-
-  holochain-conductor = holochain-rust;
-
-  holochain-rust = callPackage ./holochain-rust {
-    inherit (darwin.apple_sdk.frameworks) CoreServices Security;
-    inherit (rust.packages.nightly) rustPlatform;
-  };
 
   holoport-nano-dtb = callPackage ./holoport-nano-dtb {
     linux = linux_latest;

@@ -14,7 +14,6 @@
     ./services/holo-auth-client.nix
     ./services/holo-router-agent.nix
     ./services/holo-router-gateway.nix
-    ./services/holochain-conductor.nix
     ./services/hp-admin-crypto-server.nix
     ./services/hpos-admin.nix
     ./services/hpos-init.nix
