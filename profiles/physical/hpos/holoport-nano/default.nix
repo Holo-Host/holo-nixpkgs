@@ -30,7 +30,7 @@
 
   services.automount.enable = true;
 
-  services.hpos-led-manager.devicePath = "/dev/ttyS3";
+  services.hpos-led-manager.devicePath = "/dev/ttyS1";
 
   services.holochain-conductor.enable = lib.mkForce false;
 
