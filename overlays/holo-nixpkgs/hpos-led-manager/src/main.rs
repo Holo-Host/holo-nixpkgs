@@ -63,12 +63,12 @@ fn main() -> Fallible<()> {
             (true, false) => State::Static(Color::Blue),
             _ => State::Aurora,
         };
-
+        println!("Before led.set");
         if state != state_prev {
             led.set(state)?;
             state_prev = state;
         }
-
+        println!("After led.set");
         fs::write(&state_temp_path, serde_json::to_vec(&state)?)?;
         fs::rename(&state_temp_path, &state_path)?;
 
