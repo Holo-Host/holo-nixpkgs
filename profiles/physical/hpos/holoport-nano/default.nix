@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports = [
@@ -27,6 +27,8 @@
   boot.loader.grub.enable = false;
 
   hardware.deviceTree.package = pkgs.holoport-nano-dtb;
+
+  services.holochain-conductor.enable = lib.mkForce false;
 
   services.automount.enable = true;
 
