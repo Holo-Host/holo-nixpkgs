@@ -1,7 +1,16 @@
 { lib, ... }:
 
 {
+  disabledModules = [
+    "system/boot/loader/generic-extlinux-compatible"
+  ];
+
   imports = [
+<<<<<<< HEAD
+=======
+    ./profiles/development.nix
+    ./boot/generic-extlinux-compatible.nix
+>>>>>>> 1baa360... Revert "physical/hpos/holoport-nano: set DTB via hardware.deviceTree.package"
     ./services/aorura-emu.nix
     ./services/automount.nix
     ./services/dnscrypt-proxy2.nix
