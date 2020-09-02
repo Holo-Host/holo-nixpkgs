@@ -3,6 +3,7 @@
 {
   imports = [
     ./profiles/development.nix
+    ./profiles/hpos-admin-features.nix
     ./services/aorura-emu.nix
     ./services/automount.nix
     ./services/dnscrypt-proxy2.nix
