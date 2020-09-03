@@ -10,7 +10,7 @@ rustPlatform.buildRustPackage {
     sha256 = "0cl9nj2irdcsx6bx4czn5frk0x2l6fb6ccgj3nn759k73kcwrgp3";
   };
 
-  cargoSha256 = "0v331h3p22835y1nmzi9c9gskq2k0g3qk7rirfp63zmvxzl4m7sa";
+  cargoSha256 = "0v331h3p22835y1nmzi9c9gskq2k0g3qk7rirfp63zmvxzl4m7sv";
 
   nativeBuildInputs = [ perl ];
 
