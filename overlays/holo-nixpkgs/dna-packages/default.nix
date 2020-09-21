@@ -32,8 +32,8 @@ let
   servicelogger = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "servicelogger";
-    rev = "f66b4364df2bc2be54407f4b7664a4e35a91d421";
-    sha256 = "0irhj35qz3ifwm5645n5wdlplbdwzp2cxdxgjah1sbcria99sw0s";
+    rev = "055935c983649188ac51e383e32102204ea06e47";
+    sha256 = "1cbaag6k57apa56kqpynnzchay95fkrqmd2f6v2c1qcwjb8gzm9q";
   };
 in
 
