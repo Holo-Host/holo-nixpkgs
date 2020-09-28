@@ -21,7 +21,7 @@ let
   '';
 
   conductorHome = "/var/lib/holochain-conductor";
-  holofuelHhaHash = "QmNedTibHaD3K7ojqa7ZZfkMBbUWg39taK6oLBEPAswTKu";
+  holofuelHhaHash = "QmeFJR4JNc2TuiBLqsKDESciStoZZ3KEPtSQfakLmYLQHb";
 
   dnas = with dnaPackages; [
     # list self hosted DNAs here
