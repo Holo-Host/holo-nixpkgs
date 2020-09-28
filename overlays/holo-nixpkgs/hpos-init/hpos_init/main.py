@@ -60,6 +60,8 @@ async def receive_config(backoff_exp=1):
         log.warning("receive failed with %s, retrying in %d seconds",
                     exc_type, backoff)
         reactor.callLater(backoff, receive_config, backoff_exp + 1)
+    except:
+        log.warning("Wormhole receive failed with %s, process will now terminate")
     finally:
         if os.path.exists(wormhole_code_path()):
             os.remove(wormhole_code_path())

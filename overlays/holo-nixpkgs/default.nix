@@ -49,8 +49,8 @@ let
   hp-admin = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "hp-admin";
-    rev = "4c370b242402e274377cdd25f48963d4b2d7647e";
-    sha256 = "1gq3zxi9wnr6rifcan4fcr24swyfp2h8zyshszmkiwkn0l2mcgnd";
+    rev = "5d252ca9b6ea5b7b324381016fce6842618f28f0";
+    sha256 = "18xdf5dpr1lv2kpbp5xlrpv7h4mns9gvpyj5m49fx5xl6vm3bgx9";
   };
 
   hp-admin-crypto = fetchFromGitHub {
@@ -194,6 +194,8 @@ in
     sim2h = holo.buildProfile "sim2h";
     wormhole-relay = holo.buildProfile "wormhole-relay";
   };
+  
+  extlinux-conf-builder = callPackage ./extlinux-conf-builder {};
 
   holo-cli = callPackage ./holo-cli {};
 
