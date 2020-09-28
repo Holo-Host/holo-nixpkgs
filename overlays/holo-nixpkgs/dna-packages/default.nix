@@ -18,22 +18,22 @@ let
   };
 
   holofuel = fetchurl {
-    url = "https://holo-host.github.io/holofuel/releases/download/v0.21.6-alpha8/holofuel.dna.json";
+    url = "https://holo-host.github.io/holofuel/releases/download/v0.21.6-alpha10/holofuel.dna.json";
     name = "holofuel.dna.json";
-    sha256 = "1bpa1lclmn15lg91r1lkh1i48gachpidivclfbcq50m4rr15nmjg";
+    sha256 = "1sq55zb8ci411yb6gidxk94qr5z9rwvqirknd1b0i28rabr8dl38";
   };
 
   hosted-holofuel = fetchurl {
-    url = "https://holo-host.github.io/holofuel/releases/download/v0.21.6-alpha8/holofuel.dna.json";
+    url = "https://holo-host.github.io/holofuel/releases/download/v0.21.6-alpha10/holofuel.dna.json";
     name = "holofuel.dna.json";
-    sha256 = "1bpa1lclmn15lg91r1lkh1i48gachpidivclfbcq50m4rr15nmjg";
+    sha256 = "1sq55zb8ci411yb6gidxk94qr5z9rwvqirknd1b0i28rabr8dl38";
   };
 
   servicelogger = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "servicelogger";
-    rev = "e25f3dba41c6bda71367fb06769edb962ba6fb3c";
-    sha256 = "18df0v8h620fnl61fk8099jvms5sla0i0g974ld4v8ir9pj7y8a4";
+    rev = "dc0eeb8cb1f9f5685028c9bf0e4d37c1e6639d92";
+    sha256 = "1rm0dkalrb374n3is1wx9qx3r3hwzp4608wmmpryy0yqj9rzvw6f";
   };
 in
 
