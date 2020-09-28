@@ -37,7 +37,11 @@ in
 
 {
   options.profiles.development = {
-    enable = mkEnableOption "HPOS development profile";
+    enable = mkOption {
+      description = "HPOS development profile";
+      type = types.bool;
+      default = true;
+    };
 
     features = mkOption {
       description = "Feature flags to control the profile";
