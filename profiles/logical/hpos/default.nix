@@ -36,7 +36,7 @@ in
 
   environment.noXlibs = true;
 
-  environment.systemPackages = [ hpos-reset hpos-admin-client hpos-update-cli git ];
+  environment.systemPackages = [ hpos-reset hpos-admin-client hpos-update-cli git holochain lair-keystore ];
 
   networking.firewall.allowedTCPPorts = [ 443 ];
 

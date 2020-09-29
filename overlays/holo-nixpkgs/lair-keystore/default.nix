@@ -1,4 +1,4 @@
-{ stdenv, rustPlatform, fetchFromGitHub, perl, CoreServices, CoreFoundation, Security, libsodium, openssl, pkgconfig }:
+{ stdenv, rustPlatform, fetchFromGitHub, perl }:
 
 rustPlatform.buildRustPackage {
   name = "lair-keystore";
