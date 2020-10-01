@@ -16,8 +16,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "holo-envoy";
-    rev = "edff191ba6d87c26a4279d3986e602cdea13ff7c";
-    sha256 = "0z44dx44kf8w2k5ah8amq82chkryafmxdi8wz9n27gd6qi8fbniv";
+    rev = "326a37de87ac2bb89873151a0c4600c80f17b8b3";
+    sha256 = "0ydqsi1kgw57x5pjqpb6x023vi818bhm4j5zjhnfv4dn145s6xv9";
   };
 
   buildInputs = [
