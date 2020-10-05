@@ -21,9 +21,8 @@ let
   '';
 
   conductorHome = "/var/lib/holochain-conductor";
-  
-  # Note: Since there is only one hosted DNA we can use this as a hack
-  holofuelHhaID = pkgs.dnaHash dnaPackages.servicelogger;
+
+  holofuelHhaID = "QmPATBZABhxPpfZavVv27KV8aQAFhi2wgApRah3yTo4i4q";
 
   dnas = with dnaPackages; [
     # list self hosted DNAs here
