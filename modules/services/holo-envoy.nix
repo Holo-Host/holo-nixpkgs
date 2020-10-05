@@ -23,6 +23,7 @@ in
 
       serviceConfig = {
         Environment = "LOG_LEVEL=silly";
+        ExecStartPre = "/run/current-system/sw/bin/sleep 10";
         ExecStart = "${cfg.package}/bin/holo-envoy";
       };
     };
