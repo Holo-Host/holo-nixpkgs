@@ -211,12 +211,12 @@ in
       dnas = map dnaConfig dnas ++ map hostedDnaConfig hostedDnas;
       instances = map instanceConfig dnas ++ [
         {
-          id = "${holofuelHhaHash}::servicelogger";
+          id = "${holofuelHhaID}::servicelogger";
           dna = dnaPackages.servicelogger.name;
           agent = "host-agent";
           holo-hosted = false;
           storage = {
-            path = "${conductorHome}/${holofuelHhaHash}::servicelogger";
+            path = "${conductorHome}/${holofuelHhaID}::servicelogger";
             type = "lmdb";
           };
         }
@@ -251,7 +251,7 @@ in
           };
           instances = [
             {
-              id = "${holofuelHhaHash}::servicelogger";
+              id = "${holofuelHhaID}::servicelogger";
             }
           ];
         }
