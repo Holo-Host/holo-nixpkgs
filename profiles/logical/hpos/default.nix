@@ -8,16 +8,12 @@ let
     until $(${curl}/bin/curl --fail --head --insecure --max-time 10 --output /dev/null --silent "https://$base36_id.holohost.net"); do
       sleep 5
     done
-    exec ${simp_le}/bin/simp_le \
-      --default_root ${config.security.acme.certs.default.webroot} \
-      --valid_min ${toString config.security.acme.validMin} \
+    exec ${lego}/bin/lego run \
+      --accept-tos \
+      --email ${config.security.acme.email} \
+      --http.webroot ${config.security.acme.certs.default.webroot} \
+      --path . \
       -d "$base36_id.holohost.net" \
-      -f fullchain.pem \
-      -f full.pem \
-      -f key.pem \
-      -f account_key.json \
-      -f account_reg.json \
-      -v
   '';
 
   conductorHome = "/var/lib/holochain-conductor";
