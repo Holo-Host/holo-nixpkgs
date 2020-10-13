@@ -97,6 +97,8 @@ in
     options = "--delete-older-than 7d";
   };
 
+  security.acme.email = "oleksii.filonenko@holo.host";
+  
   security.sudo.wheelNeedsPassword = false;
 
   services.holo-auth-client.enable = lib.mkDefault true;
