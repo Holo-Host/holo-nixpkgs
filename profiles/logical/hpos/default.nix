@@ -8,12 +8,13 @@ let
     until $(${curl}/bin/curl --fail --head --insecure --max-time 10 --output /dev/null --silent "https://$base36_id.holohost.net"); do
       sleep 5
     done
-    exec ${lego}/bin/lego run \
+    exec ${lego}/bin/lego \
       --accept-tos \
       --email ${config.security.acme.email} \
       --http.webroot ${config.security.acme.certs.default.webroot} \
       --path . \
-      -d "$base36_id.holohost.net" \
+      --domains "$base36_id.holohost.net" \
+      run
   '';
 
   conductorHome = "/var/lib/holochain-conductor";
@@ -98,7 +99,7 @@ in
   };
 
   security.acme.email = "oleksii.filonenko@holo.host";
-  
+
   security.sudo.wheelNeedsPassword = false;
 
   services.holo-auth-client.enable = lib.mkDefault true;
