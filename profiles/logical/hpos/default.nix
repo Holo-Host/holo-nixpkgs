@@ -22,8 +22,101 @@ let
 
   conductorHome = "/var/lib/holochain-conductor";
 
-  # Note: Since there is only one hosted DNA we can use this as a hack
-  holofuelHhaID = with dnaPackages; pkgs.dnaHash hosted-holofuel;
+  hha-store = [
+    {
+      name = "hosted-holofuel";
+      title = "HoloFuel";
+      url = "http://holofuel.com";
+      publisher = "Holo Ltd";
+      versions = [
+        {
+          happ-id = "QmNs8vqa5dMwxXUStFPEjSj8LQ1vn7xkh1GPgEU5MCsubz";
+          publish-date = "2020/08/19";
+          dnas = {
+            holofuel = {
+              hash = "QmNedTibHaD3K7ojqa7ZZfkMBbUWg39taK6oLBEPAswTKu";
+              url = "https://holo-host.github.io/holofuel/releases/download/v0.21.6-alpha2/holofuel.dna.json";
+              sha256 = "06bz94lg1is8lq2rrvwiqki0cm2fgnis9l223dq89wba2rmss75p";
+            };
+          };
+        }
+        {
+          happ-id = "QmSvPd3sHK7iWgZuW47fyLy4CaZQe2DwxvRhrJ39VpBVMK";
+          publish-date = "2020/08/19";
+          dnas = {
+            holofuel = {
+              hash = "QmWCuV9BptskAraBMidQHtre7hTqT1ouwqcFuh6Q7HbGGx";
+              url = "https://holo-host.github.io/holofuel/releases/download/v0.21.6-alpha1/holofuel.dna.json";
+              sha256 = "10i6a0kzd0xagq9fdica87jh0xm70i369bph7mr36sk248yl9h8w";
+            };
+          };
+        }
+      ];
+    }
+  ];
+
+  installDNA = drv: runCommand (lib.removeSuffix ".dna.json" drv.name) {} ''
+    install -Dm -x ${drv} $out/dna.json
+  '';
+
+  hha-fetched = map (
+    app: {
+      name = app.title;
+      versions = map (
+        version: {
+          happ-id = version.happ-id;
+          dnas = builtins.listToAttrs (
+            map (
+              name: {
+                name = name;
+                value = {
+                  dna = installDNA (
+                    fetchurl {
+                      url = version.dnas.${name}.url;
+                      sha256 = version.dnas.${name}.sha256;
+                    }
+                  ) + "/dna.json";
+                  hash = version.dnas.${name}.hash;
+                };
+              }
+            ) (builtins.attrNames version.dnas)
+          );
+        }
+      ) app.versions;
+    }
+  ) hha-store;
+
+  hosted-dnas = builtins.concatLists (map (
+    app: builtins.concatLists (map (
+      version: map (
+        name: {
+          id = version.dnas.${name}.hash;
+          file = installDNA (
+            fetchurl {
+              url = version.dnas.${name}.url;
+              sha256 = version.dnas.${name}.sha256;
+            }
+          ) + "/dna.json";
+          hash = version.dnas.${name}.hash;
+        }
+      ) (builtins.attrNames version.dnas)
+    ) app.versions)
+  ) hha-store);
+
+  service-logger-instances = builtins.concatLists (map (
+    app: map (
+      version: {
+        id = "${version.happ-id}::servicelogger";
+        dna = dnaPackages.servicelogger.name;
+        agent = "host-agent";
+        holo-hosted = false;
+        storage = {
+          path = "${conductorHome}/${version.happ-id}::servicelogger";
+          type = "lmdb";
+        };
+      }
+    ) app.versions
+  ) hha-store);
 
   dnas = with dnaPackages; [
     # list self hosted DNAs here
@@ -38,30 +131,6 @@ let
     file = "${drv}/${drv.name}.dna.json";
     hash = pkgs.dnaHash drv;
     holo-hosted = false;
-  };
-
-   hostedDnas = with dnaPackages; [
-    # list holo hosted DNAs here
-    {
-      drv = hosted-holofuel;
-      happ-url = "http://testfuel.holo.host";
-      happ-title = "HoloFuel";
-      happ-release-version = "v0.1";
-      happ-publisher = "Holo Ltd";
-      happ-publish-date = "2020/01/31";
-    }
-  ];
-
-  hostedDnaConfig = dna: rec {
-    id = pkgs.dnaHash dna.drv;
-    file = "${dna.drv}/${dna.drv.name}.dna.json";
-    hash = id;
-    holo-hosted = true;
-    happ-url = dna.happ-url;
-    happ-title = dna.happ-title;
-    happ-release-version = dna.happ-release-version;
-    happ-publisher = dna.happ-publisher;
-    happ-publish-date = dna.happ-publish-date;
   };
 
   instanceConfig = drv: {
@@ -189,6 +258,7 @@ in
 
   services.holochain-conductor = {
     enable = true;
+    available-happs = hha-fetched;
     config = {
       agents = [
         {
@@ -199,19 +269,8 @@ in
         }
       ];
       bridges = [];
-      dnas = map dnaConfig dnas ++ map hostedDnaConfig hostedDnas;
-      instances = map instanceConfig dnas ++ [
-        {
-          id = "${holofuelHhaID}::servicelogger";
-          dna = dnaPackages.servicelogger.name;
-          agent = "host-agent";
-          holo-hosted = false;
-          storage = {
-            path = "${conductorHome}/${holofuelHhaID}::servicelogger";
-            type = "lmdb";
-          };
-        }
-      ];
+      dnas = map dnaConfig dnas ++ hosted-dnas;
+      instances = map instanceConfig dnas ++ service-logger-instances;
       network = {
         type = "sim2h";
         sim2h_url = "ws://public.sim2h.net:9000";
@@ -240,11 +299,9 @@ in
             port = 42222;
             type = "websocket";
           };
-          instances = [
-            {
-              id = "${holofuelHhaID}::servicelogger";
-            }
-          ];
+          instances = map (instance: {
+            id = instance.id;
+          }) service-logger-instances;
         }
         {
           id = "admin-interface";

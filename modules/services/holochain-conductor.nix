@@ -13,6 +13,9 @@ in
     config = mkOption {
       type = types.attrs;
     };
+    available-happs = mkOption {
+      type = types.listOf types.attrs;
+    };
 
     package = mkOption {
       default = pkgs.holochain-rust;
@@ -36,6 +39,9 @@ in
             | ${pkgs.holo-update-conductor-config}/bin/holo-update-conductor-config \
             $STATE_DIRECTORY/conductor-config.toml
         fi
+        HOSTED_HAPPS_CONFIG=${pkgs.writeText "hosted-happs.json" (builtins.toJSON cfg.available-happs)}
+        echo "Wrote available-happs config to $HOSTED_HAPPS_CONFIG"
+        ln -fs $HOSTED_HAPPS_CONFIG /var/lib/holochain-conductor/hosted-happs.json
       '';
 
       serviceConfig = {
