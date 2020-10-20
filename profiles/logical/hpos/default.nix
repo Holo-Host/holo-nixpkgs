@@ -10,7 +10,7 @@ let
     done
     exec ${lego}/bin/lego \
       --accept-tos \
-      --email ${config.security.acme.email} \
+      --email "oleksii.filonenko@holo.host" \
       --http.webroot ${config.security.acme.certs.default.webroot} \
       --path . \
       --domains "$base36_id.holohost.net" \
@@ -97,8 +97,6 @@ in
     dates = "daily";
     options = "--delete-older-than 7d";
   };
-
-  security.acme.email = "oleksii.filonenko@holo.host";
 
   security.sudo.wheelNeedsPassword = false;
 
