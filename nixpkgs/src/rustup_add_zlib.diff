@@ -1,0 +1,126 @@
+diff --git a/pkgs/development/tools/rust/rustup/0001-dynamically-patchelf-binaries.patch b/pkgs/development/tools/rust/rustup/0001-dynamically-patchelf-binaries.patch
+index 74da8d6..13649b3 100644
+--- a/pkgs/development/tools/rust/rustup/0001-dynamically-patchelf-binaries.patch
++++ b/pkgs/development/tools/rust/rustup/0001-dynamically-patchelf-binaries.patch
+@@ -1,30 +1,24 @@
+ diff --git a/src/dist/component/package.rs b/src/dist/component/package.rs
+-index e0fdea28..38d9d0e4 100644
++index 3beddf54..0f859b8d 100644
+ --- a/src/dist/component/package.rs
+ +++ b/src/dist/component/package.rs
+-@@ -104,10 +104,11 @@ impl Package for DirectoryPackage {
+-             match &*part.0 {
+-                 "file" => {
+-                     if self.copy {
+--                        builder.copy_file(path.clone(), &src_path)?
+-+                        builder.copy_file(path.clone(), &src_path)?;
++@@ -113,6 +113,7 @@ impl Package for DirectoryPackage {
+                      } else {
+--                        builder.move_file(path.clone(), &src_path)?
+-+                        builder.move_file(path.clone(), &src_path)?;
++                         builder.move_file(path.clone(), &src_path)?
+                      }
+ +                    nix_patchelf_if_needed(&target.prefix().path().join(path.clone()), &src_path)
+                  }
+                  "dir" => {
+                      if self.copy {
+-@@ -132,6 +133,22 @@ impl Package for DirectoryPackage {
++@@ -135,6 +136,29 @@ impl Package for DirectoryPackage {
+      }
+  }
+-
++ 
+ +fn nix_patchelf_if_needed(dest_path: &Path, src_path: &Path) {
+-+    let is_bin = if let Some(p) = src_path.parent() {
+-+        p.ends_with("bin")
+++    let (is_bin, is_lib) = if let Some(p) = src_path.parent() {
+++        (p.ends_with("bin"), p.ends_with("lib"))
+ +    } else {
+-+        false
+++        (false, false)
+ +    };
+ +
+ +    if is_bin {
+@@ -34,8 +28,15 @@ index e0fdea28..38d9d0e4 100644
+ +            .arg(dest_path)
+ +            .output();
+ +    }
+++    else if is_lib {
+++        let _ = ::std::process::Command::new("@patchelf@/bin/patchelf")
+++            .arg("--set-rpath")
+++            .arg("@libPath@")
+++            .arg(dest_path)
+++            .output();
+++    }
+ +}
+ +
+- // On Unix we need to set up the file permissions correctly so
+- // binaries are executable and directories readable. This shouldn't be
+- // necessary: the source files *should* have the right permissions,
++ #[derive(Debug)]
++ pub struct TarPackage<'a>(DirectoryPackage, temp::Dir<'a>);
++ 
+diff --git a/pkgs/development/tools/rust/rustup/default.nix b/pkgs/development/tools/rust/rustup/default.nix
+index 0bf1c61..6881594 100644
+--- a/pkgs/development/tools/rust/rustup/default.nix
++++ b/pkgs/development/tools/rust/rustup/default.nix
+@@ -1,35 +1,42 @@
+ { stdenv, lib, runCommand, patchelf
+ , fetchFromGitHub, rustPlatform
+-, pkgconfig, curl, Security, CoreServices }:
++, pkgconfig, curl, zlib, Security, CoreServices }:
+ 
+ rustPlatform.buildRustPackage rec {
+   pname = "rustup";
+-  version = "1.18.3";
++  version = "1.21.1";
+ 
+   src = fetchFromGitHub {
+     owner = "rust-lang";
+-    repo = "rustup.rs";
++    repo = "rustup";
+     rev = version;
+-    sha256 = "062l893i9czm1lm0x3arj3vfnjg3fg8q8xvq3y4adakmk6yrcc4x";
++    sha256 = "0d7l3j8js16zgdx37kykavr343v65vchldz88j38jjyc43pcm2pg";
+   };
+ 
+-  cargoSha256 = "1zwlr0zxc97m6xr28ryq5hkrvcns6qg68h7w09sga23xinm3fr11";
++  cargoSha256 = "1y13kfski36rfvqkp3mxxn12aidp339j7rigv49msyr004ac5y8s";
+ 
+   nativeBuildInputs = [ pkgconfig ];
+ 
+   buildInputs = [
+-    curl
++    curl zlib
+   ] ++ stdenv.lib.optionals stdenv.isDarwin [ CoreServices Security ];
+ 
+   cargoBuildFlags = [ "--features no-self-update" ];
+ 
+   patches = lib.optionals stdenv.isLinux [
+-    (runCommand "0001-dynamically-patchelf-binaries.patch" { CC=stdenv.cc; patchelf = patchelf; } ''
++    (let
++      libPath = lib.makeLibraryPath [
++        zlib # libz.so.1
++      ];
++    in
++      (runCommand "0001-dynamically-patchelf-binaries.patch" { CC=stdenv.cc; patchelf = patchelf; libPath = "$ORIGIN/../lib:${libPath}"; } ''
+        export dynamicLinker=$(cat $CC/nix-support/dynamic-linker)
+        substitute ${./0001-dynamically-patchelf-binaries.patch} $out \
+          --subst-var patchelf \
+-         --subst-var dynamicLinker
++         --subst-var dynamicLinker \
++         --subst-var libPath
+     '')
++    )
+   ];
+ 
+   doCheck = !stdenv.isAarch64 && !stdenv.isDarwin;
+@@ -63,7 +70,7 @@ rustPlatform.buildRustPackage rec {
+ 
+   meta = with stdenv.lib; {
+     description = "The Rust toolchain installer";
+-    homepage = https://www.rustup.rs/;
++    homepage = "https://www.rustup.rs/";
+     license = with licenses; [ asl20 /* or */ mit ];
+     maintainers = [ maintainers.mic92 ];
+     platforms = platforms.all;

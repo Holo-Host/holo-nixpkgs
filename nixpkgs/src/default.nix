@@ -15,6 +15,7 @@ stdenvNoCC.mkDerivation {
     ./ext4-no-resize2fs.diff
     ./rust-aarch64-musl-cross.diff
     ./rust-home.diff
+    ./rustup_add_zlib.diff
     ./virtualbox-image-no-audio-mouse-usb.diff
     ./zerotier-1.4.6.patch
   ];
