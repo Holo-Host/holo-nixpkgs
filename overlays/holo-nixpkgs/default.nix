@@ -292,8 +292,6 @@ in
     }
   );
 
-  magic-wormhole-mailbox-server = python3Packages.callPackage ./magic-wormhole-mailbox-server {};
-
   nginx = nginxStable;
 
   nginxStable = (callPackage "${pkgs.path}/pkgs/servers/http/nginx/stable.nix" {}).overrideAttrs (super: {

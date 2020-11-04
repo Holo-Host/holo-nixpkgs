@@ -15,7 +15,6 @@ in
   nix.buildMachines = [
     {
       hostName = "localhost";
-      maxJobs = config.nix.maxJobs;
       supportedFeatures = [
         "benchmark"
         "big-parallel"
@@ -53,9 +52,9 @@ in
     email = "oleksii.filonenko@holo.host";
   };
 
-  services.postgresql.extraConfig = ''
-    max_connections = 1024
-  '';
+  services.postgresql.settings = {
+    max_connections = 1024;
+  };
 
   services.hydra = {
     enable = true;
