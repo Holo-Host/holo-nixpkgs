@@ -39,8 +39,6 @@ let
 in
 
 {
-  yarn2nix = yarn2nix-moretea;
-
   inherit (callPackage ./aorura {}) aorura;
 
   inherit (callPackage cargo-to-nix {})
