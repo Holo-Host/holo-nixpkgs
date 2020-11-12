@@ -1,30 +1,21 @@
-{ stdenv, fetchFromGitHub, nodejs, npmToNix }:
+{ stdenv, fetchFromGitHub, nodejs, mkYarnPackage }:
 
 {
-  self-hosted-happs-node = stdenv.mkDerivation rec {
+  self-hosted-happs-node = mkYarnPackage rec {
     name = "self-hosted-happs-node";
     src = fetchFromGitHub {
       owner = "holo-host";
       repo = "self-hosted-happs-node";
-      rev = "60530dc846df1d9c94352247547cb11d38244960";
-      sha256 = "1fm6bmcdn27d1lnww88w4a5wmxiwkqvk7c1vqq6fwx864wq5rrhd";
+      rev = "426cffa3a8779f34613cb0cea52f12274e665a02";
+      sha256 = "0ycbyciqbqljvpfgqk55bqbyv6ngcngdyr1vy9xvczgx5xb0jkls";
     };
 
-    buildInputs = [ nodejs ];
-
-    preConfigure = ''
-      cp -r ${npmToNix { src = "${src}/"; }} node_modules
-      chmod -R +w node_modules
-      chmod +x node_modules/.bin/webpack
-      patchShebangs node_modules
-    '';
-
     buildPhase = ''
-      npm run build
+      yarn build
     '';
 
     installPhase = ''
-      cp -r dist/ $out
+      ls
     '';
 
     doCheck = false;

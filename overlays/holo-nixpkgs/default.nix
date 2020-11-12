@@ -29,13 +29,6 @@ let
     url = "https://github.com/mozilla/nixpkgs-mozilla/archive/8c007b60731c07dd7a052cce508de3bb1ae849b4.tar.gz";
     sha256 = "1zybp62zz0h077zm2zmqs2wcg3whg6jqaah9hcl1gv4x8af4zhs6";
   };
-
-  npm-to-nix = fetchFromGitHub {
-    owner = "Holo-Host";
-    repo = "npm-to-nix";
-    rev = "6d2cbbc9d58566513019ae176bab7c2aeb68efae";
-    sha256 = "1wm9f2j8zckqbp1w7rqnbvr8wh6n072vyyzk69sa6756y24sni9a";
-  };
 in
 
 {
@@ -57,8 +50,6 @@ in
   inherit (callPackage ./hp-admin-crypto {}) hp-admin-crypto;
 
   inherit (callPackage ./hpos-config {}) hpos-config;
-
-  inherit (callPackage npm-to-nix {}) npmToNix;
 
   inherit (callPackage "${nixpkgs-mozilla}/package-set.nix" {}) rustChannelOf;
 

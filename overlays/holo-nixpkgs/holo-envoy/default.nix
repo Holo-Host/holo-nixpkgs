@@ -3,22 +3,22 @@
 , fetchFromGitHub
 , makeWrapper
 , nodejs
-, npmToNix
+, mkYarnPackage
 , ps
 , python
 , fetchgit
 }:
 
-stdenv.mkDerivation rec {
+mkYarnPackage rec {
   name = "holo-envoy";
   src = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "holo-envoy";
-    rev = "bd8eec1e5ee24c757aa54b5ab0ff0b6c04aec977";
-    sha256 = "0yii2qkc6bcxwjwlvv7nj1awgqbd8a2bxx1gif0fx3jd2r142008";
+    rev = "659f37de20726473740b93fcf49cbd7d1d4f20da";
+    sha256 = "1hjq7n5dn2y4x8kfz50fagl4hjn3cf18a9jzsz5zh20p6y1zzcj2";
   };
 
-  buildInputs = [ python ];
+  extraBuildInputs = [ python ];
 
   nativeBuildInputs = [
     makeWrapper
@@ -27,14 +27,8 @@ stdenv.mkDerivation rec {
     ps
   ];
 
-  preConfigure = ''
-    cp -r ${npmToNix { inherit src; }} node_modules
-    chmod -R +w node_modules
-    patchShebangs node_modules
-  '';
-
   buildPhase = ''
-    npm run build
+    yarn build
   '';
 
   installPhase = ''
