@@ -145,6 +145,9 @@ in
 
     appendHttpConfig = ''
       limit_req_zone $binary_remote_addr zone=zone1:1m rate=2r/s;
+      types {
+        application/wasm wasm;
+      }
     '';
   };
 
