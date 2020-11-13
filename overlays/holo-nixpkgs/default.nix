@@ -225,10 +225,6 @@ in
 
   nginx = nginxStable;
 
-  nginxStable = (callPackage "${pkgs.path}/pkgs/servers/http/nginx/stable.nix" {}).overrideAttrs (super: {
-    patches = super.patches ++ [ ./nginx/add-wasm-mime-type.patch ];
-  });
-
   nodejs = nodejs-12_x;
 
   rust = previous.rust // {
