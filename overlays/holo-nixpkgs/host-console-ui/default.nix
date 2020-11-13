@@ -1,7 +1,7 @@
-{ stdenv, fetchFromGitHub, nodejs, yarn2nix }:
+{ stdenv, fetchFromGitHub, nodejs, mkYarnPackage  }:
 
 {
-  host-console-ui = yarn2nix.mkYarnPackage rec {
+  host-console-ui = mkYarnPackage rec {
     name = "host-console-ui";
     src = fetchFromGitHub {
       owner = "holo-host";
