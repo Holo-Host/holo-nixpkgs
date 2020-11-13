@@ -3,20 +3,24 @@
 with lib;
 
 let
-  cfg = config.services.self-hosted-happs;
+  cfg = config.services.hpos-configure-holochain;
 in
 
 {
-  options.services.self-hosted-happs = {
-    enable = mkEnableOption "self-hosted-happs";
+  options.services.hpos-configure-holochain = {
+    enable = mkEnableOption "hpos-configure-holochain";
 
-    default-list = mkOption {
+    default-self-hosted-list = mkOption {
       type = types.listOf types.attrs;
     };
 
     package = mkOption {
-      default = pkgs.self-hosted-happs-node;
+      default = pkgs.hpos-configure-holochain;
       type = types.package;
+    };
+
+    self-hosted-working-directory = mkOption {
+      default = "";
     };
 
     working-directory = mkOption {
@@ -27,32 +31,33 @@ in
   config = mkIf (cfg.enable) {
     environment.systemPackages = [ cfg.package pkgs.nodejs ];
 
-    systemd.services.self-hosted-happs = {
+    systemd.services.hpos-configure-holochain = {
       after = [ "network.target" "holochain.service" ];
       requisite = [ "holochain.service" ];
       wantedBy = [ "multi-user.target" ];
 
       preStart = ''
-        ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.default-list} > ${cfg.working-directory}/config.yaml
+        ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.default-list} > ${cfg.self-hosted-working-directory}/config.yaml
         sleep 2 # wait for holochian admin interface to be ready
       '';
 
       serviceConfig = {
-        User = "self-hosted-happs";
-        Group = "self-hosted-happs";
+        User = "hpos-configure-holochain";
+        Group = "hpos-configure-holochain";
+        # FIXME binary
         ExecStart = "${pkgs.nodejs}/bin/node --no-warnings ${cfg.package}/main.js ${cfg.working-directory}/config.yaml";
-        StateDirectory = "self-hosted-happs";
+        StateDirectory = "hpos-configure-holochain";
         Type = "oneshot";
       };
     };
 
-    users.users.self-hosted-happs = {
+    users.users.hpos-configure-holochain = {
       isSystemUser = true;
       home = "${cfg.working-directory}";
       # ensures directory is owned by user
       createHome = true;
     };
 
-    users.groups.self-hosted-happs = {};
+    users.groups.hpos-configure-holochain = {};
   };
 }

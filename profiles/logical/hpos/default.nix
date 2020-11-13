@@ -23,8 +23,8 @@ let
   '';
 
   holochainWorkingDir = "/var/lib/holochain-rsm";
-
-  selfHostedHappsWorkingDir = "/var/lib/self-hosted-happs";
+  hposConfigureHolochainWorkingDir = "/var/lib/hpos-configure-holochain";
+  selfHostedHappsWorkingSubDir = "self-hosted-happs";
 in
 
 {
@@ -91,7 +91,7 @@ in
         };
 
         "/apps/" = {
-          alias = "/var/lib/self-hosted-happs/uis/";
+          alias = "/var/lib/hpos-configure-holochain/self-hosted-happs/uis/";
           extraConfig = ''
             limit_req zone=zone1 burst=30;
           '';
@@ -171,10 +171,11 @@ in
     };
   };
 
-  services.self-hosted-happs = {
+  services.hpos-configure-holochain = {
     enable = true;
-    working-directory = selfHostedHappsWorkingDir;
-    default-list = [
+    working-directory = hposConfigureHolochainWorkingDir;
+    self-hosted-working-directory = "${hposConfigureHolochainWorkingDir}/${selfHostedHappsWorkingSubDir}";
+    default-self-hosted-list = [
       {
         app_id = "elemental-chat";
         ui_url = "https://s3.eu-central-1.wasabisys.com/elemetal-chat-tests/elemental-chat.zip";
