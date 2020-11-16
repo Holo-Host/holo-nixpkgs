@@ -12,11 +12,11 @@ in
     src = fetchFromGitHub {
       owner = "holo-host";
       repo = "hpos-configure-holochain";
-      rev = "9364c1c1c4832fa8e0c1513707554dcfcac2f8b3";
-      sha256 = "1hc7i46hknvv2afm4ccynql7pf73kp7rcb7vhdfhazna357mbll0";
+      rev = "94f9633ac5bc07a93b622ddf2b1e54837e4c6f72";
+      sha256 = "1a9ng7pgf7zdrsy52p44ji0kvb11mb89cf8pm162diki475pgvn3";
     };
 
-    cargoSha256 = "1ykz4j8igr438cmv3lrl0qwvsfc2013rvjch2lm1zrr55yhf5nlk";
+    cargoSha256 = "1wa2fvbpr0gdsx7mplf8y6j2g3jz9wf0j24h6r9s7annia176yls";
 
     nativeBuildInputs = [ pkgconfig ];
     buildInputs = [ openssl ];
