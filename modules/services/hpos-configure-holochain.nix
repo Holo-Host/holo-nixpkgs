@@ -37,7 +37,7 @@ in
       wantedBy = [ "multi-user.target" ];
 
       preStart = ''
-        ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.default-list} > ${cfg.self-hosted-working-directory}/config.yaml
+        ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.default-self-hosted-list} > ${cfg.self-hosted-working-directory}/config.yaml
         sleep 2 # wait for holochian admin interface to be ready
       '';
 
