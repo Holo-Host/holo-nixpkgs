@@ -177,7 +177,7 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = "kitsune-proxy://R9IjlcdJTDVL88sTi_b8zbU87l6AM7mXTNWL8IHXIVE/kitsune-quic/h/proxy.holochain.org/p/5775/--";
+            proxy_url = "kitsune-proxy://CIW6PxKxsPPlcuvUCbMcKwUpaMSmB7kLD8xyyj4mqcw/kitsune-quic/h/proxy.holochain.org/p/5778/--";
           };
         };
       };
