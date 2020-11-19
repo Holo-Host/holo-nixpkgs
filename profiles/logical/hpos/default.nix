@@ -24,7 +24,7 @@ let
 
   holochainWorkingDir = "/var/lib/holochain-rsm";
 
-  selfHostedHappsWorkingDir = "/var/lib/self-hosted-happs";
+  configureHolochainWorkingDir = "/var/lib/configure-holochain";
 in
 
 {
@@ -93,7 +93,7 @@ in
         };
 
         "/apps/" = {
-          alias = "/var/lib/self-hosted-happs/uis/";
+          alias = "/var/lib/configure-holochain/uis/";
           extraConfig = ''
             limit_req zone=zone1 burst=30;
           '';
@@ -197,10 +197,10 @@ in
     };
   };
 
-  services.self-hosted-happs = {
+  services.configure-holochain = {
     enable = true;
-    working-directory = selfHostedHappsWorkingDir;
-    default-list = [
+    working-directory = configureHolochainWorkingDir;
+    install-list = [
       {
         app_id = "elemental-chat";
         version = "alpha14";
