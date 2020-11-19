@@ -29,7 +29,7 @@ in
   };
 
   config = mkIf (cfg.enable) {
-    environment.systemPackages = [ cfg.package pkgs.nodejs ];
+    environment.systemPackages = [ cfg.package ];
 
     systemd.services.hpos-configure-holochain = {
       after = [ "network.target" "holochain.service" ];
@@ -44,11 +44,12 @@ in
       serviceConfig = {
         User = "hpos-configure-holochain";
         Group = "hpos-configure-holochain";
-        # FIXME binary
-        ExecStart = "${pkgs.nodejs}/bin/node --no-warnings ${cfg.package}/main.js ${cfg.working-directory}/config.yaml";
+        ExecStart = "${cfg.package}/bin/hpos-configure-holochain ${cfg.working-directory}/config.yaml";
         StateDirectory = "hpos-configure-holochain";
         Type = "oneshot";
       };
+
+      environment.RUST_LOG = "info,hpos_configure_holochain=debug";
     };
 
     users.users.hpos-configure-holochain = {

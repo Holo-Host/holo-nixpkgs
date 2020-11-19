@@ -174,6 +174,10 @@ in
     python3 = python3.withPackages (ps: [ ps.click ps.requests ]);
   };
 
+  hpos-configure-holochain = callPackage ./hpos-configure-holochain {
+    inherit (rust.packages.holochain-rsm) rustPlatform;
+  };
+
   hpos-init = python3Packages.callPackage ./hpos-init {};
 
   hpos-led-manager = callPackage ./hpos-led-manager {
@@ -273,8 +277,6 @@ in
       };
     };
   };
-
-  inherit (callPackage ./hpos-configure-holochain {}) hpos-configure-holochain;
 
   wrangler = callPackage ./wrangler {};
 

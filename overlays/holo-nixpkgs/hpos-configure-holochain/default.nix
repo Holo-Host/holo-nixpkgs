@@ -1,26 +1,22 @@
-{ pkgs }:
+{ pkgs, rustPlatform }:
 
 with pkgs;
 
-let
-  inherit (rust.packages.nightly) rustPlatform;
-in
-
-{
-  hpos-configure-holochain = rustPlatform.buildRustPackage {
-    name = "hpos-configure-holochain";
-    src = fetchFromGitHub {
-      owner = "holo-host";
-      repo = "hpos-configure-holochain";
-      rev = "94f9633ac5bc07a93b622ddf2b1e54837e4c6f72";
-      sha256 = "1a9ng7pgf7zdrsy52p44ji0kvb11mb89cf8pm162diki475pgvn3";
-    };
-
-    cargoSha256 = "1wa2fvbpr0gdsx7mplf8y6j2g3jz9wf0j24h6r9s7annia176yls";
-
-    nativeBuildInputs = [ pkgconfig ];
-    buildInputs = [ openssl ];
-
-    meta.platforms = lib.platforms.linux;
+rustPlatform.buildRustPackage {
+  name = "hpos-configure-holochain";
+  src = fetchFromGitHub {
+    owner = "Holo-Host";
+    repo = "hpos-configure-holochain";
+    # Pin holochain to ddda967 (#36)
+    # https://github.com/Holo-Host/hpos-configure-holochain/pull/36
+    rev = "ac1166f8861d33f2673386ca64a26282ddeebe88";
+    sha256 = "0xwbq75jjcwzlq8mv3zifbndzi9irdabaclnz8wyk0l4aahbng9p";
   };
+
+  cargoSha256 = "078dpwnym72hyhl84631s4xhr42rw6lihkx6prmkkyyxvkrrcczx";
+
+  nativeBuildInputs = [ pkgconfig ];
+  buildInputs = [ openssl ];
+
+  meta.platforms = lib.platforms.linux;
 }
