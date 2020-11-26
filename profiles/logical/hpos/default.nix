@@ -46,7 +46,7 @@ let
           dnas = {
             holofuel = {
               hash = "QmWCuV9BptskAraBMidQHtre7hTqT1ouwqcFuh6Q7HbGGx";
-              url = "https://holo-host.github.io/holofuel/releases/download/v0.21.6-alpha1/holofuel.dna.json";
+              url = "https://holo-host.github.io/holofuel/releases/download/v0.21.6-alpha2/holofuel.dna.json";
               sha256 = "10i6a0kzd0xagq9fdica87jh0xm70i369bph7mr36sk248yl9h8w";
             };
           };
