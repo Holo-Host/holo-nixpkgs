@@ -7,8 +7,8 @@
     src = fetchFromGitHub {
       owner = "Holochain";
       repo = "hc-state-cli-node";
-      rev = "0da0c0954e2314d507dce0bcfe6d30ff97321a62";
-      sha256 = "1p8mbcna6ijhwxmjggqr2w7nqzm5lgslxi2a8lr0nqp9wxclr955";
+      rev = "8e86e5827093c7a0682fc1eaf7e348758a08a3f0";
+      sha256 = "006b6hyrd33jafg4ix0k4q8q7qp854yn8gmxqs8nmpq9kdpg5h0s";
     };
 
     buildInputs = [ nodejs ];
