@@ -31,4 +31,12 @@
   services.automount.enable = true;
 
   services.hpos-led-manager.devicePath = "/dev/ttyS2";
+
+   swapDevices = [
+    {
+      device = "/swapfile";
+      priority = 100;
+      size = 1024 * 4;
+    }
+  ];
 }
