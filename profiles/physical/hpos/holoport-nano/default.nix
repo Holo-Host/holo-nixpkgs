@@ -23,8 +23,6 @@
 
   boot.loader.grub.enable = false;
 
-  services.holochain.enable = lib.mkForce false;
-
   services.automount.enable = true;
 
   services.hpos-led-manager.devicePath = "/dev/ttyS2";
