@@ -44,6 +44,7 @@ in
         Group = "holochain-rsm";
         ExecStart = "${cfg.package}/bin/holochain -c ${cfg.working-directory}/holochain-config.yaml";
         StateDirectory = "holochain-rsm";
+        Restart = "always";
       };
     };
 
