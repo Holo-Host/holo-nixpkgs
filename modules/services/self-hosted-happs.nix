@@ -29,7 +29,7 @@ in
 
     systemd.services.self-hosted-happs = {
       after = [ "network.target" "holochain.service" ];
-      requires = [ "holochain.service" ];
+      partOf = [ "holochain.service" ];
       wantedBy = [ "multi-user.target" ];
 
       preStart = ''
