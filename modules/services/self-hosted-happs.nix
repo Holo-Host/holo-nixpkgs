@@ -31,6 +31,7 @@ in
       after = [ "network.target" "holochain.service" ];
       bindsTo = [ "holochain.service" ];
       wantedBy = [ "multi-user.target" ];
+      reloadPropagatedFrom = [ "holochain.service" ];
 
       preStart = ''
         ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.default-list} > ${cfg.working-directory}/config.yaml
