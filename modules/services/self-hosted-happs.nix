@@ -31,7 +31,6 @@ in
       after = [ "network.target" "holochain.service" ];
       bindsTo = [ "holochain.service" ];
       wantedBy = [ "multi-user.target" ];
-      reloadPropagatedFrom = [ "holochain.service" ];
 
       preStart = ''
         ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.default-list} > ${cfg.working-directory}/config.yaml
@@ -44,6 +43,7 @@ in
         ExecStart = "${pkgs.nodejs}/bin/node --no-warnings ${cfg.package}/main.js ${cfg.working-directory}/config.yaml";
         StateDirectory = "self-hosted-happs";
         Type = "oneshot";
+        ReloadPropagatedFrom = "holochain.service";
       };
     };
 
