@@ -4,7 +4,6 @@ with lib;
 
 let
   cfg = config.services.holo-router-agent;
-  holochain-home = config.services.holochain.working-directory;
 in
 
 {
@@ -25,7 +24,6 @@ in
         ExecStart = "${pkgs.holo-router}/bin/holo-router-agent";
         Type = "oneshot";
         User = "root";
-        WorkingDirectory = "${holochain-home}";
       };
     };
   };

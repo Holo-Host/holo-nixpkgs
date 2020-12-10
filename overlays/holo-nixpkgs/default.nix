@@ -150,6 +150,8 @@ rec {
 
   inherit (callPackage ./host-console-ui {}) host-console-ui;
 
+  hpos-install = callPackage ./hpos-install {};
+
   hpos = recurseIntoAttrs {
     buildImage = imports:
       buildImage (imports ++ [ hpos.logical ]);

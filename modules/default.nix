@@ -25,6 +25,8 @@
     ./services/self-hosted-happs.nix
     ./system/holo-nixpkgs/auto-upgrade.nix
     ./system/holo-nixpkgs/usb-reset.nix
+    ./system/holo-nixpkgs/install.nix
+    ./system/hpos.nix
   ];
 
   # Compat shim, to be removed along with /profiles/targets:

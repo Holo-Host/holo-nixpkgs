@@ -9,6 +9,8 @@ with pkgs;
   ];
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowPing = true;
+  networking.resolvconf.useLocalResolver = true;
 
   services.dnscrypt-proxy2 = {
     enable = true;
@@ -28,4 +30,6 @@ with pkgs;
       '';
     };
   };
+
+  boot.cleanTmpDir = true;
 }
