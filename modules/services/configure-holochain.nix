@@ -30,6 +30,10 @@ in
       requisite = [ "holochain.service" ];
       wantedBy = [ "multi-user.target" ];
 
+      environment.RUST_LOG = "debug";
+      environment.UI_STORE_FOLDER = "${cfg.working-directory}/uis";
+      path = with pkgs; [ unzip ];
+
       preStart = ''
         ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.install-list} > ${cfg.working-directory}/config.yaml
         sleep 2 # wait for holochian admin interface to be ready

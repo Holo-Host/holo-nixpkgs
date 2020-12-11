@@ -93,7 +93,7 @@ in
         };
 
         "/apps/" = {
-          alias = "/var/lib/configure-holochain/uis/";
+          alias = "${configureHolochainWorkingDir}/uis/";
           extraConfig = ''
             limit_req zone=zone1 burst=30;
           '';
