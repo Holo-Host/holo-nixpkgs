@@ -6,11 +6,11 @@ rustPlatform.buildRustPackage {
   src = fetchFromGitHub {
     owner = "holochain";
     repo = "holochain";
-    rev = "43b0f45bd2784f8b993085cbae714c8537c2e082";
-    sha256 = "1vy1mkbm9hnxxd3j2hpfrjscxwrxj3w38m9cfigpa0vsls2l2x9k";
+    rev = "6a3cb58f4a3cb6974ffac444dc1b3c45e5b039aa";
+    sha256 = "0irnvbsf1hhsi0gzd82c9savv14zq9zz7pacwsprnl6vyxwc09g0";
   };
 
-  cargoSha256 = "0crpxmxp7fq5xq8amls89jjcj0yxn8ijk1bm2v0h97jyb3rq8j6d";
+  cargoSha256 = "15bks76p0q2swdx87g2sgb5z30sxyn1mhx44apm8h5nihii9wg4c";
 
   nativeBuildInputs = [ perl pkgconfig ];
 
