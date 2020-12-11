@@ -23,6 +23,6 @@ nixos-install --channel @channel@ --no-root-passwd \
   -I holo-nixpkgs=@channel@/holo-nixpkgs \
   -I nixpkgs=@channel@/holo-nixpkgs/nixpkgs \
   -I nixpkgs-overlays=@channel@/holo-nixpkgs/overlays
-echo '@channelUrl@ holo-nixpkgs' > /mnt/root/.nix-channels
+echo '@channelUrl@ holo-nixpkgs' > /mnt/run/.nix-channels
 
 @postPhase@

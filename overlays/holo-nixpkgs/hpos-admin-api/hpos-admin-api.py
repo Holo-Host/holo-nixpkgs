@@ -13,7 +13,7 @@ import toml
 import requests
 
 
-PROFILES_TOML_PATH = '/etc/nixos/hpos-admin-features.toml'
+PROFILES_TOML_PATH = '/run/hpos-admin-api/hpos-admin-features.toml'
 
 
 app = Flask(__name__)
@@ -141,7 +141,7 @@ def disable_feature(profile, feature):
 
 
 def hydra_channel():
-    with open('/root/.nix-channels') as f:
+    with open('/run/.nix-channels') as f:
         channel_url = f.read()
     return channel_url.split('/')[6]
 
@@ -159,17 +159,11 @@ def hydra_revision():
 
 def local_revision():
     try:
-        with open('/root/.nix-revision') as f:
+        with open('/run/.nix-revision') as f:
             local_revision = f.read()
     except:
         local_revision = 'unversioned'
     return local_revision
-
-
-def zerotier_info():
-    proc = subprocess.run(['zerotier-cli', '-j', 'info'],
-                          capture_output=True, check=True)
-    return json.loads(proc.stdout)
 
 
 @app.route('/status', methods=['GET'])
@@ -183,8 +177,7 @@ def status():
             'current_system': {
                 'rev': local_revision()
             }
-        },
-        'zerotier': zerotier_info()
+        }
     })
 
 

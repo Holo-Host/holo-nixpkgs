@@ -21,7 +21,7 @@ if echo $update | grep -q "using cached result"; then
     echo "Unable to update and using cached result"
     exit 1
 else
-    curl -L -H Content-Type:application/json https://hydra.holo.host/jobset/holo-nixpkgs/$1/latest-eval | jq -r '.jobsetevalinputs | ."holo-nixpkgs" | .revision' | perl -pe 'chomp' > /root/.nix-revision
+    curl -L -H Content-Type:application/json https://hydra.holo.host/jobset/holo-nixpkgs/$1/latest-eval | jq -r '.jobsetevalinputs | ."holo-nixpkgs" | .revision' | perl -pe 'chomp' > /run/.nix-revision
     echo 'Successfully updated HoloPort to channel:' $1
 fi
 
