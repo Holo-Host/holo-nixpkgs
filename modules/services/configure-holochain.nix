@@ -42,7 +42,7 @@ in
       serviceConfig = {
         User = "configure-holochain";
         Group = "configure-holochain";
-        ExecStart = "${cfg.package}/hpos-configure-holochain ${cfg.working-directory}/config.yaml";
+        ExecStart = "${cfg.package}/bin/configure-holochain ${cfg.working-directory}/config.yaml";
         StateDirectory = "configure-holochain";
         Type = "oneshot";
       };
