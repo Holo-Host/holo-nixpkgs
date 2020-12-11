@@ -73,4 +73,4 @@ Refer to [VirtualBox manual, chapter 1, section 1.15.2](https://www.virtualbox.o
 
 ## HPOS profiles
 
-There's a number of profiles you can activate on your HPOS that alter behavior of your machine. Instructions, list of profiles and their features can be found in `profiles/logical/hpos/README.md`
+There's a number of profiles you can activate on your HPOS that alter behavior of your machine. Instructions, list of profiles and their features can be found in `profiles/logical/hpos/README.md`.
