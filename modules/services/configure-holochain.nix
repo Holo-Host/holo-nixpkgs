@@ -30,7 +30,7 @@ in
       requisite = [ "holochain.service" ];
       wantedBy = [ "multi-user.target" ];
 
-      environment.RUST_LOG = "debug";
+      environment.RUST_LOG = "configure_holochain=debug";
       environment.UI_STORE_FOLDER = "${cfg.working-directory}/uis";
       path = with pkgs; [ unzip ];
 
@@ -54,6 +54,10 @@ in
       # ensures directory is owned by user
       createHome = true;
     };
+
+    systemd.tmpfiles.rules = [
+      "d ${cfg.working-directory}/uis 0770 configure-holochain apis - -"
+    ];
 
     users.groups.configure-holochain = {};
   };
