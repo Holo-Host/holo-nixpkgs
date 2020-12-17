@@ -262,9 +262,8 @@ rec {
         cargo = final.rust.packages.holochain-rsm.rustc;
         rustc = (
           rustChannelOf {
-            channel = "stable";
-            date = "2020-08-03";
-            sha256 = "0yvh2ck2vqas164yh01ggj4ckznx04blz3jgbkickfgjm18y269j";
+            channel = "1.48.0";
+            sha256 = "0b56h3gh577wv143ayp46fv832rlk8yrvm7zw1dfiivifsn7wfzg";
           }
         ).rust.override {
           targets = [
