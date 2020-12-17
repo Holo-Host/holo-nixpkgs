@@ -1,14 +1,14 @@
-let
-  nixpkgs = import ../../../../../nixpkgs/src;
-in
+# let
+#   nixpkgs = import ../../../../../nixpkgs/src;
+# in
 
-{
-  imports = [
-    ../.
-    "${nixpkgs}/nixos/modules/virtualisation/virtualbox-image.nix"
-  ];
+# {
+#   imports = [
+#     ../.
+#     "${nixpkgs}/nixos/modules/virtualisation/virtualbox-image.nix"
+#   ];
 
-  virtualbox.memorySize = 3072;
+#   virtualbox.memorySize = 3072;
 
-  virtualisation.virtualbox.guest.x11 = false;
-}
+#   virtualisation.virtualbox.guest.x11 = false;
+# }
