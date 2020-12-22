@@ -123,6 +123,10 @@ in
         "/api/v1/ws/" = {
           proxyPass = "http://127.0.0.1:42233";
           proxyWebsockets = true;
+          extraConfig = ''
+            proxy_send_timeout 1d;
+            proxy_read_timeout 1d;
+          '';
         };
 
         "/holochain-api/v1/" = {
@@ -145,7 +149,7 @@ in
 
         "/hosting/" = {
           proxyPass = "http://127.0.0.1:4656";
-          proxyWebsockets = true;
+          proxyWebsockets = true;   # TODO: add proxy_send_timeout, proxy_read_timeout HERE
         };
       };
     };
