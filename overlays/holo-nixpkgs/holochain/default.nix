@@ -6,8 +6,8 @@ rustPlatform.buildRustPackage {
   src = fetchFromGitHub {
     owner = "holochain";
     repo = "holochain";
-    rev = "b1a5b34e7c8f9ff2e92e3b9db71c658d57a2bbd9";
-    sha256 = "02hij8rvzhkzby2miigsc6zjk4axrcmllsdbmlsz1nj7vpr1dhk9";
+    rev = "5daac31fe21f5d10c192bbe208f0b11f8ee67d88";
+    sha256 = "1zv063ivgwajr0sidaccr4igy67ll87xnadnm3df6glcmqgy1b3h";
   };
 
   cargoBuildFlags = [
@@ -15,7 +15,7 @@ rustPlatform.buildRustPackage {
     "--no-default-features"
   ];
 
-  cargoSha256 = "171ciff7jny8x3kmv5zmnzm1zrxrj7d86mi77li7hq65kz4m7ykk";
+  cargoSha256 = "0w0cn23y858q8jqq77nx5ax51hqan3n43rzzb4146k2f0430rjx6";
 
   nativeBuildInputs = [ perl pkgconfig ];
 
