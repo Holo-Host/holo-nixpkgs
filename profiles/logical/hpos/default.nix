@@ -203,9 +203,9 @@ in
     default-list = [
       {
         app_id = "elemental-chat";
-        version = "alpha12";
-        ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha17/elemental-chat.zip";
-        dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha12/elemental-chat.dna.gz";
+        version = "alpha13";
+        ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha18/elemental-chat.zip";
+        dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha13/elemental-chat.dna.gz";
       }
     ];
   };
