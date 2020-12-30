@@ -178,10 +178,18 @@ rec {
     python3 = python3.withPackages (ps: with ps; [ http-parser flask gevent toml requests websockets ]);
   };
 
+
   hpos-admin-client = callPackage ./hpos-admin-client {
     stdenv = stdenvNoCC;
     python3 = python3.withPackages (ps: [ ps.click ps.requests ]);
   };
+
+  match-service-api = callPackage ./match-service-api {
+    stdenv = stdenvNoCC;
+    python3 = python3.withPackages (ps: with ps; [ pymongo pandas flask ]);
+  };
+
+  matching-engine = callPackage ./matching-engine {};
 
   hpos-init = python3Packages.callPackage ./hpos-init {};
 
