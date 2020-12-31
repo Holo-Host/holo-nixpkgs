@@ -1,4 +1,4 @@
-{ stdenv, makeWrapper, python3, pkgs, fetchFromGitHub }:
+{ stdenv, makeWrapper, python3, fetchFromGitHub }:
 
 with stdenv.lib;
 
@@ -12,12 +12,14 @@ stdenv.mkDerivation rec {
       private = true;
     };
 
+  nativeBuildInputs = [ makeWrapper ];
   checkInputs = [ pytest mongomock ];
   buildInputs = [ python3 ];
 
   buildCommand = ''
-    makeWrapper ${python3}/bin/python3 $out/bin/${name}
+    mkdir -p $out/bin
+    mv * $out
   '';
 
-#   meta.platforms = platforms.linux;
+  meta.platforms = platforms.linux;
 }

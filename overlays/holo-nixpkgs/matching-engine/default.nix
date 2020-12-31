@@ -1,23 +1,33 @@
-{ stdenv, python3Packages, fetchFromGitHub }:
+{ stdenv, makeWrapper, python3, fetchFromGitHub }:
 
+with stdenv.lib;
 
-
-python3Packages.buildPythonApplication rec {
+stdenv.mkDerivation rec {
   name = "matching-engine";
   src = fetchFromGitHub {
       owner = "Holo-Host";
       repo = "matching-engine";
-      rev = "a1a58b5eb5e3790d9ccad6d4f026a740548ae65c";
-      sha256 = "1kh9ibbjwp0jsqgggf5qkvl0k4c73r7610nda09wrx4ih2gjladc";
+      rev = "95341bc8653ae529e28fcd3750f21f50e3df3a9b";
+      sha256 = "0wzm07fsfj7sxqpnigxd2il5r0izzalszz938qcp913bjhd5r88f";
       private = true;
     };
 
-  checkInputs = with python3Packages; [ pytest requests-mock ];
-  propagatedBuildInputs = with python3Packages; [ requests pandas pymongo numpy ];
+  nativeBuildInputs = [ makeWrapper ];
+  checkInputs = [ pytest mongomock ];
+  buildInputs = [ python3 ];
 
-  checkPhase = ''
-    pytest
+  buildPhase = ":";
+
+  installPhase = ''
+    mkdir $out
+    mv * $out
+
+    makeWrapper ${python3}/bin/python3 $out/bin/${name}-collector \
+      --add-flags $out/collector/poll_script.py
+    
+    makeWrapper ${python3}/bin/python3 $out/bin/${name}-updater \
+      --add-flags $out/updater/upload_script.py
   '';
 
-  # meta.platforms = platforms.linux;
+  meta.platforms = platforms.linux;
 }

@@ -189,7 +189,10 @@ rec {
     python3 = python3.withPackages (ps: with ps; [ pymongo pandas flask ]);
   };
 
-  matching-engine = callPackage ./matching-engine {};
+  matching-engine = callPackage ./matching-engine {
+    stdenv = stdenvNoCC;
+    python3 = python3.withPackages (ps: with ps; [ requests pandas pymongo numpy ]);
+  };
 
   hpos-init = python3Packages.callPackage ./hpos-init {};
 
