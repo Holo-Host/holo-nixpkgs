@@ -1,3 +1,5 @@
+# TODO: See if these python scripts can be pre-compiled for quicker execution
+
 { stdenv, makeWrapper, python3, fetchFromGitHub }:
 
 with stdenv.lib;
