@@ -8,7 +8,7 @@ in
 
 {
   options.services.match-service-api = {
-    enable = mkEnableOption "HPOS Admin";
+    enable = mkEnableOption "Match Service API";
 
     package = mkOption {
       default = pkgs.match-service-api;
@@ -17,12 +17,16 @@ in
 
     wsgiWorkers = mkOption {
       default = 2;
-    }
+    };
+
+    socket = mkOption {
+      type = types.str;
+    };
   };
 
   config = mkIf cfg.enable {
 
-    environment.systemPackages = [ flask pandas pymongo ];
+    environment.systemPackages = with pkgs.python3Packages; [ flask pandas pymongo ];
 
     systemd.services.match-service-api = {
       after = [ "network.target" ];
@@ -32,7 +36,7 @@ in
         ExecStart = "
           ${pkgs.python3Packages.gunicorn}/bin/gunicorn ${cfg.package}.wsgi:app \
           --workers ${toString cfg.wsgiWorkers} \
-          --bind unix:/run/match-api-server.sock
+          --bind ${cfg.socket}
         ";
         User = "admin-api";
         Group = "apis";

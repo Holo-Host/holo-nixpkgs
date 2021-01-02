@@ -15,9 +15,9 @@ in
       type = types.package;
     };
 
-    working-directory = mkOption {
-      type = types.path;
-    };
+    # working-directory = mkOption {
+    #   type = types.path;
+    # };
   };
 
   config = mkIf cfg.enable {

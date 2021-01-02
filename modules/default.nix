@@ -21,8 +21,11 @@
     ./services/holo-envoy.nix
     ./services/hpos-init.nix
     ./services/hpos-led-manager.nix
+    ./services/kv-uploader.nix
     ./services/lair-keystore.nix
     ./services/configure-holochain.nix
+    ./services/match-service-api.nix
+    ./services/zt-collector.nix
     ./system/holo-nixpkgs/auto-upgrade.nix
     ./system/holo-nixpkgs/usb-reset.nix
     ./system/holo-nixpkgs/install.nix
