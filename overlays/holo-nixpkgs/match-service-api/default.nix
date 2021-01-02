@@ -1,4 +1,4 @@
-{ stdenv, makeWrapper, python3, fetchFromGitHub }:
+{ stdenv, fetchFromGitHub }:
 
 with stdenv.lib;
 
@@ -12,12 +12,12 @@ stdenv.mkDerivation rec {
       private = true;
     };
 
-  nativeBuildInputs = [ makeWrapper ];
   checkInputs = [ pytest mongomock ];
-  buildInputs = [ python3 ];
 
-  buildCommand = ''
-    mkdir -p $out/bin
+  buildPhase = ":";
+
+  installPhase = ''
+    mkdir $out
     mv * $out
   '';
 

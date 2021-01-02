@@ -21,13 +21,16 @@ in
   };
 
   config = mkIf cfg.enable {
+
+    environment.systemPackages = [ flask pandas pymongo ];
+
     systemd.services.match-service-api = {
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
         ExecStart = "
-          ${pkgs.python3Packages.gunicorn}/bin/gunicorn ${cfg.package}/wsgi.py \
+          ${pkgs.python3Packages.gunicorn}/bin/gunicorn ${cfg.package}.wsgi:app \
           --workers ${toString cfg.wsgiWorkers} \
           --bind unix:/run/match-api-server.sock
         ";

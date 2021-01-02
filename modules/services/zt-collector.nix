@@ -26,7 +26,7 @@ in
       startAt = "*:0/15";
 
       serviceConfig = {
-        ExecStart = "${pkgs.matching-engine}/collector/poll_script.py";
+        ExecStart = "${pkgs.matching-engine}/bin/matching-engine-collector";
         Type = "oneshot";
         User = "root";
       };

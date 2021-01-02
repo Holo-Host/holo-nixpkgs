@@ -184,10 +184,7 @@ rec {
     python3 = python3.withPackages (ps: [ ps.click ps.requests ]);
   };
 
-  match-service-api = callPackage ./match-service-api {
-    stdenv = stdenvNoCC;
-    python3 = python3.withPackages (ps: with ps; [ pymongo pandas flask ]);
-  };
+  match-service-api = callPackage ./match-service-api {};
 
   matching-engine = callPackage ./matching-engine {
     stdenv = stdenvNoCC;

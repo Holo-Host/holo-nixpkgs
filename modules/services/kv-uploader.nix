@@ -26,7 +26,7 @@ in
       startAt = "*:0/60";
 
       serviceConfig = {
-        ExecStart = "${pkgs.matching-engine}/updater/upload_script.py";
+        ExecStart = "${pkgs.matching-engine}/bin/matching-engine-updater";
         Type = "oneshot";
         User = "root";
       };
