@@ -15,9 +15,9 @@ in
       type = types.package;
     };
 
-    # working-directory = mkOption {
-    #   type = types.path;
-    # };
+    credentialsDir = mkOption {
+      type = types.path;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -26,7 +26,7 @@ in
       startAt = "*:0/60";
 
       serviceConfig = {
-        ExecStart = "${pkgs.matching-engine}/bin/matching-engine-updater";
+        ExecStart = "${pkgs.matching-engine}/bin/matching-engine-updater ${cfg.credentialsDir}/config.json";
         Type = "oneshot";
         User = "root";
       };

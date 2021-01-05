@@ -4,6 +4,8 @@ with pkgs;
 
 let 
   matchServiceApiSocket = "unix:/run/match-service-api.sock";
+
+  matchServerCredentialsDir = "/var/lib/match-server-credentials";
 in
 
 {
@@ -17,15 +19,18 @@ in
 
   services.kv-uploader = {
     enable = true;
+    credentialsDir = matchServerCredentialsDir;
   };
 
   services.zt-collector = {
     enable = true;
+    credentialsDir = matchServerCredentialsDir;
   };
 
   services.match-service-api = {
     enable = true;
     socket = matchServiceApiSocket;
+    credentialsDir = matchServerCredentialsDir;
   };
 
   services.nginx = {
@@ -50,9 +55,4 @@ in
     enable = true;
     dates = "*:0/10";
   };
-
-  boot.loader.grub.enable = lib.mkDefault true;
-  boot.loader.grub.device = "/dev/inferred-grub";
-  
-  fileSystems."/" = { device = "$rootfsdev"; fsType = "ext4"; };
 }

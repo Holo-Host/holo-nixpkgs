@@ -22,6 +22,10 @@ in
     socket = mkOption {
       type = types.str;
     };
+
+    credentialsDir = mkOption {
+      type = types.path;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -34,7 +38,7 @@ in
 
       serviceConfig = {
         ExecStart = "
-          ${pkgs.python3Packages.gunicorn}/bin/gunicorn ${cfg.package}.wsgi:app \
+          ${pkgs.python3Packages.gunicorn}/bin/gunicorn '${cfg.package}.server:create_app(config_filepath=${cfg.credentialsDir}/config.json)' \
           --workers ${toString cfg.wsgiWorkers} \
           --bind ${cfg.socket}
         ";
