@@ -188,7 +188,7 @@ rec {
 
   matching-engine = callPackage ./matching-engine {
     stdenv = stdenvNoCC;
-    python3 = python3.withPackages (ps: with ps; [ requests pandas pymongo numpy ]);
+    python3 = python3.withPackages (ps: with ps; [ requests pandas pymongo numpy dns]);
   };
 
   hpos-init = python3Packages.callPackage ./hpos-init {};

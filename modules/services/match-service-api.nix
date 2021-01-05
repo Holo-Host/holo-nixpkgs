@@ -4,6 +4,7 @@ with lib;
 
 let
   cfg = config.services.match-service-api;
+  python = pkgs.python3Packages.python;
 in
 
 {
@@ -30,17 +31,22 @@ in
 
   config = mkIf cfg.enable {
 
-    environment.systemPackages = with pkgs.python3Packages; [ flask pandas pymongo ];
-
     systemd.services.match-service-api = {
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
 
+      environment = let
+        penv = python.buildEnv.override {
+          extraLibs = with pkgs.python3Packages; [ flask pandas pymongo dnspython ];
+        };
+      in {
+        PYTHONPATH= "${penv}/${python.sitePackages}/";
+      };
+
+
       serviceConfig = {
         ExecStart = ''
-          ${pkgs.python3Packages.gunicorn}/bin/gunicorn '${cfg.package}.server:create_app(config_filepath=${cfg.credentialsDir}/config.json)'
-          --workers ${toString cfg.wsgiWorkers}
-          --bind ${cfg.socket}
+          ${pkgs.python3Packages.gunicorn}/bin/gunicorn --pythonpath ${cfg.package} "server:create_app(config_filepath='${cfg.credentialsDir}/config.json')" --workers ${toString cfg.wsgiWorkers} --bind ${cfg.socket}
         '';
       };
     };

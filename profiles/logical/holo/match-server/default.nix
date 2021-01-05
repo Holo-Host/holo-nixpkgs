@@ -60,10 +60,10 @@ in
     default-list = [
       {
         # Replace this with HHA
-        # app_id = "elemental-chat";
-        # version = "alpha11";
-        # ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha16/elemental-chat.zip";
-        # dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha11/elemental-chat.dna.gz";
+        app_id = "elemental-chat";
+        version = "alpha11";
+        ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha16/elemental-chat.zip";
+        dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha11/elemental-chat.dna.gz";
       }
     ];
   };
@@ -88,19 +88,19 @@ in
     enable = true;
 
     virtualHosts.publicApi = {
-      enableACME = true;
+      enableACME = false;
       locations = {
-        "/".proxyPass = matchServiceApiSocket;
+        "/".proxyPass = "http://${matchServiceApiSocket}";
       };
       serverName = "network-statistics.holo.host";
     };
   };
 
-  security.acme = {
-    acceptTerms = true;
-    # REVIEW: maybe a dedicated email for Hydra?
-    email = "oleksii.filonenko@holo.host";
-  };
+#  security.acme = {
+#    acceptTerms = true;
+#    # REVIEW: maybe a dedicated email for Hydra?
+#    email = "oleksii.filonenko@holo.host";
+#  };
 
   system.holo-nixpkgs.autoUpgrade = {
     enable = true;

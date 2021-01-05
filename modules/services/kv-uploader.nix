@@ -23,7 +23,7 @@ in
   config = mkIf cfg.enable {
     systemd.services.kv-uploader = {
       after = [ "network.target" ];
-      startAt = "*:0/60";
+      startAt = "*:5/15";
 
       serviceConfig = {
         ExecStart = "${pkgs.matching-engine}/bin/matching-engine-updater ${cfg.credentialsDir}/config.json";
