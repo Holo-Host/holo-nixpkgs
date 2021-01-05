@@ -14,8 +14,6 @@ in
   ];
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
-  networking.firewall.allowPing = true;
-  networking.resolvconf.useLocalResolver = true;
 
   services.kv-uploader = {
     enable = true;
