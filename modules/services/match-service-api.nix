@@ -42,15 +42,7 @@ in
           --workers ${toString cfg.wsgiWorkers} \
           --bind ${cfg.socket}
         ";
-        User = "admin-api";
-        Group = "apis";
-        UMask = "0002";
       };
-    };
-
-    users.users.admin-api = {
-      isSystemUser = true;
-      group = "apis";
     };
   };
 }

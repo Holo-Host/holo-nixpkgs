@@ -8,7 +8,7 @@ in
 
 {
   options.services.zt-collector = {
-    enable = mkEnableOption "KV Uploader";
+    enable = mkEnableOption "zt-collector";
 
     package = mkOption {
       default = pkgs.matching-engine;
