@@ -37,11 +37,11 @@ in
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
-        ExecStart = "
-          ${pkgs.python3Packages.gunicorn}/bin/gunicorn '${cfg.package}.server:create_app(config_filepath=${cfg.credentialsDir}/config.json)' \
-          --workers ${toString cfg.wsgiWorkers} \
+        ExecStart = ''
+          ${pkgs.python3Packages.gunicorn}/bin/gunicorn '${cfg.package}.server:create_app(config_filepath=${cfg.credentialsDir}/config.json)'
+          --workers ${toString cfg.wsgiWorkers}
           --bind ${cfg.socket}
-        ";
+        '';
       };
     };
   };
