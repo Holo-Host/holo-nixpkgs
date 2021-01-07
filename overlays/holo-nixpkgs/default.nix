@@ -285,6 +285,8 @@ rec {
 
   inherit (callPackage ./hpos-holochain-api {}) hpos-holochain-api;
 
+  inherit (callPackage ./hosted-happs-monitor {}) hosted-happs-monitor;
+
   wrangler = callPackage ./wrangler {};
 
   zerotierone = previous.zerotierone.overrideAttrs (
