@@ -15,6 +15,7 @@
     ./services/holo-router-agent.nix
     ./services/holo-router-gateway.nix
     ./services/holochain.nix
+    ./services/hosted-happ-monitor.nix
     ./services/hp-admin-crypto-server.nix
     ./services/hpos-admin-api.nix
     ./services/hpos-holochain-api.nix    
