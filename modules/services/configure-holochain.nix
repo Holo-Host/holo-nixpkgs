@@ -57,7 +57,7 @@ in
     };
 
     systemd.tmpfiles.rules = [
-      "d ${cfg.working-directory}/uis 0770 configure-holochain apis - -"
+      "d ${cfg.working-directory}/uis 0755 configure-holochain apis - -"
     ];
 
     users.groups.configure-holochain = {};
