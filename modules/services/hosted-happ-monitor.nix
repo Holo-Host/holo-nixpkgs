@@ -14,6 +14,10 @@ in
       default = pkgs.hosted-happs-monitor;
       type = types.package;
     };
+
+    credentialsDir = mkOption {
+      type = types.path;
+    };
   };
 
   config = mkIf (cfg.enable) {
@@ -25,7 +29,7 @@ in
       startAt = "*:5/15";
 
       serviceConfig = {
-        ExecStart = "${pkgs.nodejs}/bin/node --no-warnings ${cfg.package}/main.js";
+        ExecStart = "${pkgs.nodejs}/bin/node --no-warnings ${cfg.package}/main.js --config-path=${cfg.credentialsDir}/config.json";
         Type = "oneshot";
         User = "root";
       };
