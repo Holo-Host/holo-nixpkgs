@@ -7,22 +7,18 @@ const argv = yargs(hideBin(process.argv)).argv
 const appPort = 42233;
 const appId = 'core-hha';
 
+// Get Mongodb creds from file
 if (!argv.configPath) {
   throw new Error('hosted-happ-monitor requires --config-path option.')
 };
-
-const dbName = 'myproject';
+const credentials = require(argv.configPath);
+const username = credentials.MONGO_USERNAME;
+const password = credentials.MONGO_PASSWORD;
+const dbName = credentials.MONGO_DBNAME;
 
 // Connection URL
 const url = `mongodb+srv://${username}:${password}@cluster0.hjwna.mongodb.net/${dbname}?retryWrites=true&w=majority`;
 const client = new MongoClient(url);
-
-
-
-
-
-
-
 
 const main = async () => {
 
@@ -47,7 +43,7 @@ const main = async () => {
 
   const happList = happs.map(happ => ({
     id: happ.happ_id,
-    name: happ.happ_bundle.name
+    url: happ.happ_bundle.name
   }));
 
   client.connect(function(err) {
@@ -56,9 +52,12 @@ const main = async () => {
     const db = client.db(dbName);
     const collection = db.collection('happ_list');
     
-    await collection.drop()
+    await collection.drop(function(err) {
+      if(err) console.log('Error dropping happ_list: ', err)
+    });
+
     await collection.insertMany(happList, function(err) {
-      if(err) console.log('Error updating happ_list')
+      if(err) console.log('Error updating happ_list: ', err)
     });
 
     client.close();
