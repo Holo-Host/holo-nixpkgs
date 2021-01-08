@@ -24,7 +24,7 @@ let
 
   holochainWorkingDir = "/var/lib/holochain-rsm";
 
-  selfHostedHappsWorkingDir = "/var/lib/self-hosted-happs";
+  configureHolochainWorkingDir = "/var/lib/configure-holochain";
 in
 
 {
@@ -93,7 +93,7 @@ in
         };
 
         "/apps/" = {
-          alias = "/var/lib/self-hosted-happs/uis/";
+          alias = "${configureHolochainWorkingDir}/uis/";
           extraConfig = ''
             limit_req zone=zone1 burst=30;
           '';
@@ -197,17 +197,20 @@ in
     };
   };
 
-  services.self-hosted-happs = {
+  services.configure-holochain = {
     enable = true;
-    working-directory = selfHostedHappsWorkingDir;
-    default-list = [
-      {
-        app_id = "elemental-chat";
-        version = "alpha14";
-        ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha19/elemental-chat.zip";
-        dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha14/elemental-chat.dna.gz";
-      }
-    ];
+    working-directory = configureHolochainWorkingDir;
+    install-list = {
+      core_happs = [];
+      self_hosted_happs = [
+        {
+          app_id = "elemental-chat";
+          version = "alpha14";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha19/elemental-chat.zip";
+          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha14/elemental-chat.dna.gz";
+        }
+      ];
+    };
   };
 
   system.holo-nixpkgs.autoUpgrade = {

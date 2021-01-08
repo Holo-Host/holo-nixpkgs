@@ -22,7 +22,7 @@
     ./services/hpos-init.nix
     ./services/hpos-led-manager.nix
     ./services/lair-keystore.nix
-    ./services/self-hosted-happs.nix
+    ./services/configure-holochain.nix
     ./system/holo-nixpkgs/auto-upgrade.nix
     ./system/holo-nixpkgs/usb-reset.nix
     ./system/holo-nixpkgs/install.nix
