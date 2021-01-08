@@ -9,7 +9,7 @@ let
 
   holochainWorkingDir = "/var/lib/holochain-rsm";
 
-  selfHostedHappsWorkingDir = "/var/lib/self-hosted-happs";
+  configureHolochainWorkingDir = "/var/lib/configure-holochain";
 in
 
 {
@@ -54,12 +54,11 @@ in
     };
   };
 
-  services.self-hosted-happs = {
+  services.configure-holochain = {
     enable = true;
-    working-directory = selfHostedHappsWorkingDir;
-    default-list = [
+    working-directory = configureHolochainWorkingDir;
+    install-list = [
       {
-        # Replace this with HHA
         app_id = "elemental-chat";
         version = "alpha11";
         ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha16/elemental-chat.zip";
