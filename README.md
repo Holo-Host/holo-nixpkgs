@@ -13,18 +13,18 @@ On NixOS, add the following to `/etc/nixos/configuration.nix` and rebuild:
   ];
 
   nix.binaryCachePublicKeys = [
-    "cache.holo.host-1:lNXIXtJgS9Iuw4Cu6X0HINLu9sTfcjEntnrgwMQIMcE="
+    "cache.holo.host-1:ZJCkX3AUYZ8soxTLfTb60g+F3MkWD7hkH9y8CgqwhDQ="
   ];
 }
 ```
 
 Otherwise, add `https://cache.holo.host/` to `substituters` and
-`cache.holo.host-1:lNXIXtJgS9Iuw4Cu6X0HINLu9sTfcjEntnrgwMQIMcE=` to
+`cache.holo.host-1:ZJCkX3AUYZ8soxTLfTb60g+F3MkWD7hkH9y8CgqwhDQ=` to
 `trusted-public-keys` in Nix config file:
 
 ```
 substituters = https://cache.holo.host/ https://cache.nixos.org/
-trusted-public-keys = cache.holo.host-1:lNXIXtJgS9Iuw4Cu6X0HINLu9sTfcjEntnrgwMQIMcE= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+trusted-public-keys = cache.holo.host-1:ZJCkX3AUYZ8soxTLfTb60g+F3MkWD7hkH9y8CgqwhDQ= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
 ```
 
 For single-user installs (`nix-shell -p nix-info --run nix-info` prints

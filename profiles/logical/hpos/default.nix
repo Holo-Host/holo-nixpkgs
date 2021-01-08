@@ -186,7 +186,7 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = "kitsune-proxy://CIW6PxKxsPPlcuvUCbMcKwUpaMSmB7kLD8xyyj4mqcw/kitsune-quic/h/proxy.holochain.org/p/5778/--";
+            proxy_url = "kitsune-proxy://nFCWLsuRC0X31UMv8cJxioL-lBRFQ74UQAsb8qL4XyM/kitsune-quic/h/proxy.holochain.org/p/5775/--";
           };
         }];
       };
@@ -199,9 +199,9 @@ in
     install-list = [
       {
         app_id = "elemental-chat";
-        version = "alpha1";
-        ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/alpha1/elemental-chat.zip ";
-        dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha1/elemental-chat.dna.gz";
+        version = "alpha11";
+        ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha16/elemental-chat.zip";
+        dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha11/elemental-chat.dna.gz";
       }
     ];
   };
