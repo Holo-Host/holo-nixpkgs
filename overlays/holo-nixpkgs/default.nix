@@ -121,7 +121,7 @@ rec {
   };
 
   configure-holochain = callPackage ./configure-holochain {
-    inherit (rust.packages.holochain-rsm) rustPlatform;
+    inherit (rust.packages.stable) rustPlatform;
   };
 
   extlinux-conf-builder = callPackage ./extlinux-conf-builder {};
