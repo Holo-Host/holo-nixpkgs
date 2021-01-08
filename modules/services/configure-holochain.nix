@@ -32,6 +32,7 @@ in
 
       environment.RUST_LOG = "configure_holochain=debug";
       environment.UI_STORE_FOLDER = "${cfg.working-directory}/uis";
+      environment.PUBKEY_PATH = "${cfg.working-directory}/agent_key.pub";
       path = with pkgs; [ unzip ];
 
       preStart = ''
