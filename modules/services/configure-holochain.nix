@@ -11,7 +11,7 @@ in
     enable = mkEnableOption "configure-holochain";
 
     install-list = mkOption {
-      type = types.listOf types.attrs;
+      type = types.attrs;
     };
 
     package = mkOption {
