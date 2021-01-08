@@ -145,7 +145,6 @@ rec {
   );
 
   inherit (callPackage ./holochain {
-    inherit (darwin.apple_sdk.frameworks) CoreServices Security;
     inherit (rust.packages.stable) rustPlatform;
   }) mkHolochainBinary holochain;
 

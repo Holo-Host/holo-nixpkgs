@@ -1,4 +1,4 @@
-{ stdenv, rustPlatform, fetchFromGitHub, perl, CoreServices, Security, libsodium, openssl, pkgconfig, lib, callPackage }:
+{ stdenv, rustPlatform, fetchFromGitHub, perl, xcbuild, darwin, libsodium, openssl, pkgconfig, lib, callPackage }:
 
 rec {
   mkHolochainBinary = {
@@ -23,12 +23,15 @@ rec {
       "--manifest-path=crates/${crate}/Cargo.toml"
     ];
 
-    nativeBuildInputs = [ perl pkgconfig ];
+    nativeBuildInputs = [ perl pkgconfig ] ++ stdenv.lib.optionals stdenv.isDarwin [
+      xcbuild
+    ];
 
-    buildInputs = [ openssl ] ++ stdenv.lib.optionals stdenv.isDarwin [
+    buildInputs = [ openssl ] ++ stdenv.lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
+      CoreFoundation
       CoreServices
       Security
-    ];
+    ]);
 
     RUST_SODIUM_LIB_DIR = "${libsodium}/lib";
     RUST_SODIUM_SHARED = "1";
