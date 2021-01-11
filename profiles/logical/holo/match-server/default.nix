@@ -83,6 +83,11 @@ in
     credentialsDir = matchServerCredentialsDir;
   };
 
+  services.hosted-happ-monitor = {
+    enable = true;
+    credentialsDir = matchServerCredentialsDir;
+  };
+
   services.nginx = {
     enable = true;
 
