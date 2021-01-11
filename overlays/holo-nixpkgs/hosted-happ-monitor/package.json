@@ -13,7 +13,7 @@
     "@holochain/conductor-api": "0.0.1-dev.12",
     "express": "^4.17.1",
     "mongodb": "^3.6.3",
-    "yargs": "^16.1.0"
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
     "webpack": "^5.4.0",

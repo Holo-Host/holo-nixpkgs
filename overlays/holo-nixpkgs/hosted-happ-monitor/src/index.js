@@ -9,16 +9,11 @@ const appId = 'core-hha';
 
 // Get Mongodb creds from file
 if (!argv.configPath) throw new Error('hosted-happ-monitor requires --config-path option.');
-
-let credentials
-fs.readFile(argv.configPath, (err, data) => {
-    if (err) throw err;
-    credentials = JSON.parse(data);
-});
-
+let data = fs.readFileSync(`${argv.configPath}`)
+let credentials = JSON.parse(data);
 const username = credentials.MONGO_USERNAME;
 const password = credentials.MONGO_PASSWORD;
-const dbName = credentials.MONGO_DBNAME;
+const dbname = credentials.MONGO_DBNAME;
 
 // Connection URL
 const url = `mongodb+srv://${username}:${password}@cluster0.hjwna.mongodb.net/${dbname}?retryWrites=true&w=majority`;
