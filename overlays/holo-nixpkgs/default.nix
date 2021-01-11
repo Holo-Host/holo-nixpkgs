@@ -285,7 +285,7 @@ rec {
 
   inherit (callPackage ./hpos-holochain-api {}) hpos-holochain-api;
 
-  inherit (callPackage ./hosted-happs-monitor {}) hosted-happs-monitor;
+  inherit (callPackage ./hosted-happ-monitor {}) hosted-happ-monitor;
 
   wrangler = callPackage ./wrangler {};
 

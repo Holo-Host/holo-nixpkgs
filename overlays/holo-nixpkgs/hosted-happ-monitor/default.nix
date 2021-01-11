@@ -1,7 +1,7 @@
 { stdenv,  nodejs, npmToNix, gitignoreSource }:
 
 {
-  hpos-holochain-api = stdenv.mkDerivation rec {
+  hosted-happ-monitor = stdenv.mkDerivation rec {
     name = "hosted-happ-monitor";
     src = gitignoreSource ./.;
 

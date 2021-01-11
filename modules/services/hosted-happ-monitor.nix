@@ -3,15 +3,15 @@
 with lib;
 
 let
-  cfg = config.services.hosted-happs-monitor;
+  cfg = config.services.hosted-happ-monitor;
 in
 
 {
-  options.services.hosted-happs-monitor = {
-    enable = mkEnableOption "hosted-happs-monitor";
+  options.services.hosted-happ-monitor = {
+    enable = mkEnableOption "hosted-happ-monitor";
 
     package = mkOption {
-      default = pkgs.hosted-happs-monitor;
+      default = pkgs.hosted-happ-monitor;
       type = types.package;
     };
 
@@ -23,7 +23,7 @@ in
   config = mkIf (cfg.enable) {
     environment.systemPackages = [ cfg.package pkgs.nodejs ];
 
-    systemd.services.hosted-happs-monitor = {
+    systemd.services.hosted-happ-monitor = {
       after = [ "network.target" "holochain.service" "self-hosted-happs.service"];
       requisite = [ "holochain.service" ]; 
       startAt = "*:5/15";
