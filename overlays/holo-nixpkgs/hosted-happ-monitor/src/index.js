@@ -1,5 +1,5 @@
 const fs = require('fs');
-onst MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient;
 const { AppWebsocket } = require('@holochain/conductor-api');
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
@@ -46,7 +46,7 @@ const main = async () => {
     url: happ.happ_bundle.name
   }));
 
-  client.connect(function(err) {
+  client.connect(async function(err) {
     console.log("Connected successfully to server");
 
     const db = client.db(dbName);
@@ -71,3 +71,7 @@ main()
       console.error(e.message);
       process.exit(1);
   });
+
+  // TO DO:
+  // 1. Fix the happList and format for mongodb
+  // 2. Create a job for updating list of hosts and prices

@@ -57,14 +57,14 @@ in
   services.configure-holochain = {
     enable = true;
     working-directory = configureHolochainWorkingDir;
-    install-list = [
-      {
-        app_id = "elemental-chat";
-        version = "alpha11";
-        ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha16/elemental-chat.zip";
-        dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha11/elemental-chat.dna.gz";
-      }
-    ];
+    install-list = {
+      core_happs = [];
+      self_hosted_happs = [{
+        app_id = "core-hha";
+        version = "0.0.1-alpha2";
+        dna_url = "https://github.com/Holo-Host/holo-hosting-app-rsm/releases/download/v0.0.1-alpha2/holo-hosting-app.dna.gz";
+      }]
+    };
   };
 
   services.kv-uploader = {
