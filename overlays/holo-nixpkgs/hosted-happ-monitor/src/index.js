@@ -13,7 +13,7 @@ if (!argv.configPath) throw new Error('hosted-happ-monitor requires --config-pat
 let credentials
 fs.readFile(argv.configPath, (err, data) => {
     if (err) throw err;
-    let credentials = JSON.parse(data);
+    credentials = JSON.parse(data);
 });
 
 const username = credentials.MONGO_USERNAME;
