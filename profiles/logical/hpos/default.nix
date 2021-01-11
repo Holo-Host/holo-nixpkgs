@@ -196,14 +196,17 @@ in
   services.configure-holochain = {
     enable = true;
     working-directory = configureHolochainWorkingDir;
-    install-list = [
-      {
-        app_id = "elemental-chat";
-        version = "alpha11";
-        ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha16/elemental-chat.zip";
-        dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha11/elemental-chat.dna.gz";
-      }
-    ];
+    install-list = {
+      core_happs = [];
+      self_hosted_happs = [
+        {
+          app_id = "elemental-chat";
+          version = "alpha14";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha19/elemental-chat.zip";
+          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha14/elemental-chat.dna.gz";
+        }
+      ];
+    };
   };
 
   system.holo-nixpkgs.autoUpgrade = {

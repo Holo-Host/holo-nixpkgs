@@ -63,7 +63,7 @@ in
         app_id = "core-hha";
         version = "0.0.1-alpha2";
         dna_url = "https://github.com/Holo-Host/holo-hosting-app-rsm/releases/download/v0.0.1-alpha2/holo-hosting-app.dna.gz";
-      }]
+      }];
     };
   };
 

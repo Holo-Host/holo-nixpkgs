@@ -7,8 +7,8 @@ rustPlatform.buildRustPackage {
   src = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "hpos-configure-holochain";
-    rev = "b80fcb0b1fa7574e7aea022931c67364b0f82751";
-    sha256 = "00sd1mn1bql2ydwcfrbyjm1gqsxyk7yyvdi3f6b4sczdv0ahxksq";
+    rev = "e52ac50acc31e7e8dcddab0ff0a8cbd90ae3d6b6";
+    sha256 = "10mk138y2hl5xgpl110yvspvrjcs5p341ixrn7avlziw3cp52fnf";
   };
 
   cargoSha256 = "0cjx904pwa9vczr2gvp1ifshl1vkq4fxc0r9djl2mjzi8x4aa8ak";
