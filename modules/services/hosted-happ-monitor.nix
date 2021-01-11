@@ -24,7 +24,7 @@ in
     environment.systemPackages = [ cfg.package pkgs.nodejs ];
 
     systemd.services.hosted-happ-monitor = {
-      after = [ "network.target" "holochain.service" "self-hosted-happs.service"];
+      after = [ "network.target" "holochain.service" "configure-holochain.service"];
       requisite = [ "holochain.service" ]; 
       startAt = "*:5/15";
 
