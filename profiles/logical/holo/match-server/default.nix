@@ -105,4 +105,8 @@ in
     enable = true;
     dates = "*:0/10";
   };
+
+  users.groups.apis = {};
+
+  users.users.nginx.extraGroups = [ "apis" ];
 }
