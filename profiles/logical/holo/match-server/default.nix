@@ -94,7 +94,14 @@ in
     virtualHosts.publicApi = {
       enableACME = false;
       locations = {
-        "/".proxyPass = "http://${matchServiceApiSocket}";
+        "/" = {
+          proxyPass = "http://${matchServiceApiSocket}";
+        };
+        
+        "/api/v1/ws/" = {
+          proxyPass = "http://127.0.0.1:42233";
+          proxyWebsockets = true;
+        };
       };
       serverName = "network-statistics.holo.host";
     };
