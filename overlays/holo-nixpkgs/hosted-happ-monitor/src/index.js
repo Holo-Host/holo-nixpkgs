@@ -8,10 +8,14 @@ const appPort = 42233;
 const appId = 'core-hha';
 
 // Get Mongodb creds from file
-if (!argv.configPath) {
-  throw new Error('hosted-happ-monitor requires --config-path option.')
-};
-const credentials = require(argv.configPath);
+if (!argv.configPath) throw new Error('hosted-happ-monitor requires --config-path option.');
+
+let credentials
+fs.readFile(argv.configPath, (err, data) => {
+    if (err) throw err;
+    let credentials = JSON.parse(data);
+});
+
 const username = credentials.MONGO_USERNAME;
 const password = credentials.MONGO_PASSWORD;
 const dbName = credentials.MONGO_DBNAME;
