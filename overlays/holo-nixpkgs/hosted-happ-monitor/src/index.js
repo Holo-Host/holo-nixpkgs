@@ -42,8 +42,8 @@ const main = async () => {
   });
 
   const happList = happs.map(happ => ({
-    id: happ.happ_id,
-    url: happ.happ_bundle.name
+    url: happ.happ_bundle.hosted_url,
+    id: happ.happ_id
   }));
 
   client.connect(async function(err) {
@@ -62,7 +62,6 @@ const main = async () => {
 
     client.close();
   });
-  
 };
 
 main()
@@ -71,7 +70,3 @@ main()
       console.error(e.message);
       process.exit(1);
   });
-
-  // TO DO:
-  // 1. Fix the happList and format for mongodb
-  // 2. Create a job for updating list of hosts and prices
