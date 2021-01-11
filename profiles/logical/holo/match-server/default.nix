@@ -58,11 +58,11 @@ in
     enable = true;
     working-directory = configureHolochainWorkingDir;
     install-list = {
-      core_happs = [];
-      self_hosted_happs = [{
+      self_hosted_happs = [];
+      core_happs = [{
         app_id = "core-hha";
-        version = "0.0.1-alpha2";
-        dna_url = "https://github.com/Holo-Host/holo-hosting-app-rsm/releases/download/v0.0.1-alpha2/holo-hosting-app.dna.gz";
+        version = "0.0.1-alpha5";
+        dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha5/holo-hosting-app.dna.gz";
       }];
     };
   };
