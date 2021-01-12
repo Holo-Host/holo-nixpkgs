@@ -13,10 +13,10 @@ let data = fs.readFileSync(`${argv.configPath}`)
 let credentials = JSON.parse(data);
 const username = credentials.MONGO_USERNAME;
 const password = credentials.MONGO_PASSWORD;
-const dbname = credentials.MONGO_DBNAME;
+const dbName = credentials.MONGO_DBNAME;
 
 // Connection URL
-const url = `mongodb+srv://${username}:${password}@cluster0.hjwna.mongodb.net/${dbname}?retryWrites=true&w=majority`;
+const url = `mongodb+srv://${username}:${password}@cluster0.hjwna.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 const client = new MongoClient(url);
 
 const main = async () => {
@@ -50,13 +50,14 @@ const main = async () => {
 
 const upload = async(happList) => {
   await client.connect()
-  console.log("Connected successfully to server");
   const db = client.db(dbName);
   const collection = db.collection('happ_list');
-  await collection.drop();
-  console.log('collection dropped');
+
+  let collection_list = await db.listCollections().toArray();
+  if (collection_list.includes('happ_list')) {
+    await collection.drop();
+  };
   await collection.insertMany(happList);
-  console.log('collection uploaded')
   await client.close();
 }
 
