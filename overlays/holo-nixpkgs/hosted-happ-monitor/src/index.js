@@ -5,7 +5,7 @@ const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const argv = yargs(hideBin(process.argv)).argv
 const appPort = 42233;
-const appId = 'core-hha';
+const appId = 'core-hha:0.0.1-alpha5';
 
 // Get Mongodb creds from file
 if (!argv.configPath) throw new Error('hosted-happ-monitor requires --config-path option.');
@@ -22,7 +22,7 @@ const client = new MongoClient(url);
 const main = async () => {
 
   const appWebsocket = await AppWebsocket.connect(`ws://localhost:${appPort}`);
-  const appInfo = appWebsocket.appInfo({ installed_app_id: appId });
+  const appInfo = await appWebsocket.appInfo({ installed_app_id: appId });
 
   if (!appInfo) {
     throw new Error(`Couldn't find Holo Hosting App with id ${appId}`)
@@ -37,7 +37,7 @@ const main = async () => {
     zome_name: 'hha',
     fn_name: 'get_happs',
     provenance: agentKey,
-    payload: {}
+    payload: null
   });
 
   const happList = happs.map(happ => ({
@@ -45,25 +45,23 @@ const main = async () => {
     id: happ.happ_id
   }));
 
-  client.connect(async function(err) {
-    console.log("Connected successfully to server");
-
-    const db = client.db(dbName);
-    const collection = db.collection('happ_list');
-    
-    await collection.drop(function(err) {
-      if(err) console.log('Error dropping happ_list: ', err)
-    });
-
-    await collection.insertMany(happList, function(err) {
-      if(err) console.log('Error updating happ_list: ', err)
-    });
-
-    client.close();
-  });
+  return happList
 };
 
+const upload = async(happList) => {
+  await client.connect()
+  console.log("Connected successfully to server");
+  const db = client.db(dbName);
+  const collection = db.collection('happ_list');
+  await collection.drop();
+  console.log('collection dropped');
+  await collection.insertMany(happList);
+  console.log('collection uploaded')
+  await client.close();
+}
+
 main()
+  .then(happList => upload(happList))
   .then(()=> process.exit())
   .catch(e => {
       console.error(e.message);
