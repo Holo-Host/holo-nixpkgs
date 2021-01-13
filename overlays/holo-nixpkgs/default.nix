@@ -150,6 +150,8 @@ rec {
 
   dna-util = mkHolochainBinary { crate = "dna_util"; };
 
+  kitsune-p2p-proxy = mkHolochainBinary { crate = "kitsune_p2p/proxy"; };
+
   holoport-nano-dtb = callPackage ./holoport-nano-dtb {};
 
   inherit (callPackage ./host-console-ui {}) host-console-ui;
