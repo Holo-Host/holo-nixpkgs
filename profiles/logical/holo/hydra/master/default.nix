@@ -37,6 +37,14 @@ in
       ];
       system = "aarch64-linux";
     }
+    {
+      hostName = "hydra-minion-2.holo.host";
+      maxJobs = 12;
+      sshKey = "/var/lib/hydra/queue-runner/.ssh/id_ed25519";
+      sshUser = "administrator";
+      supportedFeatures = [];
+      system = "x86_64-darwin";
+    }
   ];
 
   nix.distributedBuilds = true;
