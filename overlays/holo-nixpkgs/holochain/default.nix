@@ -37,6 +37,11 @@ rec {
     RUST_SODIUM_SHARED = "1";
 
     doCheck = false;
+    meta.platforms = [
+        "aarch64-linux"
+        "x86_64-linux"
+        "x86_64-darwin"
+    ];
   } (builtins.removeAttrs overrides [
     "rev"
     "sha256"
