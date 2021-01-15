@@ -57,14 +57,14 @@ in
   services.configure-holochain = {
     enable = true;
     working-directory = configureHolochainWorkingDir;
-    install-list = [
-      {
-        app_id = "elemental-chat";
-        version = "alpha11";
-        ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha16/elemental-chat.zip";
-        dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha11/elemental-chat.dna.gz";
-      }
-    ];
+    install-list = {
+      self_hosted_happs = [];
+      core_happs = [{
+        app_id = "core-hha";
+        version = "0.0.1-alpha5";
+        dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha5/holo-hosting-app.dna.gz";
+      }];
+    };
   };
 
   services.kv-uploader = {
@@ -83,13 +83,25 @@ in
     credentialsDir = matchServerCredentialsDir;
   };
 
+  services.hosted-happ-monitor = {
+    enable = true;
+    credentialsDir = matchServerCredentialsDir;
+  };
+
   services.nginx = {
     enable = true;
 
     virtualHosts.publicApi = {
       enableACME = false;
       locations = {
-        "/".proxyPass = "http://${matchServiceApiSocket}";
+        "/" = {
+          proxyPass = "http://${matchServiceApiSocket}";
+        };
+        
+        "/api/v1/ws/" = {
+          proxyPass = "http://127.0.0.1:42233";
+          proxyWebsockets = true;
+        };
       };
       serverName = "network-statistics.holo.host";
     };
@@ -105,4 +117,8 @@ in
     enable = true;
     dates = "*:0/10";
   };
+
+  users.groups.apis = {};
+
+  users.users.nginx.extraGroups = [ "apis" ];
 }
