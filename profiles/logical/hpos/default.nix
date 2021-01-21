@@ -193,6 +193,15 @@ in
             proxy_url = "kitsune-proxy://nFCWLsuRC0X31UMv8cJxioL-lBRFQ74UQAsb8qL4XyM/kitsune-quic/h/proxy.holochain.org/p/5775/--";
           };
         }];
+        tuning_params = {
+          gossip_loop_iteration_delay_ms = 200; # Default was 10
+          default_notify_remote_agent_count = 5;
+          default_notify_timeout_ms = 1000;
+          default_rpc_single_timeout_ms = 2000;
+          default_rpc_multi_remote_agent_count = 2;
+          default_rpc_multi_timeout_ms = 2000;
+          agent_info_expires_after_ms = 1000 * 60 * 20; #// 20 minutes
+        };
       };
     };
   };
