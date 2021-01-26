@@ -194,7 +194,7 @@ in
           };
         }];
         tuning_params = {
-          gossip_loop_iteration_delay_ms = 200; # Default was 10
+          gossip_loop_iteration_delay_ms = 1000; # Default was 10
           default_notify_remote_agent_count = 5;
           default_notify_timeout_ms = 1000;
           default_rpc_single_timeout_ms = 2000;
