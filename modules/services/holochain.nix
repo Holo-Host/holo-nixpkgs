@@ -25,7 +25,7 @@ in
 
     restart-interval = mkOption {
       type = types.str;
-    }
+    };
   };
 
   config = mkIf (cfg.enable) {
