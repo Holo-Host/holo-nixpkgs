@@ -55,7 +55,7 @@ in
       serviceConfig.Type = "oneshot";
 
       script = ''
-        /run/current-system/sw/bin/systemctl try-restart holochain.service
+        ${pkgs.systemd}/bin/systemctl try-restart holochain.service
       '';
 
       startAt = cfg.restart-interval;
