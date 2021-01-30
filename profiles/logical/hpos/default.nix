@@ -24,7 +24,7 @@ let
 
   holochainWorkingDir = "/var/lib/holochain-rsm";
 
-  selfHostedHappsWorkingDir = "/var/lib/self-hosted-happs";
+  configureHolochainWorkingDir = "/var/lib/configure-holochain";
 in
 
 {
@@ -62,7 +62,7 @@ in
 
   services.holo-auth-client.enable = lib.mkDefault true;
 
-  services.holo-envoy.enable = true;
+  services.holo-envoy.enable = lib.mkDefault true;
 
   services.holo-router-agent.enable = lib.mkDefault true;
 
@@ -93,7 +93,7 @@ in
         };
 
         "/apps/" = {
-          alias = "/var/lib/self-hosted-happs/uis/";
+          alias = "${configureHolochainWorkingDir}/uis/";
           extraConfig = ''
             limit_req zone=zone1 burst=30;
           '';
@@ -123,6 +123,10 @@ in
         "/api/v1/ws/" = {
           proxyPass = "http://127.0.0.1:42233";
           proxyWebsockets = true;
+          extraConfig = ''
+            proxy_send_timeout 1d;
+            proxy_read_timeout 1d;
+          '';
         };
 
         "/holochain-api/v1/" = {
@@ -145,7 +149,7 @@ in
 
         "/hosting/" = {
           proxyPass = "http://127.0.0.1:4656";
-          proxyWebsockets = true;
+          proxyWebsockets = true;   # TODO: add proxy_send_timeout, proxy_read_timeout HERE
         };
       };
     };
@@ -162,7 +166,7 @@ in
     '';
   };
 
-  services.holochain = {
+  services.holochain = lib.mkDefault {
     enable = true;
     working-directory = holochainWorkingDir;
     config = {
@@ -186,24 +190,28 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = "kitsune-proxy://CIW6PxKxsPPlcuvUCbMcKwUpaMSmB7kLD8xyyj4mqcw/kitsune-quic/h/proxy.holochain.org/p/5778/--";
+            proxy_url = "kitsune-proxy://nFCWLsuRC0X31UMv8cJxioL-lBRFQ74UQAsb8qL4XyM/kitsune-quic/h/proxy.holochain.org/p/5775/--";
           };
         }];
       };
     };
   };
 
-  services.self-hosted-happs = {
+  services.configure-holochain = lib.mkDefault {
     enable = true;
-    working-directory = selfHostedHappsWorkingDir;
-    default-list = [
-      {
-        app_id = "elemental-chat";
-        version = "alpha1";
-        ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/alpha1/elemental-chat.zip ";
-        dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha1/elemental-chat.dna.gz";
-      }
-    ];
+    working-directory = configureHolochainWorkingDir;
+    install-list = {
+      core_happs = [];
+      self_hosted_happs = [
+        {
+          app_id = "elemental-chat";
+          uuid = "0001";
+          version = "alpha14";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha20/elemental-chat.zip";
+          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha14/elemental-chat.dna.gz"; # this version mismatch is on purpose for hash alteration
+        }
+      ];
+    };
   };
 
   system.holo-nixpkgs.autoUpgrade = {

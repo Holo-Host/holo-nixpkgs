@@ -4,6 +4,7 @@ with pkgs;
 
 let
   inherit (rust.packages.nightly) rustPlatform;
+  inherit (darwin.apple_sdk.frameworks) Security;
 in
 
 {
@@ -21,6 +22,8 @@ in
     cargoSha256 = "19fk595k9nrqgn5nwfxd0mnzw3is448q2lpgc8m20d92sw2az8fx";
 
     nativeBuildInputs = [ perl ];
+
+    buildInputs = lib.optionals stdenv.isDarwin [ Security ];
 
     RUST_SODIUM_LIB_DIR = "${libsodium}/lib";
     RUST_SODIUM_SHARED = "1";

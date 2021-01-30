@@ -111,13 +111,17 @@ rec {
     wormhole-relay = holo.buildProfile "wormhole-relay";
   };
 
+  configure-holochain = callPackage ./configure-holochain {
+    inherit (rust.packages.stable) rustPlatform;
+  };
+
   extlinux-conf-builder = callPackage ./extlinux-conf-builder {};
 
   hc-state = writeShellScriptBin "hc-state" ''
     ${nodejs}/bin/node ${hc-state-node}/main.js "$@"
   '';
 
-  inherit (callPackage ./hc-state-node {}) hc-state-node; 
+  inherit (callPackage ./hc-state-node {}) hc-state-node;
 
   holo-cli = callPackage ./holo-cli {};
 
@@ -131,17 +135,19 @@ rec {
     import "${holo-nixpkgs.path}/tests" { inherit pkgs; }
   );
 
-  # holochain RSM requires version of rust matching holonix, which is set under rust.packages.holochain-rsm
-  holochain = callPackage ./holochain {
-    inherit (darwin.apple_sdk.frameworks) CoreServices Security;
-    inherit (rust.packages.holochain-rsm) rustPlatform;
-  };
+  inherit (callPackage ./holochain {
+    inherit (rust.packages.stable) rustPlatform;
+  }) mkHolochainBinary holochain;
 
-  holoport-nano-dtb = callPackage ./holoport-nano-dtb {
-    linux = linux_latest;
-  };
+  dna-util = mkHolochainBinary { crate = "dna_util"; };
+
+  kitsune-p2p-proxy = mkHolochainBinary { crate = "kitsune_p2p/proxy"; };
+
+  holoport-nano-dtb = callPackage ./holoport-nano-dtb {};
 
   inherit (callPackage ./host-console-ui {}) host-console-ui;
+
+  hpos-install = callPackage ./hpos-install {};
 
   hpos = recurseIntoAttrs {
     buildImage = imports:
@@ -154,9 +160,9 @@ rec {
       meta.platforms = [ "x86_64-linux" ];
     };
 
-    virtualbox = (hpos.buildImage [ "${hpos.physical}/vm/virtualbox" ]) // {
-      meta.platforms = [ "x86_64-linux" ];
-    };
+    # virtualbox = (hpos.buildImage [ "${hpos.physical}/vm/virtualbox" ]) // {
+    #   meta.platforms = [ "x86_64-linux" ];
+    # };
   };
 
   hpos-admin-api = callPackage ./hpos-admin-api {
@@ -200,9 +206,8 @@ rec {
     }
   );
 
-  # holochain RSM requires version of rust matching holonix, which is set under rust.packages.holochain-rsm
   lair-keystore = callPackage ./lair-keystore {
-    inherit (rust.packages.holochain-rsm) rustPlatform;
+    inherit (rust.packages.stable) rustPlatform;
   };
 
   libsodium = previous.libsodium.overrideAttrs (
@@ -212,7 +217,7 @@ rec {
     }
   );
 
-  linuxPackages_latest = previous.linuxPackages_latest.extend (
+  linuxPackages = previous.linuxPackages.extend (
     self: super: {
       sun50i-a64-gpadc-iio = self.callPackage ./linux-packages/sun50i-a64-gpadc-iio {};
     }
@@ -222,56 +227,52 @@ rec {
 
   nodejs = nodejs-12_x;
 
-  rust = previous.rust // {
+  rust = previous.rust // (let
+    targets = [
+      "aarch64-unknown-linux-musl"
+      "wasm32-unknown-unknown"
+      "x86_64-pc-windows-gnu"
+      "x86_64-unknown-linux-musl"
+    ];
+
+    rustNightly = (rustChannelOf {
+      channel = "nightly";
+      date = "2019-11-16";
+      sha256 = "17l8mll020zc0c629cypl5hhga4hns1nrafr7a62bhsp4hg9vswd";
+    }).rust.override { inherit targets; };
+
+    rustStable = (rustChannelOf {
+      channel = "1.48.0";
+      sha256 = "0b56h3gh577wv143ayp46fv832rlk8yrvm7zw1dfiivifsn7wfzg";
+    }).rust.override { inherit targets; };
+  in {
     packages = previous.rust.packages // {
       nightly = {
         rustPlatform = final.makeRustPlatform {
-          inherit (buildPackages.rust.packages.nightly) cargo rustc;
+          rustc = rustNightly;
+          cargo = rustNightly;
         };
 
-        cargo = final.rust.packages.nightly.rustc;
-        rustc = (
-          rustChannelOf {
-            channel = "nightly";
-            date = "2019-11-16";
-            sha256 = "17l8mll020zc0c629cypl5hhga4hns1nrafr7a62bhsp4hg9vswd";
-          }
-        ).rust.override {
-          targets = [
-            "aarch64-unknown-linux-musl"
-            "wasm32-unknown-unknown"
-            "x86_64-pc-windows-gnu"
-            "x86_64-unknown-linux-musl"
-          ];
-        };
+        inherit (final.rust.packages.nightly.rustPlatform) rust;
       };
-      holochain-rsm = {
+
+      stable = {
         rustPlatform = final.makeRustPlatform {
-          inherit (buildPackages.rust.packages.holochain-rsm) cargo rustc;
+          rustc = rustStable;
+          cargo = rustStable;
         };
 
-        cargo = final.rust.packages.holochain-rsm.rustc;
-        rustc = (
-          rustChannelOf {
-            channel = "stable";
-            date = "2020-08-03";
-            sha256 = "0yvh2ck2vqas164yh01ggj4ckznx04blz3jgbkickfgjm18y269j";
-          }
-        ).rust.override {
-          targets = [
-            "aarch64-unknown-linux-musl"
-            "wasm32-unknown-unknown"
-            "x86_64-pc-windows-gnu"
-            "x86_64-unknown-linux-musl"
-          ];
-        };
+        inherit (final.rust.packages.stable.rustPlatform) rust;
       };
     };
-  };
-
-  inherit (callPackage ./self-hosted-happs {}) self-hosted-happs-node;
+  });
 
   inherit (callPackage ./hpos-holochain-api {}) hpos-holochain-api;
+
+  hpos-holochain-client = callPackage ./hpos-holochain-client {
+    stdenv = stdenvNoCC;
+    python3 = python3.withPackages (ps: [ ps.click ps.requests ]);
+  };
 
   wrangler = callPackage ./wrangler {};
 

@@ -1,48 +1,121 @@
+#!/usr/bin/env node
+
 const fs = require('fs')
 const express = require('express')
 const app = express()
-const { AppWebsocket } = require('@holochain/conductor-api')
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const argv = yargs(hideBin(process.argv)).argv
-
-if (!argv.appPort) {
-  throw new Error('Host console server requires --app-port option.')
-}
-
-if (!argv.appId) {
-  throw new Error('Host console server requires --app-id option.')
-}
-
-const UNIX_SOCKET = '/run/hpos-holochain-api/hpos-holochain-api.sock'
+const { UNIX_SOCKET, HAPP_PORT, ADMIN_PORT } = require('./const')
+const { callZome, createAgent, startHappInterface, listInstalledApps, installHostedHapp } = require("./api")
+const { parsePreferences } = require('./utils')
+const { getAppIds, getReadOnlyPubKey} = require('./const')
+const { AdminWebsocket, AppWebsocket } = require("@holochain/conductor-api")
 
 app.get('/hosted_happs', async (_, res) => {
-  const appWebsocket = await AppWebsocket.connect(`ws://localhost:${argv.appPort}`)
-
-  const appInfo = appWebsocket.appInfo({ installed_app_id: argv.appId })
-
-  if (!appInfo) {
-    throw new Error(`Couldn't find Holo Hosting App with id ${argv.appId}`)
+  let happs
+  const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`);
+  try {
+    const APP_ID = await getAppIds()
+    happs = await callZome(appWs, APP_ID.HHA, 'hha', 'get_happs', null)
+  } catch(e) {
+      console.log("error from /hosted_happs:", e);
+      return res.status(501).send(`hpos-holochain-api error: ${e}`);
   }
+  const presentedHapps = []
+  for(let i=0; i < happs.length; i++) {
+    let enabled, source_chain;
+    try{
+      source_chain = await callZome(appWs,`${happs[i].happ_id}::servicelogger`, 'service', 'get_source_chain_count', null)
+      enabled = true
+    } catch(e) {
+      enabled = false
+      source_chain = 0
+    }
+    presentedHapps.push({
+        id: happs[i].happ_id,
+        name: happs[i].happ_bundle.name,
+        enabled,
+        source_chain
+    })
+  }
+  res.status(200).send(presentedHapps)
+})
 
-  const cellId = appInfo.cell_data[0][0]
-
-  const agentKey = cellId[1]
-
-  const happs = await appWebsocket.callZome({
-    cell_id: cellId,
-    zome_name: 'hha',
-    fn_name: 'get_happs',
-    provenance: agentKey,
-    payload: {}
+app.post('/install_hosted_happ', async (req, res) => {
+  let data
+  // Loading body
+  await req.on('data', (body) => {
+    data = JSON.parse(body.toString())
   })
 
-  const presentedHapps = happs.map(happ => ({
-    id: happ.happ_id,
-    name: happ.happ_bundle.name
-  }))
+  // check if happ_id is passed else return error
+  if (data.happ_id && data.preferences) {
+    let happId = data.happ_id;
+    // preferences: {
+    //   max_fuel_before_invoice: "5", // how much holofuel to accumulate before sending invoice
+    //   price_compute: "1",
+    //   price_storage: "1",
+    //   price_bandwidth: "1",
+    //   max_time_before_invoice: [86400, 0], // how much time to allow to pass before sending invoice even if fuel trigger not reached.
+    // }
+    let preferences = data.preferences;
+    if (!preferences.max_fuel_before_invoice
+      || !preferences.max_time_before_invoice
+      || !preferences.price_compute
+      || !preferences.price_storage
+      || !preferences.price_bandwidth) {
+        console.log("wrong preferences...");
+        return res.status(501).send(`hpos-holochain-api error: preferences does not include all the necessary values`);
+    }
+    console.log("Trying to install happ with happId: ", happId)
 
-  res.send(presentedHapps)
+    // Steps:
+    // - Call hha to get happ details
+    let happBundleDetails;
+    try {
+      const APP_ID = await getAppIds()
+      const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`);
+      happBundleDetails = await callZome(appWs, APP_ID.HHA, 'hha', 'get_happ', happId)
+
+    } catch (e) {
+      return res.status(501).send(`hpos-holochain-api error: ${e}`);
+    }
+    console.log("Happ Bundle: ", happBundleDetails);
+    let happAlias = happBundleDetails.happ_bundle.happ_alias;
+
+    let listOfInstalledHapps;
+    // Instalation Process:
+    try {
+      const adminWs = await AdminWebsocket.connect(`ws://localhost:${ADMIN_PORT}`);
+      // Do we need to make sure app interface is started?
+      // await startHappInterface(adminWs);
+
+      listOfInstalledHapps = await listInstalledApps(adminWs);
+
+      // Generate new agent in a test environment else read the location in hpos
+      const hostPubKey = process.env.NODE_ENV === 'test' ? await createAgent(adminWs) : await getReadOnlyPubKey();
+
+      // Install DNAs
+      let dnas = happBundleDetails.happ_bundle.dnas;
+
+      // check if the hosted_happ is already listOfInstalledHapps
+      if (listOfInstalledHapps.includes(`${happBundleDetails.happ_id}`)) {
+        return res.status(501).send(`hpos-holochain-api error: ${happBundleDetails.happ_id} already installed on your holoport`);
+      } else {
+        const serviceloggerPref = parsePreferences(preferences, happBundleDetails.provider_pubkey)
+        console.log("Parsed Preferences: ", serviceloggerPref);
+        await installHostedHapp(happBundleDetails.happ_id, dnas, hostPubKey, serviceloggerPref)
+      }
+      // Note: Do not need to install UI's for hosted happ
+      return res.status(200).send(`Successfully installed happ_id: ${happId}`);
+    } catch (e) {
+      return res.status(501).send(`hpos-holochain-api error: Failed to install hosted Happ with error - ${e}`);
+    }
+  }
+  else {
+  return res.status(501).send(`hpos-holochain-api error: Failed to pass happId in body`);
+  }
 })
 
 try {
@@ -56,3 +129,5 @@ try {
 app.listen(UNIX_SOCKET, () => {
   console.log(`Host console server running`)
 })
+
+module.exports = {app}
