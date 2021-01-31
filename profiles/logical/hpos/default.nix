@@ -201,7 +201,14 @@ in
     enable = true;
     working-directory = configureHolochainWorkingDir;
     install-list = {
-      core_happs = [];
+      core_happs = [
+        {
+          app_id = "core-hha";
+          uuid = "0001";
+          version = "0.0.1-alpha5";
+          dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha5/holo-hosting-app.dna.gz";
+        }
+      ];
       self_hosted_happs = [
         {
           app_id = "elemental-chat";
