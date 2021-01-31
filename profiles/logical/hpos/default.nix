@@ -209,15 +209,7 @@ in
           dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha7/holo-hosting-app.dna.gz";
         }
       ];
-      self_hosted_happs = [
-        {
-          app_id = "elemental-chat";
-          uuid = "0001";
-          version = "alpha14";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha20/elemental-chat.zip";
-          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha14/elemental-chat.dna.gz"; # this version mismatch is on purpose for hash alteration
-        }
-      ];
+      self_hosted_happs = [];
     };
   };
 
