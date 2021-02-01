@@ -54,7 +54,7 @@ in
     install-list = {
       core_happs = [
         {
-          app_id = "core-happs";
+          app_id = "core-hha";
           uuid = "0001";
           version = "alpha0";
           /* dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha6/holo-hosting-app.dna.gz"; */
