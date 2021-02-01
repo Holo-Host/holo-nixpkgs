@@ -205,8 +205,22 @@ in
         {
           app_id = "core-hha";
           uuid = "0001";
-          version = "0.0.1-alpha7";
-          dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha7/holo-hosting-app.dna.gz";
+          version = "alpha0";
+          /* dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha7/holo-hosting-app.dna.gz"; */
+          dna_path = builtins.fetchurl {
+            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha7/holo-hosting-app.dna.gz";
+            sha256 = "1dp7xznk0jhv9yswcpp68d9zi5wpl1xfwbh3mpl66zv62cpl12zq"; # To get sha run `nix-prefetch-url URL`
+          };
+        }
+        {
+          app_id = "servicelogger";
+          uuid = "0001";
+          version = "alpha0";
+          /* dna_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha5/servicelogger.dna.gz"; */
+          dna_path = builtins.fetchurl {
+            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha5/servicelogger.dna.gz";
+            sha256 = "14wc0fiqv1jzhgpa9kqiyhg3ncn8p5vcmj9gmf2k1ah8izh8h70h"; # To get sha run `nix-prefetch-url URL`
+          };
         }
       ];
       self_hosted_happs = [];
