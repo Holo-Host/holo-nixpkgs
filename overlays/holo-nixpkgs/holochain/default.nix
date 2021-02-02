@@ -5,7 +5,7 @@ rec {
       version ? "2021-02-02"
       , rev ? "ee41e20fe6fe1936cb688839085acb5e9c1312e2"
       , sha256 ? "08v5i90vsh1qfr9mzb4z08m1ky3vdrgag011iiidbwrp2vpgd28n"
-      , cargoSha256 ? "0c8i0fvl3w5snk94cb7gqpfx0nlk5480mfp4qbwzip1vv60205s67"
+      , cargoSha256 ? "0c8i0fvl3w5snk94cb7gqpfx0nlk5480mfp4qbwzip1vv60205s7"
       , crate
       , ... } @ overrides: rustPlatform.buildRustPackage (lib.attrsets.recursiveUpdate {
     name = "holochain";
