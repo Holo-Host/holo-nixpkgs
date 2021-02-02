@@ -28,6 +28,7 @@ rec {
     ];
 
     buildInputs = [ openssl ] ++ stdenv.lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
+      AppKit
       CoreFoundation
       CoreServices
       Security
