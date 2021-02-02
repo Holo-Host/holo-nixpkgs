@@ -169,9 +169,9 @@ rec {
       meta.platforms = [ "x86_64-linux" ];
     };
 
-    virtualbox = (hpos.buildImage [ "${hpos.physical}/vm/virtualbox" ]) // {
-      meta.platforms = [ "x86_64-linux" ];
-    };
+    # virtualbox = (hpos.buildImage [ "${hpos.physical}/vm/virtualbox" ]) // {
+    #   meta.platforms = [ "x86_64-linux" ];
+    # };
   };
 
   hpos-admin-api = callPackage ./hpos-admin-api {
