@@ -202,6 +202,9 @@ in
           default_rpc_multi_remote_agent_count = 2;
           default_rpc_multi_timeout_ms = 2000;
           agent_info_expires_after_ms = 1000 * 60 * 20; #// 20 minutes
+          tls_in_mem_session_storage = 512;
+          proxy_keepalive_ms = 1000 * 60 * 2;
+          proxy_to_expire_ms = 1000 * 6 * 5;
         };
       };
     };
@@ -215,10 +218,10 @@ in
       self_hosted_happs = [
         {
           app_id = "elemental-chat";
-          uuid = "0003";
-          version = "alpha17";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha23/elemental-chat-0003.zip";
-          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha17/elemental-chat.dna.gz"; # this version mismatch is on purpose for hash alteration
+          uuid = "0001";
+          version = "alpha19";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha24/elemental-chat-0001.zip";
+          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha19/elemental-chat.dna.gz"; # this version mismatch is on purpose for hash alteration
         }
       ];
     };
