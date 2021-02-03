@@ -135,7 +135,7 @@ rec {
   holo-cli = callPackage ./holo-cli {};
 
   holo-envoy = callPackage ./holo-envoy {
-    inherit (rust.packages.nightly) rustPlatform;
+    inherit (rust.packages.stable) rustPlatform;
   };
 
   holo-nixpkgs.path = gitignoreSource ../..;
