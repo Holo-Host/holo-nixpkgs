@@ -20,11 +20,6 @@ To use it, enable it and necessary features in your `/etc/nixos/configuration.ni
 ```
 
 ### Features
-
-- `overrideConductorConfig`: boolean, default = `false`
-
-  When this feature is enabled, HPOS will no longer rewrite your `conductor-config.toml`
-  on updates, meaning that all your changes will **NOT** be overwritten.
   
 - `ssh.enable`: boolean, default = `false`
 
@@ -44,7 +39,6 @@ To use it, enable it and necessary features in your `/etc/nixos/configuration.ni
   ```nix
   {
     features = {
-      overrideConductorConfig = true;
       ssh = {
         enable = true;
         access = {

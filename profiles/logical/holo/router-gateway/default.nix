@@ -9,12 +9,14 @@ with pkgs;
   ];
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowPing = true;
+  networking.resolvconf.useLocalResolver = true;
 
   services.dnscrypt-proxy2 = {
     enable = true;
 
     # https://dnscrypt.info/stamps/
-    config.static.holo-router-registry.stamp =
+    settings.static.holo-router-registry.stamp =
       "sdns://AgcAAAAAAAAADTEwNC4xNy4yNDEuNDUAGXJvdXRlci1yZWdpc3RyeS5ob2xvLmhvc3QNL3YxL2Rucy1xdWVyeQ";
   };
 
@@ -28,4 +30,6 @@ with pkgs;
       '';
     };
   };
+
+  boot.cleanTmpDir = true;
 }

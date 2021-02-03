@@ -47,8 +47,6 @@ in
       description = "Feature flags to control the profile";
       type = types.submodule {
         options = {
-          overrideConductorConfig = mkEnableOption "overriding conductor-config.toml and preventing updates to it";
-
           ssh = mkOption {
             description = "Flags to control SSH";
             type = types.submodule sshOptions;
@@ -62,12 +60,6 @@ in
 
   config = mkIf cfg.enable (
     mkMerge [
-      (
-        mkIf cfg.features.overrideConductorConfig {
-          environment.variables.HPOS_OVERRIDE_CONDUCTOR_CONFIG = "true";
-        }
-      )
-
       (
         mkIf cfg.features.ssh.enable {
           services.openssh.enable = true;

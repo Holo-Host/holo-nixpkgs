@@ -16,7 +16,7 @@
   # require that everyone on this list uses it along with a hardware token. We
   # also should set up sudo_pair <https://github.com/square/sudo_pair>.
   users.users.root.openssh.authorizedKeys.keys = lib.mkForce [
-    # filalex77
+    # Br1ght0ne
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICp5OkzJW/6LQ1SYNTZC1hVg72/sca2uFOOqzZcORAHg"
     # PJ Klimek
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJwtG0yk6e0szjxk3LgtWnunOvoXUJIncQjzX5zDiKxY"

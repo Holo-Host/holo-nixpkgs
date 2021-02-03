@@ -11,7 +11,7 @@ in
     enable = mkEnableOption "Holo Router Agent";
 
     package = mkOption {
-      default = pkgs.holo-router-agent;
+      default = pkgs.holo-router;
       type = types.package;
     };
   };
@@ -21,10 +21,9 @@ in
       startAt = "*:0/1";
 
       serviceConfig = {
-        ExecStart = "${pkgs.holo-router-agent}/bin/holo-router-agent";
+        ExecStart = "${pkgs.holo-router}/bin/holo-router-agent";
         Type = "oneshot";
         User = "root";
-        WorkingDirectory = "/var/lib/holochain-conductor";
       };
     };
   };

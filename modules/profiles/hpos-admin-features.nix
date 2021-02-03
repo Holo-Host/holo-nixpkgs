@@ -28,7 +28,7 @@ in
         ssh.enable = true
       '';
       type = types.path;
-      default = /etc/nixos/hpos-admin-features.toml;
+      default = /run/hpos-admin-api/hpos-admin-features.toml;
     };
 
   };

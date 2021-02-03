@@ -11,7 +11,7 @@ in
     enable = mkEnableOption "Holo Router Gateway";
 
     package = mkOption {
-      default = pkgs.holo-router-gateway;
+      default = pkgs.holo-router;
       type = types.package;
     };
   };

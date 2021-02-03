@@ -1,0 +1,21 @@
+{
+  "name": "hpos-holochain-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.cjs"
+  },
+  "author": "robbie.carlton@holo.host",
+  "license": "ISC",
+  "dependencies": {
+    "@holochain/conductor-api": "0.0.1-dev.12",
+    "express": "^4.17.1",
+    "yargs": "^16.1.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.4.0",
+    "webpack-cli": "^4.2.0"
+  }
+}

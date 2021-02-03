@@ -32,7 +32,7 @@ in
       path = [ pkgs.zerotierone ];
       serviceConfig = {
         ExecStart = "${cfg.package}/bin/hpos-led-manager --device ${cfg.devicePath} --state ${cfg.statePath}";
-        ExecStopPost = "${pkgs.aorura-cli}/bin/aorura-cli ${cfg.devicePath} --set flash:blue";
+        ExecStopPost = "${pkgs.aorura}/bin/aorura-cli ${cfg.devicePath} --set flash:blue";
         RuntimeDirectory = "hpos-led-manager";
       };
     };

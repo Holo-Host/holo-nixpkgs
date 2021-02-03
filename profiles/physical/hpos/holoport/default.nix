@@ -11,4 +11,6 @@
   services.automount.enable = true;
 
   services.hpos-led-manager.devicePath = "/dev/ttyUSB0";
+
+  system.hpos.target = "holoport";
 }

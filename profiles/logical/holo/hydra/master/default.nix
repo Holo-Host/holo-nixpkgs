@@ -15,7 +15,6 @@ in
   nix.buildMachines = [
     {
       hostName = "localhost";
-      maxJobs = config.nix.maxJobs;
       supportedFeatures = [
         "benchmark"
         "big-parallel"
@@ -50,15 +49,25 @@ in
   nix.distributedBuilds = true;
 
   nix.extraOptions = ''
+    allowed-uris = https://github.com
     builders-use-substitutes = true
+    restrict-eval = false
   '';
+  
+  security.acme = {
+    acceptTerms = true;
+    # REVIEW: maybe a dedicated email for Hydra?
+    email = "oleksii.filonenko@holo.host";
+  };
 
-  services.postgresql.extraConfig = ''
-    max_connections = 1024
-  '';
+  services.postgresql.settings = {
+    max_connections = 1024;
+  };
 
   services.hydra = {
     enable = true;
+    # NOTE: necessary to use hydra-{migration,unstable}
+    package = pkgs.hydra;
     hydraURL = "https://${config.services.nginx.virtualHosts.hydra.serverName}";
     logo = ./logo.svg;
     notificationSender = "hydra@holo.host";
@@ -67,7 +76,7 @@ in
       binary_cache_public_uri = https://cache.holo.host
       evaluator_max_heap_size = ${toString (4 * 1024 * 1024 * 1024)}
       log_prefix = https://cache.holo.host/
-      max_concurrent_evals = 3
+      max_concurrent_evals = 1
       max_output_size = 17179869184
       server_store_uri = https://cache.holo.host?local-nar-cache=/var/cache/hydra/nar-cache
       store_uri = s3://${wasabiBucket}?endpoint=${wasabiEndpoint}&log-compression=br&ls-compression=br&parallel-compression=1&secret-key=/var/lib/hydra/queue-runner/keys/${signingKeyName}/secret&write-nar-listing=1
@@ -97,7 +106,8 @@ in
         "/".proxyPass = "http://localhost:${toString config.services.hydra.port}";
         "/favicon.ico".root = ./favicon;
       };
-      serverName = "hydra.holo.host";
+      # FIXME: remove after 20.03 is tested
+      serverName = "hydra-2003.holo.host";
     };
 
     # First HoloPort/HoloPort+ batch points to Hydra-based Nix channel on
