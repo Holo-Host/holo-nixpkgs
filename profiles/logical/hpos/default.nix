@@ -208,8 +208,8 @@ in
           version = "alpha7";
           /* dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha7/holo-hosting-app.dna.gz"; */
           dna_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha7/holo-hosting-app.dna.gz";
-            sha256 = "1dp7xznk0jhv9yswcpp68d9zi5wpl1xfwbh3mpl66zv62cpl12zq"; # To get sha run `nix-prefetch-url URL`
+            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha8/holo-hosting-app.dna.gz";
+            sha256 = "1yjmyh9c5dcvx1xasyxr22pnyi2ah7zmmnshfc3k5n61c5j6nx1s"; # To get sha run `nix-prefetch-url URL`
           };
         }
         {
