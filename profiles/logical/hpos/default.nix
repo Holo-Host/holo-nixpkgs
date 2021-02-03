@@ -137,7 +137,7 @@ in
         };
 
         "/auth/" = {
-          proxyPass = "http://127.0.0.1:2884";
+          proxyPass = "http://127.0.0.1:2883";
           extraConfig = ''
             internal;
             proxy_set_header X-Original-URI $request_uri;
