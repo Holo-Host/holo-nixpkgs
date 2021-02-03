@@ -205,7 +205,7 @@ in
         {
           app_id = "core-hha";
           uuid = "0001";
-          version = "alpha7";
+          version = "alpha8";
           /* dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha7/holo-hosting-app.dna.gz"; */
           dna_path = builtins.fetchurl {
             url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha8/holo-hosting-app.dna.gz";
