@@ -169,9 +169,9 @@ rec {
       meta.platforms = [ "x86_64-linux" ];
     };
 
-    virtualbox = (hpos.buildImage [ "${hpos.physical}/vm/virtualbox" ]) // {
-      meta.platforms = [ "x86_64-linux" ];
-    };
+    # virtualbox = (hpos.buildImage [ "${hpos.physical}/vm/virtualbox" ]) // {
+    #   meta.platforms = [ "x86_64-linux" ];
+    # };
   };
 
   hpos-admin-api = callPackage ./hpos-admin-api {
@@ -277,6 +277,11 @@ rec {
   });
 
   inherit (callPackage ./hpos-holochain-api {}) hpos-holochain-api;
+
+  hpos-holochain-client = callPackage ./hpos-holochain-client {
+    stdenv = stdenvNoCC;
+    python3 = python3.withPackages (ps: [ ps.click ps.requests ]);
+  };
 
   wrangler = callPackage ./wrangler {};
 
