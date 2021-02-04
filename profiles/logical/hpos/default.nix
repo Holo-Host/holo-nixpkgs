@@ -41,7 +41,7 @@ in
   # REVIEW: `true` breaks gtk+ builds (cairo dependency)
   environment.noXlibs = false;
 
-  environment.systemPackages = [ hc-state hpos-reset hpos-admin-client hpos-update-cli git ];
+  environment.systemPackages = [ hc-state hpos-reset hpos-admin-client hpos-update-cli git hpos-holochain-client ];
 
   networking.firewall.allowedTCPPorts = [ 443 ];
 
@@ -205,7 +205,7 @@ in
         {
           app_id = "core-hha";
           uuid = "0001";
-          version = "alpha8";
+          version = "alpha7";
           /* dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha7/holo-hosting-app.dna.gz"; */
           dna_path = builtins.fetchurl {
             url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha7/holo-hosting-app.dna.gz";
