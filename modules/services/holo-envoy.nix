@@ -18,8 +18,8 @@ in
 
   config = mkIf cfg.enable {
     systemd.services.holo-envoy = {
-      after = [ "network.target" "holochain-conductor.service" ];
-      requires = [ "holochain-conductor.service" ];
+      after = [ "network.target" "holochain.service" ];
+      requires = [ "holochain.service" ];
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
