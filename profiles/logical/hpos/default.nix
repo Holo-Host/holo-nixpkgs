@@ -43,7 +43,7 @@ in
 
   environment.systemPackages = [ hc-state hpos-reset hpos-admin-client hpos-update-cli git ];
 
-  networking.firewall.allowedTCPPorts = [ 443 ];
+  networking.firewall.allowedTCPPorts = [ 443 9000 ];
 
   networking.hostName = lib.mkOverride 1100 "hpos";
 
@@ -150,6 +150,11 @@ in
         "/hosting/" = {
           proxyPass = "http://127.0.0.1:4656";
           proxyWebsockets = true;   # TODO: add proxy_send_timeout, proxy_read_timeout HERE
+        };
+
+         "/trycp/" = {
+          proxyPass = "http://127.0.0.1:9000";
+          proxyWebsockets = true; 
         };
       };
     };
