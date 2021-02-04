@@ -37,8 +37,9 @@ mkYarnPackage rec {
 
   installPhase = ''
       mkdir $out
+      mv node_modules $out
       cd deps/@holo-host/envoy/
-      mv build node_modules websocket-wrappers server.js $out
+      mv build websocket-wrappers server.js $out
       makeWrapper ${nodejs}/bin/node $out/bin/${name} \
         --add-flags $out/server.js
   '';
