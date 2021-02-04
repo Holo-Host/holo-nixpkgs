@@ -135,13 +135,40 @@ rec {
     import "${holo-nixpkgs.path}/tests" { inherit pkgs; }
   );
 
-  inherit (callPackage ./holochain {
+  holochainMeta = callPackage ./holochain {
     inherit (rust.packages.stable) rustPlatform;
-  }) mkHolochainBinary holochain;
+  };
 
-  dna-util = mkHolochainBinary { crate = "dna_util"; };
+  inherit (holochainMeta)
+    # utility functions
+    mkHolochainBinary
+    mkHolochainAllBinaries
+    mkHolochainAllBinariesWithDeps
 
-  kitsune-p2p-proxy = mkHolochainBinary { crate = "kitsune_p2p/proxy"; };
+    # meta packages
+    holochainVersions
+
+    # expose all vesrions to make hydra build them
+    holochainAllBinariesWithDeps
+    ;
+
+  inherit (holochainAllBinariesWithDeps.hpos)
+    # packages with HPOS default versions
+    holochain
+    dna-util
+    kitsune-p2p-proxy
+    lair-keystore
+    ;
+
+  # expose main versions to make hydra build them
+  holochain_main = holochainAllBinariesWithDeps.main.holochain;
+  dna-util_main = holochainAllBinariesWithDeps.main.dna-util;
+  lair-keystore_main = holochainAllBinariesWithDeps.main.lair-keystore;
+  kitsune-p2p-proxy_main = holochainAllBinariesWithDeps.main.kitsune-p2p-proxy;
+  holochain_develop = holochainAllBinariesWithDeps.develop.holochain;
+  dna-util_develop = holochainAllBinariesWithDeps.develop.dna-util;
+  lair-keystore_develop = holochainAllBinariesWithDeps.develop.lair-keystore;
+  kitsune-p2p-proxy_develop = holochainAllBinariesWithDeps.develop.kitsune-p2p-proxy;
 
   holoport-nano-dtb = callPackage ./holoport-nano-dtb {};
 
@@ -205,10 +232,6 @@ rec {
       };
     }
   );
-
-  lair-keystore = callPackage ./lair-keystore {
-    inherit (rust.packages.stable) rustPlatform;
-  };
 
   libsodium = previous.libsodium.overrideAttrs (
     super: {

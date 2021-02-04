@@ -1,16 +1,16 @@
-{ stdenv, rustPlatform, fetchFromGitHub, perl, xcbuild, darwin, libsodium, openssl, pkgconfig, lib, callPackage }:
+{ stdenv, rustPlatform, fetchFromGitHub, perl, xcbuild, darwin, libsodium, openssl, pkgconfig, lib, callPackage, rust }:
 
-rec {
+let
   mkHolochainBinary = {
-      version ? "2021-02-02"
-      , rev ? "1624c137b4172d533e93d744542198f38b6b7dfe"
-      , sha256 ? "0fn08njj2rq8lfgnrggq35ssa24sncdhcmc34lc8hhwk26fcg65d"
-      , cargoSha256 ? "1g9x6bb4pwigxwq1bg980rxr9y5p8m90q71gsq629b4x8ikw331v"
+      version
+      , rev
+      , sha256
+      , cargoSha256
       , crate
       , ... } @ overrides: rustPlatform.buildRustPackage (lib.attrsets.recursiveUpdate {
     name = "holochain";
 
-    src = fetchFromGitHub {
+    src = lib.makeOverridable fetchFromGitHub {
       owner = "holochain";
       repo = "holochain";
       inherit rev sha256;
@@ -50,7 +50,79 @@ rec {
     "crate"
   ]));
 
-  holochain = mkHolochainBinary {
-    crate = "holochain";
+  mkHolochainAllBinaries = {
+    version
+    , rev
+    , sha256
+    , cargoSha256
+    , ...
+  } @ overrides : {
+    holochain = mkHolochainBinary ({
+      inherit version rev sha256 cargoSha256;
+      crate = "holochain";
+    } // overrides );
+
+    dna-util = mkHolochainBinary ({
+      inherit version rev sha256 cargoSha256;
+      crate = "dna_util";
+    } // overrides );
+
+    kitsune-p2p-proxy = mkHolochainBinary ({
+      inherit version rev sha256 cargoSha256;
+      crate = "kitsune_p2p/proxy";
+    } // overrides );
+  };
+
+  mkHolochainAllBinariesWithDeps = { version, rev, sha256, cargoSha256, otherDeps }:
+    mkHolochainAllBinaries {
+      inherit version rev sha256 cargoSha256;
+    }
+    // otherDeps
+    ;
+
+  lair-keystore-0_0_1-alpha_10 = callPackage ./lair-keystore {
+    inherit (rust.packages.stable) rustPlatform;
+  };
+
+  versions = import ./versions.nix;
+
+  versionsWithDeps = {
+    hpos = versions.hpos // {
+      otherDeps = {
+        lair-keystore = lair-keystore-0_0_1-alpha_10;
+      };
+    };
+
+    develop = versions.develop // {
+      otherDeps = {
+        lair-keystore = lair-keystore-0_0_1-alpha_10;
+      };
+    };
+
+    main = versions.main // {
+      otherDeps = {
+        lair-keystore = lair-keystore-0_0_1-alpha_10;
+      };
+    };
+  };
+in
+
+{
+  inherit
+    mkHolochainBinary
+    mkHolochainAllBinaries
+    mkHolochainAllBinariesWithDeps
+    ;
+
+  holochainVersions = versions;
+
+  holochainAllBinariesWithDeps = builtins.mapAttrs (_name: value:
+    mkHolochainAllBinariesWithDeps value
+  ) {
+    inherit (versionsWithDeps)
+      hpos
+      develop
+      main
+      ;
   };
 }
