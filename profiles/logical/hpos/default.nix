@@ -203,23 +203,23 @@ in
     install-list = {
       core_happs = [
         {
-          app_id = "core-hha";
+          app_id = "core-happs";
           uuid = "0001";
-          version = "alpha7";
-          /* dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha7/holo-hosting-app.dna.gz"; */
+          version = "alpha0";
+          /* dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha6/holo-hosting-app.dna.gz"; */
           dna_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha7/holo-hosting-app.dna.gz";
-            sha256 = "1dp7xznk0jhv9yswcpp68d9zi5wpl1xfwbh3mpl66zv62cpl12zq"; # To get sha run `nix-prefetch-url URL`
+            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha6/holo-hosting-app.dna.gz";
+            sha256 = "0z94sg70xi0p3sybi6w1i7rbrnj8pv60m91ybizma0wc5jwmlnq3"; # To get sha run `nix-prefetch-url URL`
           };
         }
         {
           app_id = "servicelogger";
           uuid = "0001";
-          version = "alpha5";
-          /* dna_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha5/servicelogger.dna.gz"; */
+          version = "alpha0";
+          /* dna_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha4/servicelogger.dna.gz"; */
           dna_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha5/servicelogger.dna.gz";
-            sha256 = "14wc0fiqv1jzhgpa9kqiyhg3ncn8p5vcmj9gmf2k1ah8izh8h70h"; # To get sha run `nix-prefetch-url URL`
+            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha4/servicelogger.dna.gz";
+            sha256 = "11w0a1fmm4js9i298ahzmwswv7sza2n0rv9nshl76nl0zi37bdi0"; # To get sha run `nix-prefetch-url URL`
           };
         }
       ];
