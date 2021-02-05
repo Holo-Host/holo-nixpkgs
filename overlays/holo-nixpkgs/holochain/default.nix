@@ -1,11 +1,11 @@
-{ stdenv, rustPlatform, fetchFromGitHub, perl, CoreServices, Security, libsodium, openssl, pkgconfig, lib, callPackage }:
+{ stdenv, rustPlatform, fetchFromGitHub, perl, xcbuild, darwin, libsodium, openssl, pkgconfig, lib, callPackage }:
 
 rec {
   mkHolochainBinary = {
-        version ? "2020-12-17"
-      , rev ? "5daac31fe21f5d10c192bbe208f0b11f8ee67d88"
-      , sha256 ? "1zv063ivgwajr0sidaccr4igy67ll87xnadnm3df6glcmqgy1b3h"
-      , cargoSha256 ? "0w0cn23y858q8jqq77nx5ax51hqan3n43rzzb4146k2f0430rjx6"
+      version ? "2021-02-02"
+      , rev ? "84414b6f80d3b357368318a4898704708bb6b5cf"
+      , sha256 ? "1gbch78n52lvh758fjz67iki8zw1abyrhs7a54hbybfq62vcvqxg"
+      , cargoSha256 ? "1g9x6bb4pwigxwq1bg980rxr9y5p8m90q71gsq629b4x8ikw331v"
       , crate
       , ... } @ overrides: rustPlatform.buildRustPackage (lib.attrsets.recursiveUpdate {
     name = "holochain";
@@ -23,17 +23,26 @@ rec {
       "--manifest-path=crates/${crate}/Cargo.toml"
     ];
 
-    nativeBuildInputs = [ perl pkgconfig ];
+    nativeBuildInputs = [ perl pkgconfig ] ++ stdenv.lib.optionals stdenv.isDarwin [
+      xcbuild
+    ];
 
-    buildInputs = [ openssl ] ++ stdenv.lib.optionals stdenv.isDarwin [
+    buildInputs = [ openssl ] ++ stdenv.lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
+      AppKit
+      CoreFoundation
       CoreServices
       Security
-    ];
+    ]);
 
     RUST_SODIUM_LIB_DIR = "${libsodium}/lib";
     RUST_SODIUM_SHARED = "1";
 
     doCheck = false;
+    meta.platforms = [
+        "aarch64-linux"
+        "x86_64-linux"
+        "x86_64-darwin"
+    ];
   } (builtins.removeAttrs overrides [
     "rev"
     "sha256"

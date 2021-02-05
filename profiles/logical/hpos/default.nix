@@ -43,7 +43,7 @@ in
 
   environment.systemPackages = [ hc-state hpos-reset hpos-admin-client hpos-update-cli git ];
 
-  networking.firewall.allowedTCPPorts = [ 443 ];
+  networking.firewall.allowedTCPPorts = [ 443 9000 ];
 
   networking.hostName = lib.mkOverride 1100 "hpos";
 
@@ -62,7 +62,7 @@ in
 
   services.holo-auth-client.enable = lib.mkDefault true;
 
-  services.holo-envoy.enable = true;
+  services.holo-envoy.enable = lib.mkDefault true;
 
   services.holo-router-agent.enable = lib.mkDefault true;
 
@@ -123,6 +123,10 @@ in
         "/api/v1/ws/" = {
           proxyPass = "http://127.0.0.1:42233";
           proxyWebsockets = true;
+          extraConfig = ''
+            proxy_send_timeout 1d;
+            proxy_read_timeout 1d;
+          '';
         };
 
         "/holochain-api/v1/" = {
@@ -145,7 +149,12 @@ in
 
         "/hosting/" = {
           proxyPass = "http://127.0.0.1:4656";
-          proxyWebsockets = true;
+          proxyWebsockets = true;   # TODO: add proxy_send_timeout, proxy_read_timeout HERE
+        };
+
+         "/trycp/" = {
+          proxyPass = "http://127.0.0.1:9000";
+          proxyWebsockets = true; 
         };
       };
     };
@@ -162,7 +171,7 @@ in
     '';
   };
 
-  services.holochain = {
+  services.holochain = lib.mkDefault {
     enable = true;
     working-directory = holochainWorkingDir;
     config = {
@@ -193,7 +202,7 @@ in
     };
   };
 
-  services.configure-holochain = {
+  services.configure-holochain = lib.mkDefault {
     enable = true;
     working-directory = configureHolochainWorkingDir;
     install-list = {
@@ -201,9 +210,10 @@ in
       self_hosted_happs = [
         {
           app_id = "elemental-chat";
+          uuid = "0001";
           version = "alpha14";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha19/elemental-chat.zip";
-          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha14/elemental-chat.dna.gz";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha20/elemental-chat.zip";
+          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha14/elemental-chat.dna.gz"; # this version mismatch is on purpose for hash alteration
         }
       ];
     };

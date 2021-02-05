@@ -1,4 +1,4 @@
-{ stdenv, rustPlatform, fetchFromGitHub }:
+{ stdenv, rustPlatform, fetchFromGitHub, lib, darwin }:
 
 rustPlatform.buildRustPackage {
   name = "lair-keystore";
@@ -11,6 +11,10 @@ rustPlatform.buildRustPackage {
   };
 
   cargoSha256 = "18cdxfzgd1j1v2ilvwpa8b6a9dh22myynqdj67bcwa1sbfvniaps";
+
+  buildInputs = lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
+    AppKit
+  ]);
 
   doCheck = false;
 }
