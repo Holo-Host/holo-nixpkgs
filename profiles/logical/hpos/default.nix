@@ -204,7 +204,7 @@ in
           agent_info_expires_after_ms = 1000 * 60 * 20; #// 20 minutes
           tls_in_mem_session_storage = 512;
           proxy_keepalive_ms = 1000 * 60 * 2;
-          proxy_to_expire_ms = 1000 * 6 * 5;
+          proxy_to_expire_ms = 1000 * 60 * 5;
         };
       };
     };
