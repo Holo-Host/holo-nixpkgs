@@ -139,9 +139,16 @@ To begin the upgrade immediately, use the following command:
 
 ### QEMU
 
-If you have Nix installed, checkout the repo, enter `nix-shell` and then run
-`hpos-shell`. That will launch a HoloPortOS VM against current state of your
-local checkout, which is useful for iterative development.
+If you have Nix installed, checkout the repo, enter `nix-shell` and then
+`hpos-shell` is available to you. Usage:
+```
+hpos-shell <attr>
+
+starts HPOS VM against local checkout of given profile.
+```
+where `<attr>` is one of the attributes of `hpos` from overlays. If no value given defaults to `qemu`. For example `hpos-shell tests` will start HPOS VM with the profile defined as in `holo-nixpkgs.hpos.test`.
+
+Very useful for iterative local development.
 
 ### VirtualBox
 
