@@ -11,7 +11,7 @@ in
     enable = mkEnableOption "AORURA Emulator";
 
     package = mkOption {
-      default = pkgs.aorura-emu;
+      default = pkgs.aorura;
       type = types.package;
     };
 
@@ -26,7 +26,7 @@ in
 
       serviceConfig = {
         DynamicUser = true;
-        ExecStart = "${pkgs.aorura-emu}/bin/aorura-emu ${cfg.path}";
+        ExecStart = "${pkgs.aorura}/bin/aorura-emu ${cfg.path}";
         PrivateDevices = true;
         RuntimeDirectory = "aorura-emu";
       };

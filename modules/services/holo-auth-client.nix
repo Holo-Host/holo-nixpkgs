@@ -11,7 +11,7 @@ in
     enable = mkEnableOption "Holo Auth Client";
 
     package = mkOption {
-      default = pkgs.holo-auth-client;
+      default = pkgs.holo-auth;
       type = types.package;
     };
   };

@@ -39,7 +39,7 @@ branches:
       restrictions:
         users:
           - peeech
-          - filalex77
+          - Br1ght0ne
         teams: []
   - name: master
     protection:
@@ -58,7 +58,7 @@ branches:
       restrictions:
         users:
           - peeech
-          - filalex77
+          - Br1ght0ne
         teams: []
   - name: hydra
     protection:
@@ -77,5 +77,5 @@ branches:
       restrictions:
         users:
           - peeech
-          - filalex77
+          - Br1ght0ne
         teams: []

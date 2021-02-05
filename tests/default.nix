@@ -3,7 +3,7 @@
 with pkgs;
 
 let
-  testing = import "${pkgs.path}/nixos/lib/testing.nix" {
+  testing = import "${pkgs.path}/nixos/lib/testing-python.nix" {
     inherit pkgs system;
   };
 
@@ -11,5 +11,5 @@ let
 in
 
 {
-  hpos-admin = callPackage ./hpos-admin {};
+  hpos-api-tests = callPackage ./hpos-api-tests {};
 }

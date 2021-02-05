@@ -15,7 +15,6 @@ in
   nix.buildMachines = [
     {
       hostName = "localhost";
-      maxJobs = config.nix.maxJobs;
       supportedFeatures = [
         "benchmark"
         "big-parallel"
@@ -50,15 +49,25 @@ in
   nix.distributedBuilds = true;
 
   nix.extraOptions = ''
+    allowed-uris = https://github.com
     builders-use-substitutes = true
+    restrict-eval = false
   '';
+  
+  security.acme = {
+    acceptTerms = true;
+    # REVIEW: maybe a dedicated email for Hydra?
+    email = "oleksii.filonenko@holo.host";
+  };
 
-  services.postgresql.extraConfig = ''
-    max_connections = 1024
-  '';
+  services.postgresql.settings = {
+    max_connections = 1024;
+  };
 
   services.hydra = {
     enable = true;
+    # NOTE: necessary to use hydra-{migration,unstable}
+    package = pkgs.hydra;
     hydraURL = "https://${config.services.nginx.virtualHosts.hydra.serverName}";
     logo = ./logo.svg;
     notificationSender = "hydra@holo.host";
@@ -97,7 +106,8 @@ in
         "/".proxyPass = "http://localhost:${toString config.services.hydra.port}";
         "/favicon.ico".root = ./favicon;
       };
-      serverName = "hydra.holo.host";
+      # FIXME: remove after 20.03 is tested
+      serverName = "hydra-2003.holo.host";
     };
 
     # First HoloPort/HoloPort+ batch points to Hydra-based Nix channel on
