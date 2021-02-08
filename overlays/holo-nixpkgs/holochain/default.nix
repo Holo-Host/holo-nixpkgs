@@ -2,8 +2,7 @@
 
 let
   mkHolochainBinary = {
-      version
-      , rev
+      rev
       , sha256
       , cargoSha256
       , crate
@@ -51,31 +50,30 @@ let
   ]));
 
   mkHolochainAllBinaries = {
-    version
-    , rev
+    rev
     , sha256
     , cargoSha256
     , ...
   } @ overrides : {
     holochain = mkHolochainBinary ({
-      inherit version rev sha256 cargoSha256;
+      inherit rev sha256 cargoSha256;
       crate = "holochain";
     } // overrides );
 
     dna-util = mkHolochainBinary ({
-      inherit version rev sha256 cargoSha256;
+      inherit rev sha256 cargoSha256;
       crate = "dna_util";
     } // overrides );
 
     kitsune-p2p-proxy = mkHolochainBinary ({
-      inherit version rev sha256 cargoSha256;
+      inherit rev sha256 cargoSha256;
       crate = "kitsune_p2p/proxy";
     } // overrides );
   };
 
-  mkHolochainAllBinariesWithDeps = { version, rev, sha256, cargoSha256, otherDeps }:
+  mkHolochainAllBinariesWithDeps = { rev, sha256, cargoSha256, otherDeps }:
     mkHolochainAllBinaries {
-      inherit version rev sha256 cargoSha256;
+      inherit rev sha256 cargoSha256;
     }
     // otherDeps
     ;
