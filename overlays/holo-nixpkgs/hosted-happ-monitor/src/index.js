@@ -5,7 +5,6 @@ const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const argv = yargs(hideBin(process.argv)).argv
 const { HAPP_PORT, getAppIds } = require("./const")
-const appId = await getAppIds().HHA
 
 // Get Mongodb creds from file
 if (!argv.configPath) throw new Error('hosted-happ-monitor requires --config-path option.');
@@ -20,7 +19,7 @@ const url = `mongodb+srv://${username}:${password}@cluster0.hjwna.mongodb.net/${
 const client = new MongoClient(url);
 
 const main = async () => {
-
+  const appId = await getAppIds().HHA
   const appWebsocket = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`);
   const appInfo = await appWebsocket.appInfo({ installed_app_id: appId });
 
