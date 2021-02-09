@@ -120,10 +120,10 @@ in
 #    email = "oleksii.filonenko@holo.host";
 #  };
 
-  system.holo-nixpkgs.autoUpgrade = {
-    enable = true;
-    dates = "*:0/10";
-  };
+  # system.holo-nixpkgs.autoUpgrade = {
+  #   enable = true;
+  #   dates = "*:0/10";
+  # };
 
   users.groups.apis = {};
 
