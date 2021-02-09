@@ -54,7 +54,7 @@ const upload = async(happList) => {
   const collection = db.collection('happ_list');
 
   let collection_list = await db.listCollections().toArray();
-  if (collection_list.includes('happ_list')) {
+  if (collection_list.some(e => e.name === 'happ_list')) {
     await collection.drop();
   };
   await collection.insertMany(happList);
