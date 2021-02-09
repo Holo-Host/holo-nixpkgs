@@ -3,18 +3,31 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
+  "bin": {
+    "hpos-holochain-api": "src/index.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.config.cjs"
+    "test": "jest --forceExit",
+    "build": "webpack --config webpack.config.cjs",
+    "fetch-dnas": "sh ./scripts/fetch-dna.sh",
+    "holochain": "holochain-run-dna -c ./tests/config.yml -a 4444"
   },
   "author": "robbie.carlton@holo.host",
   "license": "ISC",
   "dependencies": {
-    "@holochain/conductor-api": "0.0.1-dev.12",
+    "@holochain/conductor-api": "0.0.1-dev.16",
+    "@msgpack/msgpack": "^2.3.0",
     "express": "^4.17.1",
-    "yargs": "^16.1.0"
+    "fs": "0.0.1-security",
+    "jest": "^26.6.3",
+    "js-yaml": "^4.0.0",
+    "request": "^2.88.2",
+    "supertest": "^6.1.1",
+    "tmp": "^0.2.1",
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
+    "@holochain-open-dev/holochain-run-dna": "^0.3.1",
     "webpack": "^5.4.0",
     "webpack-cli": "^4.2.0"
   }

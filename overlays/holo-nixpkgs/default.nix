@@ -145,11 +145,12 @@ rec {
   );
 
   inherit (callPackage ./holochain {
-    inherit (darwin.apple_sdk.frameworks) CoreServices Security;
     inherit (rust.packages.stable) rustPlatform;
   }) mkHolochainBinary holochain;
 
   dna-util = mkHolochainBinary { crate = "dna_util"; };
+
+  kitsune-p2p-proxy = mkHolochainBinary { crate = "kitsune_p2p/proxy"; };
 
   holoport-nano-dtb = callPackage ./holoport-nano-dtb {};
 
@@ -168,7 +169,7 @@ rec {
       meta.platforms = [ "x86_64-linux" ];
     };
 
-    virtualbox = (hpos.buildImage [ "${hpos.physical}/vm/virtualbox" ]) // {
+    test = (buildImage [ "${hpos.physical}/vm/qemu" "${hpos.logical}/sandbox/test"]) // {
       meta.platforms = [ "x86_64-linux" ];
     };
   };
@@ -286,6 +287,16 @@ rec {
   inherit (callPackage ./hpos-holochain-api {}) hpos-holochain-api;
 
   inherit (callPackage ./hosted-happ-monitor {}) hosted-happ-monitor;
+
+  # here for testing purposes only for trycp_server installation
+  tryorama = callPackage ./tryorama {
+    inherit (rust.packages.stable) rustPlatform;
+  };
+
+  hpos-holochain-client = callPackage ./hpos-holochain-client {
+    stdenv = stdenvNoCC;
+    python3 = python3.withPackages (ps: [ ps.click ps.requests ]);
+  };
 
   wrangler = callPackage ./wrangler {};
 
