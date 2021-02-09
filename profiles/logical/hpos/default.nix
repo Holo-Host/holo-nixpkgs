@@ -92,12 +92,12 @@ in
           '';
         };
 
-        # "/apps/" = {
-        #   alias = "${configureHolochainWorkingDir}/uis/";
-        #   extraConfig = ''
-        #     limit_req zone=zone1 burst=30;
-        #   '';
-        # };
+        "/apps/" = {
+          alias = "${configureHolochainWorkingDir}/uis/";
+          extraConfig = ''
+            limit_req zone=zone1 burst=30;
+          '';
+        };
 
         "~ ^/admin(?:/.*)?$" = {
             extraConfig = ''
@@ -213,13 +213,13 @@ in
     install-list = {
       core_happs = [];
       self_hosted_happs = [
-        # {
-        #   app_id = "elemental-chat";
-        #   uuid = "0003";
-        #   version = "alpha17";
-        #   ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha23/elemental-chat-0003.zip";
-        #   dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha17/elemental-chat.dna.gz"; # this version mismatch is on purpose for hash alteration
-        # }
+        {
+          app_id = "elemental-chat";
+          uuid = "0003";
+          version = "alpha17";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha23/elemental-chat-0003.zip";
+          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha17/elemental-chat.dna.gz"; # this version mismatch is on purpose for hash alteration
+        }
       ];
     };
   };
