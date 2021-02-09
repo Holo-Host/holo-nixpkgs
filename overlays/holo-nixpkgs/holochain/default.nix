@@ -2,10 +2,10 @@
 
 rec {
   mkHolochainBinary = {
-      version ? "2021-01-18"
-      , rev ? "b3b5f0171d93249189ac84b81f3fd3dbaa7d2528"
-      , sha256 ? "10sjf09qxsrmnq3as8ar49zh1xlqzr7q08dg80rjhmz8mp1k8rp3"
-      , cargoSha256 ? "11p0lc9p9y4rs4xf4ca9h5glkdb41a252fqdmas8s0h36rw9bwkz"
+      version ? "2021-02-02"
+      , rev ? "84414b6f80d3b357368318a4898704708bb6b5cf"
+      , sha256 ? "1gbch78n52lvh758fjz67iki8zw1abyrhs7a54hbybfq62vcvqxg"
+      , cargoSha256 ? "1g9x6bb4pwigxwq1bg980rxr9y5p8m90q71gsq629b4x8ikw331v"
       , crate
       , ... } @ overrides: rustPlatform.buildRustPackage (lib.attrsets.recursiveUpdate {
     name = "holochain";
@@ -28,6 +28,7 @@ rec {
     ];
 
     buildInputs = [ openssl ] ++ stdenv.lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
+      AppKit
       CoreFoundation
       CoreServices
       Security

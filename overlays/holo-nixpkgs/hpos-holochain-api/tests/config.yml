@@ -1,0 +1,11 @@
+# HoloHosting App
+- dnas:
+  - ./dnas/holo-hosting-app.dna.gz
+  app_name: core-happs:alpha0
+  app_port: 42233
+
+# Servicelogger App
+- dnas:
+  - ./dnas/servicelogger.dna.gz
+  app_name: servicelogger:alpha0
+  app_port: 42233

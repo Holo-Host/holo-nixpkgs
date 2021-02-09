@@ -4,6 +4,15 @@ with pkgs;
 
 let
   root = toString ./.;
+
+  extraSubstitutors = [
+    "https://cache.holo.host"
+  ];
+  trustedPublicKeys = [
+    "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    "cache.holo.host-1:lNXIXtJgS9Iuw4Cu6X0HINLu9sTfcjEntnrgwMQIMcE="
+    "cache.holo.host-2:ZJCkX3AUYZ8soxTLfTb60g+F3MkWD7hkH9y8CgqwhDQ="
+  ];
 in
 
 mkShell {
@@ -15,7 +24,9 @@ mkShell {
     }
 
     hpos-shell() {
-      drv=$(nix-build ${root} --attr hpos.qemu --no-out-link --show-trace)
+      drv=$(nix-build ${root} --attr hpos.qemu --no-out-link --show-trace \
+          --option extra-substituters "${builtins.concatStringsSep " " extraSubstitutors}" \
+          --option trusted-public-keys  "${builtins.concatStringsSep " " trustedPublicKeys}" )
       [ -z "$drv" ] || "$drv/bin/run-hpos-vm"
     }
 
