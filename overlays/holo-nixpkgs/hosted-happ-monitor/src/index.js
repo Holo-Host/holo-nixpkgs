@@ -4,8 +4,8 @@ const { AppWebsocket } = require('@holochain/conductor-api');
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const argv = yargs(hideBin(process.argv)).argv
-const appPort = 42233;
-const appId = 'core-hha:0.0.1-alpha5';
+const { HAPP_PORT, getAppIds } = require("./const")
+const appId = await getAppIds().HHA
 
 // Get Mongodb creds from file
 if (!argv.configPath) throw new Error('hosted-happ-monitor requires --config-path option.');
@@ -21,7 +21,7 @@ const client = new MongoClient(url);
 
 const main = async () => {
 
-  const appWebsocket = await AppWebsocket.connect(`ws://localhost:${appPort}`);
+  const appWebsocket = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`);
   const appInfo = await appWebsocket.appInfo({ installed_app_id: appId });
 
   if (!appInfo) {
