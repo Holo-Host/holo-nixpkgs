@@ -21,6 +21,7 @@ in
   };
 
   config = mkIf (cfg.enable) {
+    environment.systemPackages = [ cfg.package pkgs.nodejs ];
 
     systemd.services.hosted-happ-monitor = {
       after = [ "network.target" "holochain.service" "configure-holochain.service"];
@@ -28,23 +29,10 @@ in
       startAt = "*:5/15";
 
       serviceConfig = {
-        ExecStart = "${cfg.package}/bin/hosted-happ-monitor --config-path=${cfg.credentialsDir}/config.json";
+        ExecStart = "${pkgs.nodejs}/bin/node --no-warnings ${cfg.package}/bin/hosted-happ-monitor --config-path=${cfg.credentialsDir}/config.json";
         Type = "oneshot";
-        User = "hosted-happ-monitor";
-        UMask = "0002";
+        User = "root";
       };
     };
-    
-    users.users.hosted-happ-monitor = {
-      isSystemUser = true;
-      home = "${cfg.credentialsDir}";
-      # ensures directory is owned by user
-      createHome = true;
-    };
-
-    systemd.tmpfiles.rules = [
-      "d ${cfg.credentialsDir} 0755 hosted-happ-monitor - - -"
-      "d /run/hosted-happ-monitor 0770 hosted-happ-monitor - - -"
-    ];
   };
 }
