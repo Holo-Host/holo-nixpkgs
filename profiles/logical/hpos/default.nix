@@ -218,10 +218,10 @@ in
       self_hosted_happs = [
         {
           app_id = "elemental-chat";
-          uuid = "0001";
+          uuid = "0002";
           version = "alpha19";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha27/elemental-chat-for-dna-alpha19-0001.zip";
-          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha19/elemental-chat.dna.gz"; # this version mismatch is on purpose for hash alteration
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha27/elemental-chat-for-dna-alpha19-0002.zip";
+          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha19/elemental-chat.dna.gz";
         }
       ];
     };
