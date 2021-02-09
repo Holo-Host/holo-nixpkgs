@@ -29,7 +29,7 @@ in
       startAt = "*:5/15";
 
       serviceConfig = {
-        ExecStart = "${pkgs.nodejs}/bin/node --no-warnings ${cfg.package}/main.js --config-path=${cfg.credentialsDir}/config.json";
+        ExecStart = "${cfg.package}/bin/hosted-happ-monitor --config-path=${cfg.credentialsDir}/config.json";
         Type = "oneshot";
         User = "root";
       };

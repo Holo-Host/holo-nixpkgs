@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require('fs');
 const MongoClient = require('mongodb').MongoClient;
 const { AppWebsocket } = require('@holochain/conductor-api');
