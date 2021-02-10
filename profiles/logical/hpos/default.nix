@@ -220,7 +220,7 @@ in
           app_id = "elemental-chat";
           uuid = "0002";
           version = "alpha19";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha27/elemental-chat-for-dna-alpha19-0002.zip";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha28/elemental-chat-for-dna-alpha19-0002.zip";
           dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha19/elemental-chat.dna.gz";
         }
       ];
