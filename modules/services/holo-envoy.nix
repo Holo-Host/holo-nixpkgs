@@ -25,6 +25,7 @@ in
 
       preStart = ''
         mkdir -p ${holochain-home}/lair-shim
+        rm -rf ${holochain-home}/lair-shim/*
       '';
 
       serviceConfig = {
