@@ -58,23 +58,12 @@ in
     install-list = {
       self_hosted_happs = [];
       core_happs = [{
-          app_id = "core-happs";
-          uuid = "0001";
-          version = "alpha9";
-          dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha9/holo-hosting-app.dna.gz";
-        }
-        {
-          app_id = "servicelogger";
-          uuid = "0001";
-          version = "alpha5";
-          dna_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha5/servicelogger.dna.gz";
+          # app_id = "joining-code-happ";
+          # uuid = "0001";
+          # version = "alpha1";
+          # dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha9/holo-hosting-app.dna.gz";
         }];
     };
-  };
-
-  services.hosted-happ-monitor = {
-    enable = true;
-    credentialsDir = matchServerCredentialsDir;
   };
 
 #  security.acme = {
