@@ -29,7 +29,7 @@ in
 
     systemd.services.holochain = {
       after = [ "network.target" "lair-keystore.service" "holo-envoy.service" ];
-      requires = [ "lair-keystore.service" ];
+      requires = [ "lair-keystore.service" "holo-envoy.service" ];
       wantedBy = [ "multi-user.target" ];
 
       #environment.RUST_LOG = "debug";
