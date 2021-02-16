@@ -11,7 +11,7 @@ in
     enable = mkEnableOption "HP Admin Crypto server";
 
     package = mkOption {
-      default = pkgs.hp-admin-crypto-server;
+      default = pkgs.hp-admin-crypto;
       type = types.package;
     };
   };

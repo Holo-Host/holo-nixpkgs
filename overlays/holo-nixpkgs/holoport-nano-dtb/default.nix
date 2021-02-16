@@ -13,7 +13,6 @@ stdenv.mkDerivation {
   nativeBuildInputs = [ dtc ];
 
   patches = [
-    ./a64-ths.patch
     ./uart2.diff
   ];
 

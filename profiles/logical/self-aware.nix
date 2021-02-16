@@ -16,8 +16,8 @@ in
     lib.stringAfter [ "etc" "users" ] ''
       ${config.nix.package}/bin/nix ping-store --no-net
 
-      if [ ! -e /root/.nix-channels ]; then
-        echo "${config.system.defaultChannel} holo-nixpkgs" > "/root/.nix-channels"
+      if [ ! -e /run/.nix-channels ]; then
+        echo "${config.system.defaultChannel} holo-nixpkgs" > "/run/.nix-channels"
       fi
     ''
   );
