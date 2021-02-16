@@ -94,7 +94,7 @@ in
       enableACME = true;
       forceSSL = true;
       locations = {
-        "/".proxyPass = "http://localhost:${toString config.services.hydra.port}";
+        "/".proxyPass = "http://127.0.0.1:${toString config.services.hydra.port}";
         "/favicon.ico".root = ./favicon;
       };
       serverName = "hydra.holo.host";
