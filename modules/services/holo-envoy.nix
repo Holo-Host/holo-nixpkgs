@@ -23,8 +23,11 @@ in
       requires = [ "lair-keystore.service" ];
       requiredBy = [ "holochain.service" ];
       wantedBy = [ "multi-user.target" ];
-      unitConfig.ConditionPathExists = "${cfg.working-directory}/lair-shim/socket";
-      partof = [ "holochain.service" ]; # If holochain restarts, envoy should restart too
+      
+      unitConfig = {
+        ConditionPathExists = "${cfg.working-directory}/lair-shim/socket";
+        partOf = [ "holochain.service" ]; # If holochain restarts, envoy should restart too
+      };
 
       preStart = ''
         mkdir -p ${holochain-home}/lair-shim
