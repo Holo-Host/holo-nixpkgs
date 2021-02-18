@@ -30,7 +30,7 @@ in {
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ udevil ];
 
-    systemd.user.services.devmon = {
+    systemd.services.devmon = {
       description = "devmon automatic device mounting daemon";
       wantedBy = [ "default.target" ];
       path = with pkgs; [ udevil procps udisks2 which ];
