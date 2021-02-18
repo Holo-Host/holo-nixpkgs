@@ -1,4 +1,4 @@
-{ lib, writeText }: { owner, repo, branches, pullRequests }:
+{ lib, writeText }: { owner, repo, branches, pullRequests ? null }:
 
 let
   toJobset = { url, ref }: {
@@ -29,7 +29,7 @@ let
   };
 
   jobsets =
-    lib.mapAttrs pullRequestToJobset (lib.importJSON pullRequests) // lib.genAttrs branches branchToJobset;
+    lib.mapAttrs pullRequestToJobset (if pullRequests != null then (lib.importJSON pullRequests) else {}) // lib.genAttrs branches branchToJobset;
 in
 
 {
