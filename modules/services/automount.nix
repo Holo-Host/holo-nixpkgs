@@ -37,7 +37,7 @@ in {
       serviceConfig.ExecStart = let
         systemdEscape = command: builtins.replaceStrings [ "%" ] [ "%%" ] command;
         args = map (command: ''--exec-on-drive "${systemdEscape command}"'') cfg.execOnDrive;
-      in toString ([ "${pkgs.udevil}/bin/devmon" ] ++ args);
+      in toString ([ "${pkgs.udevil}/bin/devmon" "--mount-options umask=0002,uid=root,gid=apis"] ++ args);
     };
 
     services.udisks2.enable = true;
