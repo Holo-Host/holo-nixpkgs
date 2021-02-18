@@ -22,6 +22,7 @@ in
 
     systemd.services.lair-keystore = {
       after = [ "network.target" ];
+      requiredBy = [ "holo-envoy.service" ];
       wantedBy = [ "multi-user.target" ];
 
       preStart = ''

@@ -30,8 +30,8 @@ in
     systemd.services.holochain = {
       after = [ "network.target" "lair-keystore.service" "holo-envoy.service" ];
       requires = [ "lair-keystore.service" "holo-envoy.service" ];
-      wantedBy = [ "multi-user.target" ];
-
+      wantedBy = [ "multi-user.target" "holochain.service" ];
+      ConditionPathExists = "${cfg.working-directory}/lair-shim/socket";
       #environment.RUST_LOG = "debug";
 
       preStart = ''
@@ -44,6 +44,7 @@ in
         Group = "holochain-rsm";
         ExecStart = "${cfg.package}/bin/holochain -c ${cfg.working-directory}/holochain-config.yaml";
         StateDirectory = "holochain-rsm";
+        Restart = "always";
       };
     };
 
