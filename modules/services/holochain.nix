@@ -31,7 +31,7 @@ in
       after = [ "network.target" "lair-keystore.service" "holo-envoy.service" ];
       requires = [ "lair-keystore.service" "holo-envoy.service" ];
       wantedBy = [ "multi-user.target" "holochain.service" ];
-      ConditionPathExists = "${cfg.working-directory}/lair-shim/socket";
+      unitConfig.ConditionPathExists = "${cfg.working-directory}/lair-shim/socket";
       #environment.RUST_LOG = "debug";
 
       preStart = ''
