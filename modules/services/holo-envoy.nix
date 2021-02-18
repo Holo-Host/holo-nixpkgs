@@ -21,10 +21,10 @@ in
     systemd.services.holo-envoy = {
       after = [ "network.target" "lair-keystore.service" ];
       requires = [ "lair-keystore.service" ];
-      requiredBy = [ "holochain.service" ]
+      requiredBy = [ "holochain.service" ];
       wantedBy = [ "multi-user.target" ];
       ConditionPathExists = "${cfg.working-directory}/lair-shim/socket";
-      partof = [ "holochain.service" ] # If holochain restarts, envoy should restart too
+      partof = [ "holochain.service" ]; # If holochain restarts, envoy should restart too
 
       preStart = ''
         mkdir -p ${holochain-home}/lair-shim
