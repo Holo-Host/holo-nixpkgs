@@ -45,8 +45,6 @@ rec {
 
   inherit (callPackage ./holo-router {}) holo-router;
 
-  inherit (callPackage hp-admin {}) hp-admin-ui;
-
   inherit (callPackage ./hp-admin-crypto {}) hp-admin-crypto;
 
   inherit (callPackage ./hpos-config {}) hpos-config;
