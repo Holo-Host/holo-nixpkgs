@@ -30,14 +30,14 @@ in {
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ udevil ];
 
-    systemd.services.devmon = {
+    systemd.user.services.devmon = {
       description = "devmon automatic device mounting daemon";
       wantedBy = [ "default.target" ];
       path = with pkgs; [ udevil procps udisks2 which ];
       serviceConfig.ExecStart = let
         systemdEscape = command: builtins.replaceStrings [ "%" ] [ "%%" ] command;
         args = map (command: ''--exec-on-drive "${systemdEscape command}"'') cfg.execOnDrive;
-      in toString ([ "${pkgs.udevil-patched}/bin/devmon" "--mount-options umask=0002,uid=root,gid=apis"] ++ args);
+      in toString ([ "${pkgs.udevil-patched}/bin/devmon" "--mount-options umask=0002,gid=apis"] ++ args);
     };
 
     services.udisks2.enable = true;
