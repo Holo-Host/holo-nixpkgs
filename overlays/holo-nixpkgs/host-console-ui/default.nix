@@ -7,7 +7,7 @@
       owner = "holo-host";
       repo = "host-console-ui";
       rev = "475f80fe3ef1214a704f5efeba2fc220a9729cc6";
-      sha256 = "10m83c8kxp0mn9xxsx5i1lagc25l0gxi0jkc1mzwdv4vjh11a3gl";
+      sha256 = "0nfrkq2cj604yb35dy5cb4im4k0sz54m31n45xpkc0x3lrh0yzjg";
     };
 
     packageJSON = "${src}/package.json";
