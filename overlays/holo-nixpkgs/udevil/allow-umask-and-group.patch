@@ -1,0 +1,94 @@
+diff --git a/etc/udevil.conf b/etc/udevil.conf
+index 75a4c0d..a06b800 100644
+--- a/etc/udevil.conf
++++ b/etc/udevil.conf
+@@ -4,7 +4,7 @@
+ #
+ # This file controls what devices, networks, and files users may mount and
+ # unmount via udevil (set suid).
+-# 
++#
+ # IMPORTANT:  IT IS POSSIBLE TO CREATE SERIOUS SECURITY PROBLEMS IF THIS FILE
+ # IS MISCONFIGURED - EDIT WITH CARE
+ #
+@@ -108,7 +108,7 @@ allowed_media_dirs = /media, /media/$USER, /run/media/$USER
+ # or unmount.  If a device is not listed in allowed_devices, it cannot be
+ # un/mounted (unless in fstab).  However, even if a device is listed, other
+ # factors may prevent its use.  For example, access to system internal devices
+-# will be denied to normal users even if they are included in allowed_devices.  
++# will be denied to normal users even if they are included in allowed_devices.
+ # allowed_devices_FSTYPE, if present, is used to override allowed_devices when
+ # mounting or unmounting a specific fstype (eg ext3, ntfs).  For example, to
+ # prevent all block devices containing an ext4 filesystem from being
+@@ -141,7 +141,7 @@ allowed_devices = /dev/*
+ # For example, to allow un/mounting of an internal filesystem based on UUID:
+ # allowed_internal_uuids = cc0c4489-8def-1e5b-a304-ab87c3cb626c0
+ # WARNING:  SETTING A SYSTEM DEVICE HERE CAN CAUSE SERIOUS SECURITY PROBLEMS.
+-# allowed_internal_uuids = 
++# allowed_internal_uuids =
+ 
+ 
+ # forbidden_devices is used to prevent block devices from being un/mounted
+@@ -159,7 +159,7 @@ forbidden_devices =
+ # allowed_networks determines what hosts may be un/mounted by udevil users when
+ # using nfs, cifs, smbfs, curlftpfs, ftpfs, or sshfs.  Hosts may be specified
+ # using a hostname (eg myserver.com) or IP address (192.168.1.100).
+-# Wildcards may be used in hostnames and IP addresses, but CIDR notation 
++# Wildcards may be used in hostnames and IP addresses, but CIDR notation
+ # (192.168.1.0/16) is NOT supported.  IP v6 is supported.  For example:
+ # allowed_networks = 127.0.0.1, 192.168.1.*, 10.0.0.*, localmachine, *.okay.com
+ # Or, to prevent un/mounting of any network shares, set:
+@@ -178,7 +178,7 @@ allowed_networks = *
+ # NO REVERSE LOOKUP IS PERFORMED, so including bad.com will only have an effect
+ # if the user uses that hostname.  IP lookup is always performed, so forbidding
+ # an IP address will also forbid all corresponding hostnames.
+-forbidden_networks = 
++forbidden_networks =
+ 
+ 
+ # allowed_files is used to determine what files in what directories may be
+@@ -201,7 +201,7 @@ allowed_files = *
+ # for "forbidden_files = *", or a /** suffix, which matches all recursively.
+ # NOTE: file paths are canonicalized before being tested, so forbidding
+ # a link to a file will have no effect.
+-forbidden_files = 
++forbidden_files =
+ 
+ 
+ # default_options specifies what options are always included when performing
+@@ -220,7 +220,7 @@ default_options_file      = nosuid, noexec, nodev, noatime, uid=$UID, gid=$GID,
+ # mount iso9660 with 'ro' to prevent mount read-only warning
+ default_options_iso9660   = nosuid, noexec, nodev, noatime, uid=$UID, gid=$GID, ro, utf8
+ default_options_udf       = nosuid, noexec, nodev, noatime, uid=$UID, gid=$GID
+-default_options_vfat      = nosuid, noexec, nodev, noatime, fmask=0133, dmask=0022, uid=$UID, gid=$GID, utf8
++default_options_vfat      = nosuid, noexec, nodev, noatime, uid=$UID, gid=$GID, utf8
+ default_options_exfat     = nosuid, noexec, nodev, noatime, umask=0077, uid=$UID, gid=$GID, iocharset=utf8, namecase=0, nonempty
+ default_options_msdos     = nosuid, noexec, nodev, noatime, fmask=0133, dmask=0022, uid=$UID, gid=$GID
+ default_options_umsdos    = nosuid, noexec, nodev, noatime, fmask=0133, dmask=0022, uid=$UID, gid=$GID
+@@ -245,7 +245,7 @@ default_options_ramfs     = nosuid, noexec, nodev, noatime, uid=$UID, gid=$GID
+ # and GID.
+ # If you want to forbid remounts, remove 'remount' from here.
+ # WARNING:  OPTIONS HERE CAN CAUSE SERIOUS SECURITY PROBLEMS - CHOOSE CAREFULLY
+-allowed_options           = nosuid, noexec, nodev, noatime, fmask=0133, dmask=0022, uid=$UID, gid=$GID, ro, rw, sync, flush, iocharset=*, utf8, remount
++allowed_options           = nosuid, noexec, nodev, noatime, umask=0002, uid=$UID, gid=*, ro, rw, sync, flush, iocharset=*, utf8, remount
+ allowed_options_nfs       = nosuid, noexec, nodev, noatime, ro, rw, sync, remount, port=*, rsize=*, wsize=*, hard, proto=*, timeo=*, retrans=*
+ allowed_options_cifs      = nosuid, noexec, nodev, ro, rw, remount, port=*, user=*, username=*, pass=*, password=*, guest, domain=*, uid=$UID, gid=$GID, credentials=*
+ allowed_options_smbfs     = nosuid, noexec, nodev, ro, rw, remount, port=*, user=*, username=*, pass=*, password=*, guest, domain=*, uid=$UID, gid=$GID, credentials=*
+@@ -302,7 +302,7 @@ mount_point_mode_ftpfs =
+ 
+ # validate_rootexec works similarly to validate_exec, except that the program
+ # is run as root.  validate_rootexec will also be run if the root user runs
+-# udevil.  If both validate_exec and validate_rootexec are specified, 
++# udevil.  If both validate_exec and validate_rootexec are specified,
+ # validate_rootexec will run first, followed by validate_exec.
+ # The program must return an exit status of 0 to allow the mount or unmount
+ # to proceed.  If it returns non-zero, the user will be denied permission.
+@@ -312,7 +312,7 @@ mount_point_mode_ftpfs =
+ # validate_rootexec =
+ 
+ 
+-# success_exec is run after a successful mount, remount, or unmount.  The 
++# success_exec is run after a successful mount, remount, or unmount.  The
+ # program is run as a normal user (if root runs udevil, success_exec
+ # will NOT be run).
+ # The program is passed the username, a printable description of what action
