@@ -126,7 +126,7 @@ rec {
 
   udevil-patched = udevil.overrideAttrs (
     super: {
-      patches = [
+      patches = super.patches ++ [
         ./udevil/allow-umask-and-group.patch
       ];
     }
