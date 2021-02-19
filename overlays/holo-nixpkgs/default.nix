@@ -18,13 +18,6 @@ let
     sha256 = "0jrh5ghisaqdd0vldbywags20m2cxpkbbk5jjjmwaw0gr8nhsafv";
   };
 
-  hp-admin = fetchFromGitHub {
-    owner = "Holo-Host";
-    repo = "hp-admin";
-    rev = "e8cad8561580e028d917685539f44d53025c4ea5";
-    sha256 = "0mvhlgp6nlv069wvbc5nbd8229i3fjzyk0qszlmkv9hp0jyph51y";
-  };
-
   nixpkgs-mozilla = fetchTarball {
     url = "https://github.com/mozilla/nixpkgs-mozilla/archive/8c007b60731c07dd7a052cce508de3bb1ae849b4.tar.gz";
     sha256 = "1zybp62zz0h077zm2zmqs2wcg3whg6jqaah9hcl1gv4x8af4zhs6";
@@ -51,8 +44,6 @@ rec {
   inherit (callPackage ./holo-auth {}) holo-auth;
 
   inherit (callPackage ./holo-router {}) holo-router;
-
-  inherit (callPackage hp-admin {}) hp-admin-ui;
 
   inherit (callPackage ./hp-admin-crypto {}) hp-admin-crypto;
 
