@@ -124,6 +124,14 @@ rec {
     inherit (rust.packages.stable) rustPlatform;
   };
 
+  udevil-patched = udevil.overrideAttrs (
+    super: {
+      patches = [
+        ./udevil/allow-umask-and-group.patch
+      ];
+    }
+  );
+
   extlinux-conf-builder = callPackage ./extlinux-conf-builder {};
 
   hc-state = writeShellScriptBin "hc-state" ''
