@@ -5,26 +5,20 @@ const express = require('express')
 const app = express()
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
+yargs(hideBin(process.argv))
 const { UNIX_SOCKET, HAPP_PORT, ADMIN_PORT } = require('./const')
 const { callZome, createAgent, listInstalledApps, installHostedHapp } = require('./api')
 const { parsePreferences, formatBytesByUnit } = require('./utils')
 const { getAppIds, getReadOnlyPubKey } = require('./const')
 const { AdminWebsocket, AppWebsocket } = require('@holochain/conductor-api')
-yargs(hideBin(process.argv))
 
-app.get('/hosted_happs', async (timeInterval, res) => {
-  let happs
+const getPresentedHapps = async (timeInterval) => {
   const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
-  try {
-    const APP_ID = await getAppIds()
-    happs = await callZome(appWs, APP_ID.HHA, 'hha', 'get_happs', null)
-  } catch (e) {
-    console.log('error from /hosted_happs:', e)
-    return res.status(501).send(`hpos-holochain-api error: ${e}`)
-  }
+  const APP_ID = await getAppIds()
+  const happs = await callZome(appWs, APP_ID.HHA, 'hha', 'get_happs', null)
   const presentedHapps = []
   for (let i = 0; i < happs.length; i++) {
-    let appStats, enabled, sourceChains, duration, bandwidth, cpu, usage
+    let appStats, enabled, sourceChains, duration, bandwidth, cpu, usage, diskUsage
     try {
       // nb: servicelogger bandwidth payload is calcalated with Bytes (not bits)
       appStats = await callZome(appWs, `${happs[i].happ_id}::servicelogger`, 'service', 'get_happ_usage', timeInterval)
@@ -36,14 +30,20 @@ app.get('/hosted_happs', async (timeInterval, res) => {
     if (!appStats) {
       enabled = false
       sourceChains = 0
-      usage = {}
+      usage = {
+        duration: '0',
+        bandwidth: { size: 0, unit: 'GB' },
+        cpu: '0',
+        diskUsage: '0'
+      }
     } else {
-      ({ source_chain_count: sourceChains, duration, bandwidth, cpu } = appStats)
+      ({ source_chain_count: sourceChains, duration, bandwidth, cpu, disk_usage: diskUsage } = appStats)
       bandwidth = formatBytesByUnit(bandwidth) // format bandwidth into object with highest appropriate unit of measurement and respective size (ie: { size: 1, unit: GB })
       usage = {
         duration,
         bandwidth,
-        cpu
+        cpu,
+        diskUsage
       }
     }
 
@@ -55,7 +55,51 @@ app.get('/hosted_happs', async (timeInterval, res) => {
       usage
     })
   }
-  res.status(200).send(presentedHapps)
+
+  return presentedHapps
+}
+
+app.get('/hosted_happs', async (timeInterval, res) => {
+  try {
+    const presentedHapps = await getPresentedHapps()
+    res.status(200).send(presentedHapps)
+  } catch (e) {
+    return res.status(501).send(`hpos-holochain-api error: ${e}`)
+  }
+})
+
+app.get('/dashboard', async (timeInterval, res) => {
+  try {
+    const presentedHapps = await getPresentedHapps(timeInterval)
+    const enabledHapps = presentedHapps.filter(happ => happ.enabled)
+
+    const dashboard = enabledHapps.reduce((acc, happ) => {
+      const totalSourceChains = acc.totalSourceChains + happ.sourceChains
+      const currentTotalStorage = acc.currentTotalStorage + happ.usage.diskUsage
+      const cpu = acc.oneDayUsage.cpu + happ.usage.cpu
+      const bandwidth = acc.oneDayUsage.bandwidth + happ.usage.bandwidth
+
+      return {
+        totalSourceChains,
+        currentTotalStorage,
+        oneDayUsage: {
+          cpu,
+          bandwidth
+        }
+      }
+    }, {
+      totalSourceChains: 0,
+      currentTotalStorage: 0,
+      oneDayUsage: {
+        cpu: 0,
+        bandwidth: 0
+      }
+    })
+
+    res.status(200).send(dashboard)
+  } catch (e) {
+    return res.status(501).send(`hpos-holochain-api error: ${e}`)
+  }
 })
 
 app.post('/install_hosted_happ', async (req, res) => {
