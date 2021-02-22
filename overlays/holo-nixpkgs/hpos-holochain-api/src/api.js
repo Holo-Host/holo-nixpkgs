@@ -85,7 +85,7 @@ const installServicelogger = async (adminWebsocket, happId, preferences) => {
   })
 
   console.log(`Activating ${installedAppId}...`)
-  await adminWebsocket.activateApp({ installedAppId })
+  await adminWebsocket.activateApp({ installed_app_id: installedAppId })
   return callZome(appWebsocket, installedAppId, 'service', 'set_logger_settings', preferences)
 }
 
