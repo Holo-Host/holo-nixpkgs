@@ -154,7 +154,7 @@ in
 
          "/trycp/" = {
           proxyPass = "http://127.0.0.1:9000";
-          proxyWebsockets = true; 
+          proxyWebsockets = true;
         };
       };
     };
@@ -195,9 +195,21 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = "kitsune-proxy://nFCWLsuRC0X31UMv8cJxioL-lBRFQ74UQAsb8qL4XyM/kitsune-quic/h/proxy.holochain.org/p/5775/--";
+            proxy_url = "kitsune-proxy://CIW6PxKxsPPlcuvUCbMcKwUpaMSmB7kLD8xyyj4mqcw/kitsune-quic/h/165.22.32.11/p/5778/--";
           };
         }];
+        tuning_params = {
+          gossip_loop_iteration_delay_ms = 1000; # Default was 10
+          default_notify_remote_agent_count = 5;
+          default_notify_timeout_ms = 1000;
+          default_rpc_single_timeout_ms = 20000;
+          default_rpc_multi_remote_agent_count = 2;
+          default_rpc_multi_timeout_ms = 2000;
+          agent_info_expires_after_ms = 1000 * 60 * 30; #// Default was 20 minutes
+          tls_in_mem_session_storage = 512;
+          proxy_keepalive_ms = 1000 * 60 * 2;
+          proxy_to_expire_ms = 1000 * 60 * 5;
+        };
       };
     };
   };
@@ -210,10 +222,10 @@ in
       self_hosted_happs = [
         {
           app_id = "elemental-chat";
-          uuid = "0001";
-          version = "alpha14";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha20/elemental-chat.zip";
-          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha14/elemental-chat.dna.gz"; # this version mismatch is on purpose for hash alteration
+          uuid = "develop";
+          version = "alpha19";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha29/elemental-chat-for-dna-alpha19-develop.zip";
+          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha19/elemental-chat.dna.gz";
         }
       ];
     };

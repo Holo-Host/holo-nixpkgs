@@ -12,7 +12,20 @@ if [[ $# -eq 0 ]] ; then
 fi
 
 echo 'Switching HoloPort to channel:' $1
-nix-channel --add https://hydra.holo.host/channel/custom/holo-nixpkgs/$1/holo-nixpkgs
+
+case $1 in
+    master)
+        subdomain="hydra"
+    ;;
+    staging)
+        subdomain="hydra"
+    ;;
+    *)
+        subdomain="hydra-dev"
+    ;;
+esac
+
+nix-channel --add https://$subdomain.holo.host/channel/custom/holo-nixpkgs/$1/holo-nixpkgs
 nix-channel --update
 
 update=$(nixos-rebuild switch 2>&1 | tee /dev/stderr) # piping to stderr so it shows up in terminal
