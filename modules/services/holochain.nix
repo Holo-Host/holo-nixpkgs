@@ -22,10 +22,6 @@ in
     working-directory = mkOption {
       type = types.path;
     };
-
-    restart-interval = mkOption {
-      type = types.str;
-    };
   };
 
   config = mkIf (cfg.enable) {
@@ -49,16 +45,6 @@ in
         ExecStart = "${cfg.package}/bin/holochain -c ${cfg.working-directory}/holochain-config.yaml";
         StateDirectory = "holochain-rsm";
       };
-    };
-
-    systemd.services.holochain-restarter = {
-      serviceConfig.Type = "oneshot";
-
-      script = ''
-        ${pkgs.systemd}/bin/systemctl try-restart holochain.service
-      '';
-
-      startAt = cfg.restart-interval;
     };
 
     users.users.holochain-rsm = {
