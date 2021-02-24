@@ -86,7 +86,7 @@ in
       onlySSL = true;
       locations = {
         "/" = {
-          alias = "${pkgs.hp-admin-ui}/";
+          alias = "${pkgs.host-console-ui}/";
           extraConfig = ''
             limit_req zone=zone1 burst=30;
           '';
@@ -137,7 +137,7 @@ in
         };
 
         "/auth/" = {
-          proxyPass = "http://127.0.0.1:2883";
+          proxyPass = "http://127.0.0.1:2884";
           extraConfig = ''
             internal;
             proxy_set_header X-Original-URI $request_uri;

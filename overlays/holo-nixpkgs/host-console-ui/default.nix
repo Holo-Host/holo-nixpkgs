@@ -6,11 +6,21 @@
     src = fetchFromGitHub {
       owner = "holo-host";
       repo = "host-console-ui";
-      rev = "30eb3a92fb62c53ce2628d333f71bef87b5c6916";
-      sha256 = "1zn5k8spzls7p8iaf58fplwifbghxfs7gkm2vgfq0p6dsnsvvgpx";
+      rev = "475f80fe3ef1214a704f5efeba2fc220a9729cc6";
+      sha256 = "0nfrkq2cj604yb35dy5cb4im4k0sz54m31n45xpkc0x3lrh0yzjg";
     };
 
     packageJSON = "${src}/package.json";
     yarnLock = "${src}/yarn.lock";
+
+    buildPhase = ''
+      yarn build
+    '';
+
+    installPhase = ''
+      mv deps/host-console/dist $out
+    '';
+
+    distPhase = '':'';
   };
 }

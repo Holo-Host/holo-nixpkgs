@@ -1,6 +1,6 @@
 # Holo Nixpkgs
 
-Modules, packages and profiles that drive Holo, Holochain, and HoloPortOS.
+Modules, packages and profiles that drive Holo hosting, Holochain, and HoloPortOS.
 
 ## Test suite
 
@@ -30,7 +30,7 @@ To add a new test:
 
 <details>
 <summary>default.nix template</summary>
-  
+
 ```nix
 { makeTest, lib, hpos, /* additional packages */ ... }:
 
@@ -54,7 +54,7 @@ makeTest {
 
   testScript = ''
     start_all()
-    
+
     # Your test script goes here
     # For syntax, consult NixOS manual on writing tests and other tests in /tests directory, e.g.
     # machine.succeed("command-to-test --foo bar")
@@ -63,7 +63,7 @@ makeTest {
   meta.platforms = [ "x86_64-linux" ];
 }
 ```
-  
+
 </details>
 
 2. Add a new attribute to the bottom-most block in [`/tests/default.nix`](/tests/default.nix), e.g.
