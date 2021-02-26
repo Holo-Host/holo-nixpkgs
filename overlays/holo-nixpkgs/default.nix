@@ -166,7 +166,7 @@ rec {
   lair-keystore_main = holochainAllBinariesWithDeps.main.lair-keystore;
   kitsune-p2p-proxy_main = holochainAllBinariesWithDeps.main.kitsune-p2p-proxy;
   holochain_develop = holochainAllBinariesWithDeps.develop.holochain;
-  dna-util_develop = holochainAllBinariesWithDeps.develop.dna-util;
+  hc_develop = holochainAllBinariesWithDeps.develop.hc;
   lair-keystore_develop = holochainAllBinariesWithDeps.develop.lair-keystore;
   kitsune-p2p-proxy_develop = holochainAllBinariesWithDeps.develop.kitsune-p2p-proxy;
 

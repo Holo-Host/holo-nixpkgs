@@ -42,38 +42,32 @@ let
         "x86_64-linux"
         "x86_64-darwin"
     ];
-  } (builtins.removeAttrs overrides [
+  } # remove attributes that cause failure when they're passed to `buildRustPackage`
+    (builtins.removeAttrs overrides [
     "rev"
     "sha256"
     "cargoSha256"
     "crate"
+    "bins"
   ]));
 
   mkHolochainAllBinaries = {
     rev
     , sha256
     , cargoSha256
+    , bins
     , ...
-  } @ overrides : {
-    holochain = mkHolochainBinary ({
-      inherit rev sha256 cargoSha256;
-      crate = "holochain";
-    } // overrides );
+  } @ overrides:
+    lib.attrsets.mapAttrs (_: crate:
+      mkHolochainBinary ({
+        inherit rev sha256 cargoSha256 crate;
+      } // overrides)
+    ) bins
+  ;
 
-    dna-util = mkHolochainBinary ({
-      inherit rev sha256 cargoSha256;
-      crate = "dna_util";
-    } // overrides );
-
-    kitsune-p2p-proxy = mkHolochainBinary ({
-      inherit rev sha256 cargoSha256;
-      crate = "kitsune_p2p/proxy";
-    } // overrides );
-  };
-
-  mkHolochainAllBinariesWithDeps = { rev, sha256, cargoSha256, otherDeps }:
+  mkHolochainAllBinariesWithDeps = { rev, sha256, cargoSha256, otherDeps, bins }:
     mkHolochainAllBinaries {
-      inherit rev sha256 cargoSha256;
+      inherit rev sha256 cargoSha256 bins;
     }
     // otherDeps
     ;
