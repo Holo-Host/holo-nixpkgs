@@ -246,7 +246,7 @@ in
   };
 
   system.holo-nixpkgs.autoUpgrade = {
-    enable = lib.mkDefault true;
+    enable = lib.mkForce false;
     dates = "*:0/10";
   };
 
