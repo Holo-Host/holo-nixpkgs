@@ -1,6 +1,6 @@
 { stdenv
 , rustPlatform
-, fetchFromGitHub
+, gitignoreSource
 , makeWrapper
 , nodejs
 , npmToNix
@@ -12,12 +12,7 @@
 
 mkYarnPackage rec {
   name = "holo-envoy";
-  src = fetchFromGitHub {
-    owner = "Holo-Host";
-    repo = "holo-envoy";
-    rev = "e8095418772aecb89561e539c01f099d470d7f15";
-    sha256 = "0z0g9qnf3pahxvi2k2vkf6wwwpfw0vw476787b3vs7v5m1355c7b";
-  };
+  src = gitignoreSource ../../../../holo-envoy;
 
   buildInputs = [ python ];
 
