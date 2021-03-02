@@ -6,8 +6,8 @@
     src = fetchFromGitHub {
       owner = "holo-host";
       repo = "host-console-ui";
-      rev = "475f80fe3ef1214a704f5efeba2fc220a9729cc6";
-      sha256 = "0nfrkq2cj604yb35dy5cb4im4k0sz54m31n45xpkc0x3lrh0yzjg";
+      rev = "d6f12c97a2ba9ba5ef19a62b4d82038e80f7dbd0";
+      sha256 = "1pqsdj1dx9mn7ff4a5qr8ydpmbncw27fjakisamp81cj2kal5dx0";
     };
 
     packageJSON = "${src}/package.json";
