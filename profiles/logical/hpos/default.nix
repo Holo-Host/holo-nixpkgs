@@ -87,6 +87,7 @@ in
       locations = {
         "/" = {
           alias = "${pkgs.host-console-ui}/";
+          try_files = $uri $uri/ /index.html;
           extraConfig = ''
             limit_req zone=zone1 burst=30;
           '';
