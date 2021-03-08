@@ -22,6 +22,7 @@
     ./services/holo-envoy.nix
     ./services/hpos-init.nix
     ./services/hpos-led-manager.nix
+    ./services/joining-code-factory.nix
     ./services/kv-uploader.nix
     ./services/lair-keystore.nix
     ./services/configure-holochain.nix
