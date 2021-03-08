@@ -185,6 +185,8 @@ rec {
     python3 = python3.withPackages (ps: [ ps.click ps.requests ]);
   };
 
+  joining-code-factory = callPackage ./joining-code-factory {};
+
   match-service-api = callPackage ./match-service-api {};
 
   matching-engine = callPackage ./matching-engine {
