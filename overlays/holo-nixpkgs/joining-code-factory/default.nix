@@ -1,7 +1,7 @@
 { stdenv, gitignoreSource, mkYarnPackage }:
 
 {
-  hosted-happ-monitor = mkYarnPackage rec {
+  joining-code-factory = mkYarnPackage rec {
     name = "joining-code-factory";
     src = gitignoreSource ./joining-code-happ/service;
 
