@@ -58,10 +58,10 @@ in
     install-list = {
       self_hosted_happs = [];
       core_happs = [{
-          # app_id = "joining-code-happ";
-          # uuid = "0001";
-          # version = "alpha1";
-          # dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha9/holo-hosting-app.dna.gz";
+          app_id = "joining-code-factory";
+          uuid = "0001";
+          version = "alpha1";
+          dna_url = "https://drive.google.com/file/d/1VfUkkQksDsFEOhVKggwjsgDUQuwqEgia/view?usp=sharing";
         }];
     };
   };
