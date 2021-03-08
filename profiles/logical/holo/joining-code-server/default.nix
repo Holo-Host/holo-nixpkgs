@@ -21,6 +21,8 @@ in
 
   services.lair-keystore.enable = true;
 
+  services.joining-code-factory.enable = true;
+
   services.holochain = {
     enable = true;
     working-directory = holochainWorkingDir;
