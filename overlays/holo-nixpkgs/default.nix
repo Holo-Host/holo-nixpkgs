@@ -185,8 +185,6 @@ rec {
     python3 = python3.withPackages (ps: [ ps.click ps.requests ]);
   };
 
-  joining-code-factory = callPackage ./joining-code-factory {};
-
   match-service-api = callPackage ./match-service-api {};
 
   matching-engine = callPackage ./matching-engine {
@@ -289,6 +287,8 @@ rec {
   inherit (callPackage ./hpos-holochain-api {}) hpos-holochain-api;
 
   inherit (callPackage ./hosted-happ-monitor {}) hosted-happ-monitor;
+
+  inherit (callPackage ./joining-code-factory {}) joining-code-factory;
 
   # here for testing purposes only for trycp_server installation
   tryorama = callPackage ./tryorama {
