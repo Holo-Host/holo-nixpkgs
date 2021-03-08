@@ -26,7 +26,7 @@ in
     systemd.services.joining-code-factory = {
       after = [ "network.target" "holochain.service" "configure-holochain.service"];
       requisite = [ "holochain.service" ]; 
-      startAt = "*/1";
+      startAt = "*:0/1";
 
       serviceConfig = {
         ExecStart = "${pkgs.nodejs}/bin/node --no-warnings ${cfg.package}/bin/joining-code-factory";
