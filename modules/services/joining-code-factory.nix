@@ -29,7 +29,7 @@ in
       startAt = "*:0/1";
 
       serviceConfig = {
-        ExecStart = "${pkgs.nodejs}/bin/node /root/holo-nixpkgs/overlays/holo-nixpkgs/joining-code-factory/joining-code-happ/service/build/bundle.js";
+        ExecStart = "${pkgs.nodejs}/bin/node /root/holo-nixpkgs/overlays/holo-nixpkgs/joining-code-factory/bundle.js";
         Type = "oneshot";
         User = "root";
       };

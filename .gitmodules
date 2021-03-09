@@ -1,3 +1,0 @@
-[submodule "overlays/holo-nixpkgs/joining-code-factory/joining-code-happ"]
-	path = overlays/holo-nixpkgs/joining-code-factory/joining-code-happ
-	url = https://github.com/Holo-Host/joining-code-happ.git
