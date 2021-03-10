@@ -22,6 +22,8 @@ in
     working-directory = mkOption {
       default = "";
     };
+
+    join-testnet = mkEnableOption "join-testnet";
   };
 
   config = mkIf (cfg.enable) {
@@ -34,6 +36,8 @@ in
       environment.UI_STORE_FOLDER = "${cfg.working-directory}/uis";
       environment.PUBKEY_PATH = "${cfg.working-directory}/agent_key.pub";
       path = with pkgs; [ unzip ];
+
+      environment.IS_TEST_NETWORK = mkIf (cfg.join-testnet) true;
 
       preStart = ''
         ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.install-list} > ${cfg.working-directory}/config.yaml

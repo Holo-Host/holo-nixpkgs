@@ -71,5 +71,11 @@ in
       requires = [ "hpos-init.service" ];
       environment.HPOS_CONFIG_PATH = cfg.configPath;
     };
+
+    systemd.services.configure_holochain = {
+      after = [ "hpos-init.service" ];
+      requires = [ "hpos-init.service" ];
+      environment.HPOS_CONFIG_PATH = cfg.configPath;
+    };
   };
 }
