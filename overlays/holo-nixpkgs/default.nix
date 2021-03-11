@@ -160,7 +160,7 @@ rec {
     lair-keystore
     ;
 
-  # expose main versions to make hydra build them
+  # expose all versions to make hydra build them
   holochain_main = holochainAllBinariesWithDeps.main.holochain;
   dna-util_main = holochainAllBinariesWithDeps.main.dna-util;
   lair-keystore_main = holochainAllBinariesWithDeps.main.lair-keystore;
