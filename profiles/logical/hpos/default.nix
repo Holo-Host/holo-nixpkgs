@@ -223,7 +223,7 @@ in
         {
           app_id = "core-happs";
           uuid = "0001";
-          version = "alpha12";
+          version = "alpha13";
           dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha13/holo-hosting-app.dna.gz";
         }
         {
@@ -237,9 +237,9 @@ in
         {
           app_id = "elemental-chat";
           # uuid = "develop";
-          version = "alpha20";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha29/elemental-chat-for-dna-alpha19-develop.zip";
-          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha20/elemental-chat.dna.gz";
+          version = "alpha21";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha30/elemental-chat-for-dna-alpha21-develop.zip";
+          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha21/elemental-chat.dna.gz";
         }
       ];
     };
