@@ -1,12 +1,17 @@
 { stdenv, rustPlatform, fetchFromGitHub, lib, darwin }:
 
+let
+  version = "v0.0.1-alpha.10";
+in
+
 rustPlatform.buildRustPackage {
   name = "lair-keystore";
+  inherit version;
 
   src = fetchFromGitHub {
     owner = "holochain";
     repo = "lair";
-    rev = "be5868e6dcbe99c795a101c0e27ba6ed5edd557d";
+    rev = version;
     sha256 = "1kkrkip3sk5pmbv1qa3c69w2q38q5pmyiamklz72czwildkvsfzp";
   };
 
