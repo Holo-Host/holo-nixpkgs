@@ -3,9 +3,9 @@
 rec {
   mkHolochainBinary = {
       version ? "2021-02-02"
-      , rev ? "1624c137b4172d533e93d744542198f38b6b7dfe"
-      , sha256 ? "0fn08njj2rq8lfgnrggq35ssa24sncdhcmc34lc8hhwk26fcg65d"
-      , cargoSha256 ? "1g9x6bb4pwigxwq1bg980rxr9y5p8m90q71gsq629b4x8ikw331v"
+      , rev ? "986dc4d6179fb06e590c6a9c39b55f687723b2a8"
+      , sha256 ? "0pwccbbrfpnikv3j0v2dshi694y4d8mgb9iqazhxh95j3y82vl3f"
+      , cargoSha256 ? "1hh0w8akjzm1zndx40rhbmmi2vvyfin7garl97kimxxyzilj02xq"
       , crate
       , ... } @ overrides: rustPlatform.buildRustPackage (lib.attrsets.recursiveUpdate {
     name = "holochain";
