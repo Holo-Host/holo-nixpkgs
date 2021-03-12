@@ -5995,6 +5995,7 @@ class AdminWebsocket {
         this.deactivateApp = this._requester('deactivate_app');
         this.dumpState = this._requester('dump_state', dumpStateTransform);
         this.generateAgentPubKey = this._requester('generate_agent_pub_key');
+        this.registerDna = this._requester('register_dna');
         this.installApp = this._requester('install_app');
         this.listDnas = this._requester('list_dnas');
         this.listCellIds = this._requester('list_cell_ids');
@@ -16372,14 +16373,19 @@ function startConductor() {
                     try {
                         const agent_key = yield agentKey(adminWebsocket);
                         console.log(JSON.stringify(agent_key));
+                        console.log("Registering DNA:");
+                        const dnaHash = yield adminWebsocket.registerDna({ source: { path: path_1.default.join(config.rootPath, '../../dna', 'joining-code-factory.dna.gz') } });
+                        console.log("DNA registered");
+                        console.log("Installing app");
                         yield adminWebsocket.installApp({
                             agent_key,
                             installed_app_id: config.APP_ID,
                             dnas: [{
                                     nick: config.DNA_NICK,
-                                    path: path_1.default.join(config.rootPath, '../../dna', 'joining-code-factory.dna.gz')
+                                    hash: dnaHash,
                                 }],
                         });
+                        console.log("App installed");
                     }
                     catch (e) {
                         if (!((_b = (_a = e.data) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.includes('AppAlreadyInstalled'))) {
