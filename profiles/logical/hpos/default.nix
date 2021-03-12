@@ -224,7 +224,7 @@ in
           app_id = "core-happs";
           uuid = "0001";
           version = "alpha12";
-          dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha12/holo-hosting-app.dna.gz";
+          dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha13/holo-hosting-app.dna.gz";
         }
         {
           app_id = "servicelogger";
