@@ -218,9 +218,9 @@ in
       self_hosted_happs = [
         {
           app_id = "elemental-chat";
-          uuid = "0001";
+          uuid = "0002";
           version = "alpha21";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha30/elemental-chat-for-dna-alpha21-0001.zip";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha30/elemental-chat-for-dna-alpha21-0002.zip";
           dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha21/elemental-chat.dna.gz";
         }
       ];
