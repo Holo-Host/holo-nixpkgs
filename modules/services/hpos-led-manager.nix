@@ -20,6 +20,10 @@ in
     statePath = mkOption {
       default = "/run/hpos-led-manager/state.json";
     };
+
+    kitsuneAddress = mkOption {
+      type = types.str;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -31,7 +35,7 @@ in
     systemd.services.hpos-led-manager = {
       path = [ pkgs.zerotierone ];
       serviceConfig = {
-        ExecStart = "${cfg.package}/bin/hpos-led-manager --device ${cfg.devicePath} --state ${cfg.statePath}";
+        ExecStart = "${cfg.package}/bin/hpos-led-manager --device ${cfg.devicePath} --state ${cfg.statePath} --kitsune_address ${cfg.kitsuneAddress}";
         ExecStopPost = "${pkgs.aorura}/bin/aorura-cli ${cfg.devicePath} --set flash:blue";
         RuntimeDirectory = "hpos-led-manager";
       };

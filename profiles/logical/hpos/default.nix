@@ -25,6 +25,8 @@ let
   holochainWorkingDir = "/var/lib/holochain-rsm";
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
+
+  kitsuneAddress = "kitsune-proxy://CIW6PxKxsPPlcuvUCbMcKwUpaMSmB7kLD8xyyj4mqcw/kitsune-quic/h/165.22.32.11/p/5778/--";
 in
 
 {
@@ -77,6 +79,8 @@ in
   services.lair-keystore.enable = true;
 
   services.mingetty.autologinUser = "root";
+
+  services.hpos-led-manager.kitsuneAddress = kitsuneAddress;
 
   services.nginx = {
     enable = true;
@@ -199,7 +203,7 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = "kitsune-proxy://CIW6PxKxsPPlcuvUCbMcKwUpaMSmB7kLD8xyyj4mqcw/kitsune-quic/h/165.22.32.11/p/5778/--";
+            proxy_url = kitsuneAddress;
           };
         }];
         tuning_params = {
