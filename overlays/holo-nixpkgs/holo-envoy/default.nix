@@ -15,8 +15,8 @@ mkYarnPackage rec {
   src = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "holo-envoy";
-    rev = "ddb58cdde36797dce19a345e3f269598e9e6b6b3";
-    sha256 = "049xh75ifva83iw0xi5d06qrbrwj6rhdiwd971r939p80man6gim";
+    rev = "361dc8a2b25251548cc8dba23920fdce5cc439d3";
+    sha256 = "0dpbym5q0npvrz7h1wfjsppq1l7c6fyw8dpirj6v08ahsyafq52k";
   };
 
   buildInputs = [ python ];
