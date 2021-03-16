@@ -9,11 +9,12 @@ use std::net::{TcpStream, ToSocketAddrs};
 use std::path::{Path, PathBuf};
 use std::thread::sleep;
 use std::time::Duration;
+use std::process::Command;
 
 const POLLING_INTERVAL: u64 = 1;
 
 const USAGE: &'static str = "
-Usage: hpos-led-manager --device <path> --state <path>
+Usage: hpos-led-manager --device <path> --state <path> --kitsune_address <url>
        hpos-led-manager --help
 
 Manages AORURA LED.
@@ -21,12 +22,14 @@ Manages AORURA LED.
 Options:
   --device <path>  Path to AORURA device
   --state <path>   Path to state JSON file
+  --kitsune_address Kitsune proxy URL to check
 ";
 
 #[derive(Debug, Deserialize)]
 struct Args {
     flag_device: PathBuf,
     flag_state: PathBuf,
+    kitsune_address: String
 }
 
 fn main() -> Fallible<()> {
@@ -43,19 +46,34 @@ fn main() -> Fallible<()> {
 
     loop {
         let router_gateway_addrs = "router-gateway.holo.host:80".to_socket_addrs();
-        let online = match router_gateway_addrs {
+        let conn_zerotier = match router_gateway_addrs {
             Ok(mut addrs) => match addrs.next() {
                 Some(addr) => TcpStream::connect_timeout(&addr, Duration::new(1, 0)).is_ok(),
                 None => false,
             },
             Err(_) => false,
         };
+        
+        let conn_kitsune_proxy = match Command::new("proxy-cli")
+            .args(&["--", &args.kitsune_address])
+            .output()
+        {   
+            Ok(output) =>{ 
+                let output_string = String::from_utf8(output.stdout)?;
+                match output_string {
+                    _ if output_string.contains("tokio_task_count") => true,
+                    _ => false,
+                }
+            },
+            Err(_) => false,
+        };
 
         let hpos_config_found = Path::new("/run/hpos-init/hpos-config.json").exists();
 
-        let state = match (online, hpos_config_found) {
-            (false, _) => State::Flash(Color::Purple),
-            (true, false) => State::Static(Color::Blue),
+        let state = match (conn_zerotier, hpos_config_found, conn_kitsune_proxy) {
+            (false, _, _) => State::Flash(Color::Purple),
+            (true, false, _) => State::Static(Color::Blue),
+            (true, true, false) => State::Static(Color::Orange),
             _ => State::Aurora,
         };
 
