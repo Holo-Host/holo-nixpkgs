@@ -35,7 +35,7 @@ in
     systemd.services.hpos-led-manager = {
       path = [ pkgs.zerotierone ];
       serviceConfig = {
-        ExecStart = "${cfg.package}/bin/hpos-led-manager --device ${cfg.devicePath} --state ${cfg.statePath} --kitsune_address ${cfg.kitsuneAddress}";
+        ExecStart = "${cfg.package}/bin/hpos-led-manager --device ${cfg.devicePath} --state ${cfg.statePath} --kitsune ${cfg.kitsuneAddress}";
         ExecStopPost = "${pkgs.aorura}/bin/aorura-cli ${cfg.devicePath} --set flash:blue";
         RuntimeDirectory = "hpos-led-manager";
       };

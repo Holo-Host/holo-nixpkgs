@@ -14,7 +14,7 @@ use std::process::Command;
 const POLLING_INTERVAL: u64 = 1;
 
 const USAGE: &'static str = "
-Usage: hpos-led-manager --device <path> --state <path> --kitsune_address <url>
+Usage: hpos-led-manager --device <path> --state <path> --kitsune <url>
        hpos-led-manager --help
 
 Manages AORURA LED.
@@ -22,14 +22,14 @@ Manages AORURA LED.
 Options:
   --device <path>  Path to AORURA device
   --state <path>   Path to state JSON file
-  --kitsune_address Kitsune proxy URL to check
+  --kitsune <url>  Kitsune proxy url to check
 ";
 
 #[derive(Debug, Deserialize)]
 struct Args {
     flag_device: PathBuf,
     flag_state: PathBuf,
-    kitsune_address: String
+    flag_kitsune: String
 }
 
 fn main() -> Fallible<()> {
@@ -55,7 +55,7 @@ fn main() -> Fallible<()> {
         };
         
         let conn_kitsune_proxy = match Command::new("proxy-cli")
-            .args(&["--", &args.kitsune_address])
+            .args(&["--", &args.flag_kitsune])
             .output()
         {   
             Ok(output) =>{ 
@@ -73,7 +73,7 @@ fn main() -> Fallible<()> {
         let state = match (conn_zerotier, hpos_config_found, conn_kitsune_proxy) {
             (false, _, _) => State::Flash(Color::Purple),
             (true, false, _) => State::Static(Color::Blue),
-            (true, true, false) => State::Static(Color::Orange),
+            (true, true, false) => State::Flash(Color::Orange),
             _ => State::Aurora,
         };
 
