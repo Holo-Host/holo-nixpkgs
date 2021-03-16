@@ -6139,7 +6139,7 @@ exports.rootPath = path_1.default.dirname((_a = require.main) === null || _a ===
 exports.HC_ADMIN_PORT = 9876;
 exports.HOLO_CONDUCTOR_DEFAULT_PORT = 42233;
 exports.HC_CONFIG_PATH = exports.rootPath;
-exports.APP_ID = "joining-code-factory";
+exports.APP_ID = "joining-code-factory:alpha1:0001";
 exports.DNA_NICK = "jcf";
 exports.OPS_CONSOLE_API = "https://registration-api.holotest.net";
 exports.HAPP_NAME = "Elemental%20Chat";
