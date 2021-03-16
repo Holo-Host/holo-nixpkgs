@@ -16435,7 +16435,8 @@ function ensureConductor() {
 exports.default = ensureConductor;
 });
 
-var __awaiter$2 = (commonjsGlobal && commonjsGlobal.__awaiter) || function (thisArg, _arguments, P, generator) {
+var zomeCall = createCommonjsModule(function (module, exports) {
+var __awaiter = (commonjsGlobal && commonjsGlobal.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -16444,11 +16445,12 @@ var __awaiter$2 = (commonjsGlobal && commonjsGlobal.__awaiter) || function (this
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.pubkey = void 0;
 
 const fakeCapSecret = () => Buffer.from(Array(64).fill('aa').join(''), 'hex');
 function call(websocket, fn_name, payload) {
-    return __awaiter$2(this, void 0, void 0, function* () {
+    return __awaiter(this, void 0, void 0, function* () {
         const infoResult = yield websocket.appInfo({ installed_app_id: config.APP_ID });
         const { cell_data } = infoResult;
         const cell = cell_data[0]; //cell_data.find(cell => cell[1] === DNA_NICK)
@@ -16466,11 +16468,20 @@ function call(websocket, fn_name, payload) {
         return websocket.callZome(zomeCallRequest);
     });
 }
-var _default = call;
-
-var zomeCall = /*#__PURE__*/Object.defineProperty({
-	default: _default
-}, '__esModule', {value: true});
+exports.default = call;
+function pubkey(websocket) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const infoResult = yield websocket.appInfo({ installed_app_id: config.APP_ID });
+        const { cell_data } = infoResult;
+        const cell = cell_data[0]; //cell_data.find(cell => cell[1] === DNA_NICK)
+        // @ts-ignore
+        const cell_id = cell[0];
+        const [_dnaHash, provenance] = cell_id;
+        return provenance;
+    });
+}
+exports.pubkey = pubkey;
+});
 
 // Based on https://github.com/tmpvar/jsdom/blob/aa85b2abf07766ff7bf5c1f6daafb3726f2f2db5/lib/jsdom/living/blob.js
 
@@ -18113,7 +18124,26 @@ var lib$1 = /*#__PURE__*/Object.freeze({
 
 var node_fetch_2 = /*@__PURE__*/getAugmentedNamespace(lib$1);
 
-var __awaiter$3 = (commonjsGlobal && commonjsGlobal.__awaiter) || function (thisArg, _arguments, P, generator) {
+var __createBinding = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter$2 = (commonjsGlobal && commonjsGlobal.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -18129,11 +18159,18 @@ var __importDefault = (commonjsGlobal && commonjsGlobal.__importDefault) || func
 
 const startConductor_1$1 = __importDefault(startConductor_1);
 
-const zomeCall_1 = __importDefault(zomeCall);
+const zomeCall_1 = __importStar(zomeCall);
 const node_fetch_1 = __importDefault(node_fetch_2);
 
 process.env.PATH = `${config.rootPath}:${process.env.PATH}`;
-startConductor_1$1.default().then((websocket) => __awaiter$3(void 0, void 0, void 0, function* () {
+startConductor_1$1.default().then((websocket) => __awaiter$2(void 0, void 0, void 0, function* () {
+    try {
+        let signingPubKey = yield zomeCall_1.pubkey(websocket);
+        console.log("Signing with PubKey:", signingPubKey.toString('hex'));
+    }
+    catch (e) {
+        console.error("Error trying to retrieve public key from conductor:", e);
+    }
     try {
         const FETCH_URL = config.OPS_CONSOLE_API + '/newrecords/' + config.HAPP_NAME;
         const fetch_result = yield node_fetch_1.default(FETCH_URL);
