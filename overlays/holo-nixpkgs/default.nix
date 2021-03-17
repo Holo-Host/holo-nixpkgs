@@ -155,7 +155,7 @@ rec {
   inherit (holochainAllBinariesWithDeps.hpos)
     # packages with HPOS default versions
     holochain
-    dna-util
+    hc
     kitsune-p2p-proxy
     lair-keystore
     ;
