@@ -1,4 +1,4 @@
-{ stdenv, rustPlatform, fetchFromGitHub, perl, xcbuild, darwin, libsodium, openssl, pkgconfig, lib, callPackage, rust }:
+{ stdenv, rustPlatform, fetchFromGitHub, perl, xcbuild, darwin, libsodium, openssl, pkgconfig, lib, callPackage, rust, libiconv }:
 
 let
   mkHolochainBinary = {
@@ -31,6 +31,7 @@ let
       CoreFoundation
       CoreServices
       Security
+      libiconv
     ]);
 
     RUST_SODIUM_LIB_DIR = "${libsodium}/lib";
