@@ -1,11 +1,11 @@
 {
   hpos = {
-    rev = "1624c137b4172d533e93d744542198f38b6b7dfe";
-    sha256 = "0fn08njj2rq8lfgnrggq35ssa24sncdhcmc34lc8hhwk26fcg65d";
-    cargoSha256 = "1g9x6bb4pwigxwq1bg980rxr9y5p8m90q71gsq629b4x8ikw331v";
+    rev = "a82372a62d46a503e48f345360d0fb18cc5822d1";
+    sha256 = "1flz7cqm2rpnchsnfai83vw65m57x69ajrhd8v5zgnjcnc1plymx";
+    cargoSha256 = "1fpkb3ga1f4xvgazpd31v45y4gbf6ss1y1rjzqx300vlp99237f9";
     bins = {
       holochain = "holochain";
-      dna-util = "dna_util";
+      hc = "hc";
       kitsune-p2p-proxy = "kitsune_p2p/proxy";
     };
   };
