@@ -1,4 +1,4 @@
-{ stdenv, rustPlatform, fetchFromGitHub, lib, darwin }:
+{ stdenv, rustPlatform, fetchFromGitHub, lib, darwin, libiconv }:
 
 let
   version = "v0.0.1-alpha.11";
@@ -19,6 +19,7 @@ rustPlatform.buildRustPackage {
 
   buildInputs = lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
     AppKit
+    libiconv
   ]);
 
   doCheck = false;
