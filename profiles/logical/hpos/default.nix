@@ -226,23 +226,23 @@ in
         {
           app_id = "core-happs";
           uuid = "0001";
-          version = "alpha10";
-          dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha10/holo-hosting-app.dna.gz";
+          version = "alpha14";
+          dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha14/holo-hosting-app.dna.gz";
         }
         {
           app_id = "servicelogger";
           uuid = "0001";
           version = "alpha4";
-          dna_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha4/servicelogger.dna.gz";
+          dna_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha7/servicelogger.dna.gz";
         }
       ];
       self_hosted_happs = [
         {
           app_id = "elemental-chat";
-          uuid = "develop";
-          version = "alpha19";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha29/elemental-chat-for-dna-alpha19-develop.zip";
-          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha19/elemental-chat.dna.gz";
+          # uuid = "develop";
+          version = "alpha21";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha30/elemental-chat-for-dna-alpha21-develop.zip";
+          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha21/elemental-chat.dna.gz";
         }
       ];
     };
