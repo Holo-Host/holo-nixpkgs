@@ -41,7 +41,7 @@ var path$1 = require('path');
 var os = require('os');
 var Stream = require('stream');
 var assert = require('assert');
-var require$$0$3 = require('util');
+var require$$0$4 = require('util');
 var require$$3 = require('child_process');
 var tty = require('tty');
 var buffer = require('buffer');
@@ -62,7 +62,7 @@ var path__default = /*#__PURE__*/_interopDefaultLegacy(path$1);
 var os__default = /*#__PURE__*/_interopDefaultLegacy(os);
 var Stream__default = /*#__PURE__*/_interopDefaultLegacy(Stream);
 var assert__default = /*#__PURE__*/_interopDefaultLegacy(assert);
-var require$$0__default = /*#__PURE__*/_interopDefaultLegacy(require$$0$3);
+var require$$0__default = /*#__PURE__*/_interopDefaultLegacy(require$$0$4);
 var require$$3__default = /*#__PURE__*/_interopDefaultLegacy(require$$3);
 var tty__default = /*#__PURE__*/_interopDefaultLegacy(tty);
 var buffer__default = /*#__PURE__*/_interopDefaultLegacy(buffer);
@@ -21220,6 +21220,1679 @@ Codec,
 HHT,
 };
 
+var unpack = createCommonjsModule(function (module, exports) {
+let decoder;
+try {
+decoder = new TextDecoder();
+} catch(error) {}
+let src;
+let srcEnd;
+let position = 0;
+const EMPTY_ARRAY = [];
+let strings = EMPTY_ARRAY;
+let stringPosition = 0;
+let currentUnpackr = {};
+let currentStructures;
+let srcString;
+let srcStringStart = 0;
+let srcStringEnd = 0;
+let referenceMap;
+let currentExtensions = [];
+let dataView;
+let defaultOptions = {
+useRecords: false,
+mapsAsObjects: true
+};
+class C1Type {}
+const C1 = new C1Type();
+C1.name = 'MessagePack 0xC1';
+
+class Unpackr {
+constructor(options) {
+if (options) {
+if (options.useRecords === false && options.mapsAsObjects === undefined)
+  options.mapsAsObjects = true;
+if (options.getStructures && !options.structures)
+  (options.structures = []).uninitialized = true; // this is what we use to denote an uninitialized structures
+}
+Object.assign(this, options);
+}
+unpack(source, end, continueReading) {
+if (src) {
+// re-entrant execution, save the state and restore it after we do this unpack
+return saveState(() => {
+  clearSource();
+  return this ? this.unpack(source, end, continueReading) : Unpackr.prototype.unpack.call(defaultOptions, source, end, continueReading)
+})
+}
+srcEnd = end > -1 ? end : source.length;
+position = 0;
+stringPosition = 0;
+srcStringEnd = 0;
+srcString = null;
+strings = EMPTY_ARRAY;
+src = source;
+// this provides cached access to the data view for a buffer if it is getting reused, which is a recommend
+// technique for getting data from a database where it can be copied into an existing buffer instead of creating
+// new ones
+dataView = source.dataView || (source.dataView = new DataView(source.buffer, source.byteOffset, source.byteLength));
+if (this) {
+currentUnpackr = this;
+if (this.structures) {
+  currentStructures = this.structures;
+  try {
+    return read()
+  } finally {
+    if (position >= srcEnd || !continueReading) {
+      // finished reading this source, cleanup references
+      currentStructures = null;
+      src = null;
+      if (referenceMap)
+        referenceMap = null;
+    }
+  }
+} else if (!currentStructures || currentStructures.length > 0) {
+  currentStructures = [];
+}
+} else {
+currentUnpackr = defaultOptions;
+if (!currentStructures || currentStructures.length > 0)
+  currentStructures = [];
+}
+try {
+return read()
+} finally {
+if (position >= srcEnd || !continueReading) {
+  src = null;
+  if (referenceMap)
+    referenceMap = null;
+}
+}
+}
+unpackMultiple(source, forEach) {
+try {
+let unpackr = this;
+let size = source.length;
+let value = this ? this.unpack(source, size, true) : defaultUnpackr.unpack(source, size, true);
+let values;
+if (forEach) {
+  forEach(value);
+  while(position < size) {
+    if (forEach(read()) === false) {
+      return
+    }
+  }
+}
+else {
+  values = [ value ];
+  while(position < size) {
+    values.push(read());
+  }
+  return values
+}
+} finally {
+clearSource();
+}
+}
+decode(source, end) {
+return this.unpack(source, end)
+}
+}
+exports.Decoder = exports.Unpackr = Unpackr;
+exports.read = read;
+exports.getPosition = () => {
+return position
+};
+
+function read() {
+let token = src[position++];
+if (token < 0xa0) {
+if (token < 0x80) {
+if (token < 0x40)
+  return token
+else {
+  let structure = currentStructures[token & 0x3f];
+  if (structure) {
+    if (!structure.read)
+      structure.read = createStructureReader(structure);
+    return structure.read()
+  } else if (currentUnpackr.getStructures) {
+    let updatedStructures = saveState(() => {
+      // save the state in case getStructures modifies our buffer
+      src = null;
+      return currentUnpackr.getStructures()
+    });
+    if (currentStructures === true)
+      currentUnpackr.structures = currentStructures = updatedStructures;
+    else
+      currentStructures.splice.apply(currentStructures, [0, updatedStructures.length].concat(updatedStructures));
+    structure = currentStructures[token & 0x3f];
+    if (structure) {
+      if (!structure.read)
+        structure.read = createStructureReader(structure);
+      return structure.read()
+    } else
+      return token
+  } else
+    return token
+}
+} else if (token < 0x90) {
+// map
+token -= 0x80;
+if (currentUnpackr.mapsAsObjects) {
+  let object = {};
+  for (let i = 0; i < token; i++) {
+    object[readKey()] = read();
+  }
+  return object
+} else {
+  let map = new Map();
+  for (let i = 0; i < token; i++) {
+    map.set(read(), read());
+  }
+  return map
+}
+} else {
+token -= 0x90;
+let array = new Array(token);
+for (let i = 0; i < token; i++) {
+  array[i] = read();
+}
+return array
+}
+} else if (token < 0xc0) {
+// fixstr
+let length = token - 0xa0;
+if (srcStringEnd >= position) {
+return srcString.slice(position - srcStringStart, (position += length) - srcStringStart)
+}
+if (srcStringEnd == 0 && srcEnd < 140) {
+// for small blocks, avoiding the overhead of the extract call is helpful
+let string = length < 16 ? shortStringInJS(length) : longStringInJS(length);
+if (string != null)
+  return string
+}
+return readFixedString(length)
+} else {
+let value;
+switch (token) {
+case 0xc0: return null
+case 0xc1: return C1; // "never-used", return special object to denote that
+case 0xc2: return false
+case 0xc3: return true
+case 0xc4:
+  // bin 8
+  return readBin(src[position++])
+case 0xc5:
+  // bin 16
+  value = dataView.getUint16(position);
+  position += 2;
+  return readBin(value)
+case 0xc6:
+  // bin 32
+  value = dataView.getUint32(position);
+  position += 4;
+  return readBin(value)
+case 0xc7:
+  // ext 8
+  return readExt(src[position++])
+case 0xc8:
+  // ext 16
+  value = dataView.getUint16(position);
+  position += 2;
+  return readExt(value)
+case 0xc9:
+  // ext 32
+  value = dataView.getUint32(position);
+  position += 4;
+  return readExt(value)
+case 0xca:
+  value = dataView.getFloat32(position);
+  if (currentUnpackr.useFloat32 > 2) {
+    // this does rounding of numbers that were encoded in 32-bit float to nearest significant decimal digit that could be preserved
+    let multiplier = mult10[((src[position] & 0x7f) << 1) | (src[position + 1] >> 7)];
+    position += 4;
+    return ((multiplier * value + (value > 0 ? 0.5 : -0.5)) >> 0) / multiplier
+  }
+  position += 4;
+  return value
+case 0xcb:
+  value = dataView.getFloat64(position);
+  position += 8;
+  return value
+// uint handlers
+case 0xcc:
+  return src[position++]
+case 0xcd:
+  value = dataView.getUint16(position);
+  position += 2;
+  return value
+case 0xce:
+  value = dataView.getUint32(position);
+  position += 4;
+  return value
+case 0xcf:
+  if (currentUnpackr.uint64AsNumber)
+    return src[position++] * 0x100000000000000 + src[position++] * 0x1000000000000 + src[position++] * 0x10000000000 + src[position++] * 0x100000000 +
+      src[position++] * 0x1000000 + (src[position++] << 16) + (src[position++] << 8) + src[position++]
+  value = dataView.getBigUint64(position);
+  position += 8;
+  return value
+
+// int handlers
+case 0xd0:
+  return dataView.getInt8(position++)
+case 0xd1:
+  value = dataView.getInt16(position);
+  position += 2;
+  return value
+case 0xd2:
+  value = dataView.getInt32(position);
+  position += 4;
+  return value
+case 0xd3:
+  value = dataView.getBigInt64(position);
+  position += 8;
+  return value
+
+case 0xd4:
+  // fixext 1
+  value = src[position++];
+  if (value == 0x72) {
+    return recordDefinition(src[position++])
+  } else {
+    if (currentExtensions[value])
+      return currentExtensions[value](src.subarray(position, ++position))
+    else
+      throw new Error('Unknown extension ' + value)
+  }
+case 0xd5:
+  // fixext 2
+  return readExt(2)
+case 0xd6:
+  // fixext 4
+  return readExt(4)
+case 0xd7:
+  // fixext 8
+  return readExt(8)
+case 0xd8:
+  // fixext 16
+  return readExt(16)
+case 0xd9:
+// str 8
+  value = src[position++];
+  if (srcStringEnd >= position) {
+    return srcString.slice(position - srcStringStart, (position += value) - srcStringStart)
+  }
+  return readString8(value)
+case 0xda:
+// str 16
+  value = dataView.getUint16(position);
+  position += 2;
+  if (srcStringEnd >= position) {
+    return srcString.slice(position - srcStringStart, (position += value) - srcStringStart)
+  }
+  return readString16(value)
+case 0xdb:
+// str 32
+  value = dataView.getUint32(position);
+  position += 4;
+  if (srcStringEnd >= position) {
+    return srcString.slice(position - srcStringStart, (position += value) - srcStringStart)
+  }
+  return readString32(value)
+case 0xdc:
+// array 16
+  value = dataView.getUint16(position);
+  position += 2;
+  return readArray(value)
+case 0xdd:
+// array 32
+  value = dataView.getUint32(position);
+  position += 4;
+  return readArray(value)
+case 0xde:
+// map 16
+  value = dataView.getUint16(position);
+  position += 2;
+  return readMap(value)
+case 0xdf:
+// map 32
+  value = dataView.getUint32(position);
+  position += 4;
+  return readMap(value)
+default: // negative int
+  if (token >= 0xe0)
+    return token - 0x100
+  if (token === undefined) {
+    let error = new Error('Unexpected end of MessagePack data');
+    error.incomplete = true;
+    throw error
+  }
+  throw new Error('Unknown MessagePack token ' + token)
+
+}
+}
+}
+const validName = /^[a-zA-Z_$][a-zA-Z\d_$]*$/;
+function createStructureReader(structure) {
+function readObject() {
+// This initial function is quick to instantiate, but runs slower. After several iterations pay the cost to build the faster function
+if (readObject.count++ > 2) {
+this.read = (new Function('r', 'return function(){return {' + structure.map(key => validName.test(key) ? key + ':r()' : ('[' + JSON.stringify(key) + ']:r()')).join(',') + '}}'))(read);
+return this.read()
+}
+let object = {};
+for (let i = 0, l = structure.length; i < l; i++) {
+let key = structure[i];
+object[key] = read();
+}
+return object
+}
+readObject.count = 0;
+return readObject
+}
+
+let readFixedString = readStringJS;
+let readString8 = readStringJS;
+let readString16 = readStringJS;
+let readString32 = readStringJS;
+
+exports.setExtractor = (extractStrings) => {
+readFixedString = readString(1);
+readString8 = readString(2);
+readString16 = readString(3);
+readString32 = readString(5);
+function readString(headerLength) {
+return function readString(length) {
+let string = strings[stringPosition++];
+if (string == null) {
+  let extraction = extractStrings(position - headerLength, srcEnd, src);
+  if (typeof extraction == 'string') {
+    string = extraction;
+    strings = EMPTY_ARRAY;
+  } else {
+    strings = extraction;
+    stringPosition = 1;
+    srcStringEnd = 1; // even if a utf-8 string was decoded, must indicate we are in the midst of extracted strings and can't skip strings
+    string = strings[0];
+    if (string === undefined)
+      throw new Error('Unexpected end of buffer')
+  }
+}
+let srcStringLength = string.length;
+if (srcStringLength <= length) {
+  position += length;
+  return string
+}
+srcString = string;
+srcStringStart = position;
+srcStringEnd = position + srcStringLength;
+position += length;
+return string.slice(0, length) // we know we just want the beginning
+}
+}
+};
+function readStringJS(length) {
+let result;
+if (length < 16) {
+if (result = shortStringInJS(length))
+return result
+}
+if (length > 64 && decoder)
+return decoder.decode(src.subarray(position, position += length))
+const end = position + length;
+const units = [];
+result = '';
+while (position < end) {
+const byte1 = src[position++];
+if ((byte1 & 0x80) === 0) {
+// 1 byte
+units.push(byte1);
+} else if ((byte1 & 0xe0) === 0xc0) {
+// 2 bytes
+const byte2 = src[position++] & 0x3f;
+units.push(((byte1 & 0x1f) << 6) | byte2);
+} else if ((byte1 & 0xf0) === 0xe0) {
+// 3 bytes
+const byte2 = src[position++] & 0x3f;
+const byte3 = src[position++] & 0x3f;
+units.push(((byte1 & 0x1f) << 12) | (byte2 << 6) | byte3);
+} else if ((byte1 & 0xf8) === 0xf0) {
+// 4 bytes
+const byte2 = src[position++] & 0x3f;
+const byte3 = src[position++] & 0x3f;
+const byte4 = src[position++] & 0x3f;
+let unit = ((byte1 & 0x07) << 0x12) | (byte2 << 0x0c) | (byte3 << 0x06) | byte4;
+if (unit > 0xffff) {
+  unit -= 0x10000;
+  units.push(((unit >>> 10) & 0x3ff) | 0xd800);
+  unit = 0xdc00 | (unit & 0x3ff);
+}
+units.push(unit);
+} else {
+units.push(byte1);
+}
+
+if (units.length >= 0x1000) {
+result += fromCharCode.apply(String, units);
+units.length = 0;
+}
+}
+
+if (units.length > 0) {
+result += fromCharCode.apply(String, units);
+}
+
+return result
+}
+
+function readArray(length) {
+let array = new Array(length);
+for (let i = 0; i < length; i++) {
+array[i] = read();
+}
+return array
+}
+
+function readMap(length) {
+if (currentUnpackr.mapsAsObjects) {
+let object = {};
+for (let i = 0; i < length; i++) {
+object[readKey()] = read();
+}
+return object
+} else {
+let map = new Map();
+for (let i = 0; i < length; i++) {
+map.set(read(), read());
+}
+return map
+}
+}
+
+let fromCharCode = String.fromCharCode;
+function longStringInJS(length) {
+let start = position;
+let bytes = new Array(length);
+for (let i = 0; i < length; i++) {
+const byte = src[position++];
+if ((byte & 0x80) > 0) {
+position = start;
+    return
+  }
+  bytes[i] = byte;
+}
+return fromCharCode.apply(String, bytes)
+}
+function shortStringInJS(length) {
+if (length < 4) {
+if (length < 2) {
+if (length === 0)
+  return ''
+else {
+  let a = src[position++];
+  if ((a & 0x80) > 1) {
+    position -= 1;
+    return
+  }
+  return fromCharCode(a)
+}
+} else {
+let a = src[position++];
+let b = src[position++];
+if ((a & 0x80) > 0 || (b & 0x80) > 0) {
+  position -= 2;
+  return
+}
+if (length < 3)
+  return fromCharCode(a, b)
+let c = src[position++];
+if ((c & 0x80) > 0) {
+  position -= 3;
+  return
+}
+return fromCharCode(a, b, c)
+}
+} else {
+let a = src[position++];
+let b = src[position++];
+let c = src[position++];
+let d = src[position++];
+if ((a & 0x80) > 0 || (b & 0x80) > 0 || (c & 0x80) > 0 || (d & 0x80) > 0) {
+position -= 4;
+return
+}
+if (length < 6) {
+if (length === 4)
+  return fromCharCode(a, b, c, d)
+else {
+  let e = src[position++];
+  if ((e & 0x80) > 0) {
+    position -= 5;
+    return
+  }
+  return fromCharCode(a, b, c, d, e)
+}
+} else if (length < 8) {
+let e = src[position++];
+let f = src[position++];
+if ((e & 0x80) > 0 || (f & 0x80) > 0) {
+  position -= 6;
+  return
+}
+if (length < 7)
+  return fromCharCode(a, b, c, d, e, f)
+let g = src[position++];
+if ((g & 0x80) > 0) {
+  position -= 7;
+  return
+}
+return fromCharCode(a, b, c, d, e, f, g)
+} else {
+let e = src[position++];
+let f = src[position++];
+let g = src[position++];
+let h = src[position++];
+if ((e & 0x80) > 0 || (f & 0x80) > 0 || (g & 0x80) > 0 || (h & 0x80) > 0) {
+  position -= 8;
+  return
+}
+if (length < 10) {
+  if (length === 8)
+    return fromCharCode(a, b, c, d, e, f, g, h)
+  else {
+    let i = src[position++];
+    if ((i & 0x80) > 0) {
+      position -= 9;
+      return
+    }
+    return fromCharCode(a, b, c, d, e, f, g, h, i)
+  }
+} else if (length < 12) {
+  let i = src[position++];
+  let j = src[position++];
+  if ((i & 0x80) > 0 || (j & 0x80) > 0) {
+    position -= 10;
+    return
+  }
+  if (length < 11)
+    return fromCharCode(a, b, c, d, e, f, g, h, i, j)
+  let k = src[position++];
+  if ((k & 0x80) > 0) {
+    position -= 11;
+    return
+  }
+  return fromCharCode(a, b, c, d, e, f, g, h, i, j, k)
+} else {
+  let i = src[position++];
+  let j = src[position++];
+  let k = src[position++];
+  let l = src[position++];
+  if ((i & 0x80) > 0 || (j & 0x80) > 0 || (k & 0x80) > 0 || (l & 0x80) > 0) {
+    position -= 12;
+    return
+  }
+  if (length < 14) {
+    if (length === 12)
+      return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l)
+    else {
+      let m = src[position++];
+      if ((m & 0x80) > 0) {
+        position -= 13;
+        return
+      }
+      return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l, m)
+    }
+  } else {
+    let m = src[position++];
+    let n = src[position++];
+    if ((m & 0x80) > 0 || (n & 0x80) > 0) {
+      position -= 14;
+      return
+    }
+    if (length < 15)
+      return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l, m, n)
+    let o = src[position++];
+    if ((o & 0x80) > 0) {
+      position -= 15;
+      return
+    }
+    return fromCharCode(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o)
+  }
+}
+}
+}
+}
+
+function readBin(length) {
+return currentUnpackr.copyBuffers ?
+// specifically use the copying slice (not the node one)
+Uint8Array.prototype.slice.call(src, position, position += length) :
+src.subarray(position, position += length)
+}
+function readExt(length) {
+let type = src[position++];
+if (currentExtensions[type]) {
+return currentExtensions[type](src.subarray(position, position += length))
+}
+else
+throw new Error('Unknown extension type ' + type)
+}
+
+let keyCache = new Array(4096);
+function readKey() {
+let length = src[position++];
+if (length >= 0xa0 && length < 0xc0) {
+// fixstr, potentially use key cache
+length = length - 0xa0;
+if (srcStringEnd >= position) // if it has been extracted, must use it (and faster anyway)
+return srcString.slice(position - srcStringStart, (position += length) - srcStringStart)
+else if (!(srcStringEnd == 0 && srcEnd < 180))
+return readFixedString(length)
+} else { // not cacheable, go back and do a standard read
+position--;
+return read()
+}
+let key = ((length << 5) ^ (length > 1 ? dataView.getUint16(position) : length > 0 ? src[position] : 0)) & 0xfff;
+let entry = keyCache[key];
+let checkPosition = position;
+let end = position + length - 3;
+let chunk;
+let i = 0;
+if (entry && entry.bytes == length) {
+while (checkPosition < end) {
+chunk = dataView.getUint32(checkPosition);
+if (chunk != entry[i++]) {
+  checkPosition = 0x70000000;
+  break
+}
+checkPosition += 4;
+}
+end += 3;
+while (checkPosition < end) {
+chunk = src[checkPosition++];
+if (chunk != entry[i++]) {
+  checkPosition = 0x70000000;
+  break
+}
+}
+if (checkPosition === end) {
+position = checkPosition;
+return entry.string
+}
+end -= 3;
+checkPosition = position;
+}
+entry = [];
+keyCache[key] = entry;
+entry.bytes = length;
+while (checkPosition < end) {
+chunk = dataView.getUint32(checkPosition);
+entry.push(chunk);
+checkPosition += 4;
+}
+end += 3;
+while (checkPosition < end) {
+chunk = src[checkPosition++];
+entry.push(chunk);
+}
+// for small blocks, avoiding the overhead of the extract call is helpful
+let string = length < 16 ? shortStringInJS(length) : longStringInJS(length);
+if (string != null)
+return entry.string = string
+return entry.string = readFixedString(length)
+}
+
+// the registration of the record definition extension (as "r")
+const recordDefinition = (id) => {
+let structure = currentStructures[id & 0x3f] = read();
+structure.read = createStructureReader(structure);
+return structure.read()
+};
+let glbl = typeof window == 'object' ? window : commonjsGlobal;
+currentExtensions[0] = (data) => {}; // notepack defines extension 0 to mean undefined, so use that as the default here
+
+currentExtensions[0x65] = () => {
+let data = read();
+return (glbl[data[0]] || Error)(data[1])
+};
+
+currentExtensions[0x69] = (data) => {
+// id extension (for structured clones)
+let id = dataView.getUint32(position - 4);
+if (!referenceMap)
+referenceMap = new Map();
+let token = src[position];
+let target;
+// TODO: handle Maps, Sets, and other types that can cycle; this is complicated, because you potentially need to read
+// ahead past references to record structure definitions
+if (token >= 0x90 && token < 0xa0 || token == 0xdc || token == 0xdd)
+target = [];
+else
+target = {};
+
+let refEntry = { target }; // a placeholder object
+referenceMap.set(id, refEntry);
+let targetProperties = read(); // read the next value as the target object to id
+if (refEntry.used) // there is a cycle, so we have to assign properties to original target
+return Object.assign(target, targetProperties)
+refEntry.target = targetProperties; // the placeholder wasn't used, replace with the deserialized one
+return targetProperties // no cycle, can just use the returned read object
+};
+
+currentExtensions[0x70] = (data) => {
+// pointer extension (for structured clones)
+let id = dataView.getUint32(position - 4);
+let refEntry = referenceMap.get(id);
+refEntry.used = true;
+return refEntry.target
+};
+
+currentExtensions[0x73] = () => new Set(read());
+
+const typedArrays = ['Int8','Uint8','Uint8Clamped','Int16','Uint16','Int32','Uint32','Float32','Float64','BigInt64','BigUint64'].map(type => type + 'Array');
+
+currentExtensions[0x74] = (data) => {
+let typeCode = data[0];
+let typedArrayName = typedArrays[typeCode];
+if (!typedArrayName)
+throw new Error('Could not find typed array for code ' + typeCode)
+// we have to always slice/copy here to get a new ArrayBuffer that is word/byte aligned
+return new glbl[typedArrayName](Uint8Array.prototype.slice.call(data, 1).buffer)
+};
+currentExtensions[0x78] = () => {
+let data = read();
+return new RegExp(data[0], data[1])
+};
+
+currentExtensions[0xff] = (data) => {
+// 32-bit date extension
+if (data.length == 4)
+return new Date((data[0] * 0x1000000 + (data[1] << 16) + (data[2] << 8) + data[3]) * 1000)
+else if (data.length == 8)
+return new Date(
+((data[0] << 22) + (data[1] << 14) + (data[2] << 6) + (data[3] >> 2)) / 1000000 +
+((data[3] & 0x3) * 0x100000000 + data[4] * 0x1000000 + (data[5] << 16) + (data[6] << 8) + data[7]) * 1000)
+else if (data.length == 12)// TODO: Implement support for negative
+return new Date(
+((data[0] << 24) + (data[1] << 16) + (data[2] << 8) + data[3]) / 1000000 +
+(((data[4] & 0x80) ? -0x1000000000000 : 0) + data[6] * 0x10000000000 + data[7] * 0x100000000 + data[8] * 0x1000000 + (data[9] << 16) + (data[10] << 8) + data[11]) * 1000)
+else
+throw new Error('Invalid timestamp length')
+}; // notepack defines extension 0 to mean undefined, so use that as the default here
+// registration of bulk record definition?
+// currentExtensions[0x52] = () =>
+
+function saveState(callback) {
+let savedSrcEnd = srcEnd;
+let savedPosition = position;
+let savedStringPosition = stringPosition;
+let savedSrcStringStart = srcStringStart;
+let savedSrcStringEnd = srcStringEnd;
+let savedSrcString = srcString;
+let savedStrings = strings;
+let savedReferenceMap = referenceMap;
+// TODO: We may need to revisit this if we do more external calls to user code (since it could be slow)
+let savedSrc = new Uint8Array(src.slice(0, srcEnd)); // we copy the data in case it changes while external data is processed
+let savedStructures = currentStructures;
+let savedPackr = currentUnpackr;
+let value = callback();
+srcEnd = savedSrcEnd;
+position = savedPosition;
+stringPosition = savedStringPosition;
+srcStringStart = savedSrcStringStart;
+srcStringEnd = savedSrcStringEnd;
+srcString = savedSrcString;
+strings = savedStrings;
+referenceMap = savedReferenceMap;
+src = savedSrc;
+currentStructures = savedStructures;
+currentUnpackr = savedPackr;
+dataView = new DataView(src.buffer, src.byteOffset, src.byteLength);
+return value
+}
+exports.clearSource = clearSource;
+function clearSource() {
+src = null;
+referenceMap = null;
+currentStructures = null;
+}
+
+exports.addExtension = function(extension) {
+currentExtensions[extension.type] = extension.unpack;
+};
+
+let mult10 = new Array(147); // this is a table matching binary exponents to the multiplier to determine significant digit rounding
+for (let i = 0; i < 256; i++) {
+mult10[i] = +('1e' + Math.floor(45.15 - i * 0.30103));
+}
+exports.mult10 = mult10;
+exports.typedArrays = typedArrays;
+exports.useRecords = false;
+exports.mapsAsObjects = true;
+exports.C1 = C1;
+exports.C1Type = C1Type;
+let defaultUnpackr = new Unpackr({ useRecords: false });
+exports.unpack = defaultUnpackr.unpack;
+exports.unpackMultiple = defaultUnpackr.unpackMultiple;
+exports.decode = defaultUnpackr.unpack;
+exports.FLOAT32_OPTIONS = {
+NEVER: 0,
+ALWAYS: 1,
+DECIMAL_ROUND: 3,
+DECIMAL_FIT: 4
+};
+});
+
+const { Unpackr, Decoder: Decoder$1, unpack: unpack$1, unpackMultiple, decode: decode$2, addExtension, C1, mult10, typedArrays, C1Type, FLOAT32_OPTIONS } = unpack;
+
+var unpack$2 = /*#__PURE__*/Object.freeze({
+__proto__: null,
+Unpackr: Unpackr,
+Decoder: Decoder$1,
+unpack: unpack$1,
+unpackMultiple: unpackMultiple,
+decode: decode$2,
+addExtension: addExtension,
+C1: C1,
+mult10: mult10,
+typedArrays: typedArrays,
+C1Type: C1Type,
+FLOAT32_OPTIONS: FLOAT32_OPTIONS
+});
+
+var require$$1$1 = /*@__PURE__*/getAugmentedNamespace(unpack$2);
+
+var pack = createCommonjsModule(function (module, exports) {
+
+let Unpackr = require$$1$1.Unpackr;
+let mult10 = require$$1$1.mult10;
+let C1Type = require$$1$1.C1Type;
+const typedArrays = require$$1$1.typedArrays;
+let textEncoder;
+try {
+textEncoder = new TextEncoder();
+} catch (error) {}
+let extensions, extensionClasses;
+const hasNodeBuffer = typeof Buffer !== 'undefined';
+const ByteArrayAllocate = hasNodeBuffer ? Buffer.allocUnsafeSlow : Uint8Array;
+const ByteArray = hasNodeBuffer ? Buffer : Uint8Array;
+const MAX_BUFFER_SIZE = hasNodeBuffer ? 0x100000000 : 0x7fd00000;
+let target;
+let targetView;
+let position = 0;
+let safeEnd;
+const RECORD_SYMBOL = Symbol('record-id');
+class Packr extends Unpackr {
+constructor(options) {
+super(options);
+this.offset = 0;
+let start;
+let sharedStructures;
+let hasSharedUpdate;
+let structures;
+let referenceMap;
+let lastSharedStructuresLength = 0;
+let encodeUtf8 = ByteArray.prototype.utf8Write ? function(string, position, maxBytes) {
+return target.utf8Write(string, position, maxBytes)
+} : (textEncoder && textEncoder.encodeInto) ?
+function(string, position) {
+  return textEncoder.encodeInto(string, target.subarray(position)).written
+} : false;
+
+let packr = this;
+let maxSharedStructures = 32;
+let isSequential = options && options.sequential;
+if (isSequential) {
+maxSharedStructures = 0;
+this.structures = [];
+}
+let recordIdsToRemove = [];
+let transitionsCount = 0;
+let serializationsSinceTransitionRebuild = 0;
+if (this.structures && this.structures.length > maxSharedStructures) {
+throw new Error('Too many shared structures')
+}
+
+this.pack = this.encode = function(value) {
+if (!target) {
+  target = new ByteArrayAllocate(8192);
+  targetView = new DataView(target.buffer, 0, 8192);
+  position = 0;
+}
+safeEnd = target.length - 10;
+if (safeEnd - position < 0x800) {
+  // don't start too close to the end, 
+  target = new ByteArrayAllocate(target.length);
+  targetView = new DataView(target.buffer, 0, target.length);
+  safeEnd = target.length - 10;
+  position = 0;
+}
+start = position;
+referenceMap = packr.structuredClone ? new Map() : null;
+sharedStructures = packr.structures;
+if (sharedStructures) {
+  if (sharedStructures.uninitialized)
+    packr.structures = sharedStructures = packr.getStructures();
+  let sharedStructuresLength = sharedStructures.length;
+  if (sharedStructuresLength >  maxSharedStructures && !isSequential)
+    sharedStructuresLength = maxSharedStructures;
+  if (!sharedStructures.transitions) {
+    // rebuild our structure transitions
+    sharedStructures.transitions = Object.create(null);
+    for (let i = 0; i < sharedStructuresLength; i++) {
+      let keys = sharedStructures[i];
+      if (!keys)
+        continue
+      let nextTransition, transition = sharedStructures.transitions;
+      for (let i =0, l = keys.length; i < l; i++) {
+        let key = keys[i];
+        nextTransition = transition[key];
+        if (!nextTransition) {
+          nextTransition = transition[key] = Object.create(null);
+        }
+        transition = nextTransition;
+      }
+      transition[RECORD_SYMBOL] = i + 0x40;
+    }
+    lastSharedStructuresLength = sharedStructures.length;
+  }
+  if (!isSequential)
+    sharedStructures.nextId = sharedStructuresLength + 0x40;
+}
+if (hasSharedUpdate)
+  hasSharedUpdate = false;
+structures = sharedStructures || [];
+try {
+  pack(value);
+  packr.offset = position; // update the offset so next serialization doesn't write over our buffer, but can continue writing to same buffer sequentially
+  if (referenceMap && referenceMap.idsToInsert) {
+    position += referenceMap.idsToInsert.length * 6;
+    if (position > safeEnd)
+      makeRoom(position);
+    packr.offset = position;
+    let serialized = insertIds(target.subarray(start, position), referenceMap.idsToInsert);
+    referenceMap = null;
+    return serialized
+  }
+  return target.subarray(start, position) // position can change if we call pack again in saveStructures, so we get the buffer now
+} finally {
+  if (sharedStructures) {
+    if (serializationsSinceTransitionRebuild < 10)
+      serializationsSinceTransitionRebuild++;
+    if (transitionsCount > 10000) {
+      // force a rebuild occasionally after a lot of transitions so it can get cleaned up
+      sharedStructures.transitions = null;
+      serializationsSinceTransitionRebuild = 0;
+      transitionsCount = 0;
+      if (recordIdsToRemove.length > 0)
+        recordIdsToRemove = [];
+    } else if (recordIdsToRemove.length > 0 && !isSequential) {
+      for (let i = 0, l = recordIdsToRemove.length; i < l; i++) {
+        recordIdsToRemove[i][RECORD_SYMBOL] = 0;
+      }
+      recordIdsToRemove = [];
+    }
+    if (hasSharedUpdate && packr.saveStructures) {
+      if (packr.structures.length > maxSharedStructures) {
+        packr.structures = packr.structures.slice(0, maxSharedStructures);
+      }
+
+      if (packr.saveStructures(packr.structures, lastSharedStructuresLength) === false) {
+        // get updated structures and try again if the update failed
+        packr.structures = packr.getStructures() || [];
+        return packr.pack(value)
+      }
+      lastSharedStructuresLength = packr.structures.length;
+    }
+  }
+}
+};
+const pack = (value) => {
+if (position > safeEnd)
+  target = makeRoom(position);
+
+var type = typeof value;
+var length;
+if (type === 'string') {
+  let strLength = value.length;
+  let headerSize;
+  // first we estimate the header size, so we can write to the correct location
+  if (strLength < 0x20) {
+    headerSize = 1;
+  } else if (strLength < 0x100) {
+    headerSize = 2;
+  } else if (strLength < 0x10000) {
+    headerSize = 3;
+  } else {
+    headerSize = 5;
+  }
+  let maxBytes = strLength * 3;
+  if (position + maxBytes > safeEnd)
+    target = makeRoom(position + maxBytes);
+
+  if (strLength < 0x40 || !encodeUtf8) {
+    let i, c1, c2, strPosition = position + headerSize;
+    for (i = 0; i < strLength; i++) {
+      c1 = value.charCodeAt(i);
+      if (c1 < 0x80) {
+        target[strPosition++] = c1;
+      } else if (c1 < 0x800) {
+        target[strPosition++] = c1 >> 6 | 0xc0;
+        target[strPosition++] = c1 & 0x3f | 0x80;
+      } else if (
+        (c1 & 0xfc00) === 0xd800 &&
+        ((c2 = value.charCodeAt(i + 1)) & 0xfc00) === 0xdc00
+      ) {
+        c1 = 0x10000 + ((c1 & 0x03ff) << 10) + (c2 & 0x03ff);
+        i++;
+        target[strPosition++] = c1 >> 18 | 0xf0;
+        target[strPosition++] = c1 >> 12 & 0x3f | 0x80;
+        target[strPosition++] = c1 >> 6 & 0x3f | 0x80;
+        target[strPosition++] = c1 & 0x3f | 0x80;
+      } else {
+        target[strPosition++] = c1 >> 12 | 0xe0;
+        target[strPosition++] = c1 >> 6 & 0x3f | 0x80;
+        target[strPosition++] = c1 & 0x3f | 0x80;
+      }
+    }
+    length = strPosition - position - headerSize;
+  } else {
+    length = encodeUtf8(value, position + headerSize, maxBytes);
+  }
+
+  if (length < 0x20) {
+    target[position++] = 0xa0 | length;
+  } else if (length < 0x100) {
+    if (headerSize < 2) {
+      target.copyWithin(position + 2, position + 1, position + 1 + length);
+    }
+    target[position++] = 0xd9;
+    target[position++] = length;
+  } else if (length < 0x10000) {
+    if (headerSize < 3) {
+      target.copyWithin(position + 3, position + 2, position + 2 + length);
+    }
+    target[position++] = 0xda;
+    target[position++] = length >> 8;
+    target[position++] = length & 0xff;
+  } else {
+    if (headerSize < 5) {
+      target.copyWithin(position + 5, position + 3, position + 3 + length);
+    }
+    target[position++] = 0xdb;
+    targetView.setUint32(position, length);
+    position += 4;
+  }
+  position += length;
+} else if (type === 'number') {
+  if (value >>> 0 === value) {// positive integer, 32-bit or less
+    // positive uint
+    if (value < 0x40) {
+      target[position++] = value;
+    } else if (value < 0x100) {
+      target[position++] = 0xcc;
+      target[position++] = value;
+    } else if (value < 0x10000) {
+      target[position++] = 0xcd;
+      target[position++] = value >> 8;
+      target[position++] = value & 0xff;
+    } else {
+      target[position++] = 0xce;
+      targetView.setUint32(position, value);
+      position += 4;
+    }
+  } else if (value >> 0 === value) { // negative integer
+    if (value >= -0x20) {
+      target[position++] = 0x100 + value;
+    } else if (value >= -0x80) {
+      target[position++] = 0xd0;
+      target[position++] = value + 0x100;
+    } else if (value >= -0x8000) {
+      target[position++] = 0xd1;
+      targetView.setInt16(position, value);
+      position += 2;
+    } else {
+      target[position++] = 0xd2;
+      targetView.setInt32(position, value);
+      position += 4;
+    }
+  } else {
+    let useFloat32;
+    if ((useFloat32 = this.useFloat32) > 0 && value < 0x100000000 && value >= -0x80000000) {
+      target[position++] = 0xca;
+      targetView.setFloat32(position, value);
+      let xShifted;
+      if (useFloat32 < 4 ||
+        // this checks for  rounding of numbers that were encoded in 32-bit float to nearest significant decimal digit that could be preserved
+          ((xShifted = value * mult10[((target[position] & 0x7f) << 1) | (target[position + 1] >> 7)]) >> 0) === xShifted) {
+        position += 4;
+        return
+      } else
+        position--; // move back into position for writing a double
+    }
+    target[position++] = 0xcb;
+    targetView.setFloat64(position, value);
+    position += 8;
+  }
+} else if (type === 'object') {
+  if (!value)
+    target[position++] = 0xc0;
+  else {
+    if (referenceMap) {
+      let referee = referenceMap.get(value);
+      if (referee) {
+        if (!referee.id) {
+          let idsToInsert = referenceMap.idsToInsert || (referenceMap.idsToInsert = []);
+          referee.id = idsToInsert.push(referee);
+        }
+        target[position++] = 0xd6; // fixext 4
+        target[position++] = 0x70; // "p" for pointer
+        targetView.setUint32(position, referee.id);
+        position += 4;
+        return
+      } else 
+        referenceMap.set(value, { offset: position - start });
+    }
+    let constructor = value.constructor;
+    if (constructor === Object) {
+      writeObject(value, true);
+    } else if (constructor === Array) {
+      length = value.length;
+      if (length < 0x10) {
+        target[position++] = 0x90 | length;
+      } else if (length < 0x10000) {
+        target[position++] = 0xdc;
+        target[position++] = length >> 8;
+        target[position++] = length & 0xff;
+      } else {
+        target[position++] = 0xdd;
+        targetView.setUint32(position, length);
+        position += 4;
+      }
+      for (let i = 0; i < length; i++) {
+        pack(value[i]);
+      }
+    } else if (constructor === Map) {
+      length = value.size;
+      if (length < 0x10) {
+        target[position++] = 0x80 | length;
+      } else if (length < 0x10000) {
+        target[position++] = 0xde;
+        target[position++] = length >> 8;
+        target[position++] = length & 0xff;
+      } else {
+        target[position++] = 0xdf;
+        targetView.setUint32(position, length);
+        position += 4;
+      }
+      for (let [ key, entryValue ] of value) {
+        pack(key);
+        pack(entryValue);
+      }
+    } else {	
+      for (let i = 0, l = extensions.length; i < l; i++) {
+        let extensionClass = extensionClasses[i];
+        if (value instanceof extensionClass) {
+          let extension = extensions[i];
+          let currentTarget = target;
+          let currentTargetView = targetView;
+          let currentPosition = position;
+          target = null;
+          let result;
+          try {
+            result = extension.pack.call(this, value, (size) => {
+              // restore target and use it
+              target = currentTarget;
+              currentTarget = null;
+              position += size;
+              if (position > safeEnd)
+                makeRoom(position);
+              return {
+                target, targetView, position: position - size
+              }
+            }, pack);
+          } finally {
+            // restore current target information (unless already restored)
+            if (currentTarget) {
+              target = currentTarget;
+              targetView = currentTargetView;
+              position = currentPosition;
+              safeEnd = target.length - 10;
+            }
+          }
+          if (result) {
+            position = writeExtensionData(result, target, position, extension.type);
+          }
+          return
+        }
+      }
+      // no extension found, write as object
+      writeObject(value, !value.hasOwnProperty); // if it doesn't have hasOwnProperty, don't do hasOwnProperty checks
+    }
+  }
+} else if (type === 'boolean') {
+  target[position++] = value ? 0xc3 : 0xc2;
+} else if (type === 'bigint') {
+  if (value < (BigInt(1)<<BigInt(63)) && value >= -(BigInt(1)<<BigInt(63))) {
+    // use a signed int as long as it fits
+    target[position++] = 0xd3;
+    targetView.setBigInt64(position, value);
+  } else if (value < (BigInt(1)<<BigInt(64)) && value > 0) {
+    // if we can fit an unsigned int, use that
+    target[position++] = 0xcf;
+    targetView.setBigUint64(position, value);
+  } else {
+    // overflow
+    if (this.largeBigIntToFloat) {
+      target[position++] = 0xcb;
+      targetView.setFloat64(position, Number(value));
+    } else {
+      throw new RangeError(value + ' was too large to fit in MessagePack 64-bit integer format, set largeBigIntToFloat to convert to float-64')
+    }
+  }
+  position += 8;
+} else if (type === 'undefined') {
+  //target[position++] = 0xc1 // this is the "never-used" byte
+  target[position++] = 0xd4; // a number of implementations use fixext1 with type 0, data 0 to denote undefined, so we follow suite
+  target[position++] = 0;
+  target[position++] = 0;
+} else {
+  throw new Error('Unknown type ' + type)
+}
+};
+
+const writeObject = this.useRecords === false ? this.variableMapSize ? (object) => {
+// this method is slightly slower, but generates "preferred serialization" (optimally small for smaller objects)
+let keys = Object.keys(object);
+let length = keys.length;
+if (length < 0x10) {
+  target[position++] = 0x80 | length;
+} else if (length < 0x10000) {
+  target[position++] = 0xde;
+  target[position++] = length >> 8;
+  target[position++] = length & 0xff;
+} else {
+  target[position++] = 0xdf;
+  targetView.setUint32(position, length);
+  position += 4;
+}
+let key;
+for (let i = 0; i < length; i++) {
+  pack(key = keys[i]);
+  pack(object[key]);
+}
+} :
+(object, safePrototype) => {
+target[position++] = 0xde; // always using map 16, so we can preallocate and set the length afterwards
+let objectOffset = position - start;
+position += 2;
+let size = 0;
+for (let key in object) {
+  if (safePrototype || object.hasOwnProperty(key)) {
+    pack(key);
+    pack(object[key]);
+    size++;
+  }
+}
+target[objectOffset++ + start] = size >> 8;
+target[objectOffset + start] = size & 0xff;
+} :
+
+/*	sharedStructures ?  // For highly stable structures, using for-in can a little bit faster
+(object, safePrototype) => {
+let nextTransition, transition = structures.transitions || (structures.transitions = Object.create(null))
+let objectOffset = position++ - start
+let wroteKeys
+for (let key in object) {
+  if (safePrototype || object.hasOwnProperty(key)) {
+    nextTransition = transition[key]
+    if (!nextTransition) {
+      nextTransition = transition[key] = Object.create(null)
+      nextTransition.__keys__ = (transition.__keys__ || []).concat([key])
+      /*let keys = Object.keys(object)
+      if 
+      let size = 0
+      let startBranch = transition.__keys__ ? transition.__keys__.length : 0
+      for (let i = 0, l = keys.length; i++) {
+        let key = keys[i]
+        size += key.length << 2
+        if (i >= startBranch) {
+          nextTransition = nextTransition[key] = Object.create(null)
+          nextTransition.__keys__ = keys.slice(0, i + 1)
+        }
+      }
+      makeRoom(position + size)
+      nextTransition = transition[key]
+      target.copy(target, )
+      objectOffset
+    }
+    transition = nextTransition
+    pack(object[key])
+  }
+}
+let id = transition.id
+if (!id) {
+  id = transition.id = structures.push(transition.__keys__) + 63
+  if (sharedStructures.onUpdate)
+    sharedStructures.onUpdate(id, transition.__keys__)
+}
+target[objectOffset + start] = id
+}*/
+(object) => {
+let keys = Object.keys(object);
+let nextTransition, transition = structures.transitions || (structures.transitions = Object.create(null));
+let newTransitions = 0;
+for (let i =0, l = keys.length; i < l; i++) {
+  let key = keys[i];
+  nextTransition = transition[key];
+  if (!nextTransition) {
+    nextTransition = transition[key] = Object.create(null);
+    newTransitions++;
+  }
+  transition = nextTransition;
+}
+let recordId = transition[RECORD_SYMBOL];
+if (recordId) {
+  target[position++] = recordId;
+} else {
+  recordId = structures.nextId++;
+  if (!recordId) {
+    recordId = 0x40;
+    structures.nextId = 0x41;
+  }
+  if (recordId >= 0x80) {// cycle back around
+    structures.nextId = (recordId = maxSharedStructures + 0x40) + 1;
+  }
+  transition[RECORD_SYMBOL] = recordId;
+  structures[0x3f & recordId] = keys;
+  if (sharedStructures && sharedStructures.length <= maxSharedStructures) {
+    target[position++] = recordId;
+    hasSharedUpdate = true;
+  } else {
+    target[position++] = 0xd4; // fixext 1
+    target[position++] = 0x72; // "r" record defintion extension type
+    target[position++] = recordId;
+    if (newTransitions)
+      transitionsCount += serializationsSinceTransitionRebuild * newTransitions;
+    // record the removal of the id, we can maintain our shared structure
+    if (recordIdsToRemove.length >= 0x40 - maxSharedStructures)
+      recordIdsToRemove.shift()[RECORD_SYMBOL] = 0; // we are cycling back through, and have to remove old ones
+    recordIdsToRemove.push(transition);
+    pack(keys);
+  }
+}
+// now write the values
+for (let i =0, l = keys.length; i < l; i++)
+  pack(object[keys[i]]);
+};
+const makeRoom = (end) => {
+let newSize;
+if (end > 0x1000000) {
+  // special handling for really large buffers
+  if ((end - start) > MAX_BUFFER_SIZE)
+    throw new Error('Packed buffer would be larger than maximum buffer size')
+  newSize = Math.min(MAX_BUFFER_SIZE,
+    Math.round(Math.max((end - start) * (end > 0x4000000 ? 1.25 : 2), 0x1000000) / 0x1000) * 0x1000);
+} else // faster handling for smaller buffers
+  newSize = ((Math.max((end - start) << 2, target.length - 1) >> 12) + 1) << 12;
+let newBuffer = new ByteArrayAllocate(newSize);
+targetView = new DataView(newBuffer.buffer, 0, newSize);
+if (target.copy)
+  target.copy(newBuffer, 0, start, end);
+else
+  newBuffer.set(target.slice(start, end));
+position -= start;
+start = 0;
+safeEnd = newBuffer.length - 10;
+return target = newBuffer
+};
+}
+useBuffer(buffer) {
+// this means we are finished using our own buffer and we can write over it safely
+target = buffer;
+targetView = new DataView(target.buffer, target.byteOffset, target.byteLength);
+position = 0;
+}
+}
+exports.Packr = Packr;
+
+extensionClasses = [ Date, Set, Error, RegExp, ArrayBuffer, Object.getPrototypeOf(Uint8Array.prototype).constructor /*TypedArray*/, C1Type ];
+extensions = [{
+pack(date, allocateForWrite) {
+let seconds = date.getTime() / 1000;
+if ((this.useTimestamp32 || date.getMilliseconds() === 0) && seconds >= 0 && seconds < 0x100000000) {
+// Timestamp 32
+let { target, targetView, position} = allocateForWrite(6);
+target[position++] = 0xd6;
+target[position++] = 0xff;
+targetView.setUint32(position, seconds);
+} else if (seconds > 0 && seconds < 0x400000000) {
+// Timestamp 64
+let { target, targetView, position} = allocateForWrite(10);
+target[position++] = 0xd7;
+target[position++] = 0xff;
+targetView.setUint32(position, date.getMilliseconds() * 4000000 + ((seconds / 1000 / 0x100000000) >> 0));
+targetView.setUint32(position + 4, seconds);
+} else {
+// Timestamp 96
+let { target, targetView, position} = allocateForWrite(15);
+target[position++] = 0xc7;
+target[position++] = 12;
+target[position++] = 0xff;
+targetView.setUint32(position, date.getMilliseconds() * 1000000);
+targetView.setBigInt64(position + 4, BigInt(Math.floor(seconds)));
+}
+}
+}, {
+pack(set, allocateForWrite, pack) {
+let array = Array.from(set);
+if (this.structuredClone) {
+let { target, position} = allocateForWrite(3);
+target[position++] = 0xd4;
+target[position++] = 0x73; // 's' for Set
+target[position++] = 0;
+}
+pack(array);
+}
+}, {
+pack(error, allocateForWrite, pack) {
+if (this.structuredClone) {
+let { target, position} = allocateForWrite(3);
+target[position++] = 0xd4;
+target[position++] = 0x65; // 'e' for error
+target[position++] = 0;
+}
+pack([ error.name, error.message ]);
+}
+}, {
+pack(regex, allocateForWrite, pack) {
+if (this.structuredClone) {
+let { target, position} = allocateForWrite(3);
+target[position++] = 0xd4;
+target[position++] = 0x78; // 'x' for regeXp
+target[position++] = 0;
+}
+pack([ regex.source, regex.flags ]);
+}
+}, {
+pack(arrayBuffer, allocateForWrite) {
+if (this.structuredClone)
+writeExtBuffer(arrayBuffer, 0x10, allocateForWrite);
+else
+writeBuffer(hasNodeBuffer ? Buffer.from(arrayBuffer) : new Uint8Array(arrayBuffer), allocateForWrite);
+}
+}, {
+pack(typedArray, allocateForWrite) {
+let constructor = typedArray.constructor;
+if (constructor !== ByteArray && this.structuredClone)
+writeExtBuffer(typedArray, typedArrays.indexOf(constructor.name), allocateForWrite);
+else
+writeBuffer(typedArray, allocateForWrite);
+}
+}, {
+pack(c1, allocateForWrite) { // specific 0xC1 object
+let { target, position} = allocateForWrite(1);
+target[position] = 0xc1;
+}
+}];
+
+function writeExtBuffer(typedArray, type, allocateForWrite, encode) {
+let length = typedArray.byteLength;
+if (length + 1 < 0x100) {
+var { target, position } = allocateForWrite(4 + length);
+target[position++] = 0xc7;
+target[position++] = length + 1;
+} else if (length + 1 < 0x10000) {
+var { target, position } = allocateForWrite(5 + length);
+target[position++] = 0xc8;
+target[position++] = (length + 1) >> 8;
+target[position++] = (length + 1) & 0xff;
+} else {
+var { target, position, targetView } = allocateForWrite(7 + length);
+target[position++] = 0xc9;
+targetView.setUint32(position, length + 1); // plus one for the type byte
+position += 4;
+}
+target[position++] = 0x74; // "t" for typed array
+target[position++] = type;
+target.set(new Uint8Array(typedArray.buffer, typedArray.byteOffset, typedArray.byteLength), position);
+}
+function writeBuffer(buffer, allocateForWrite) {
+let length = buffer.byteLength;
+var target, position;
+if (length < 0x100) {
+var { target, position } = allocateForWrite(length + 2);
+target[position++] = 0xc4;
+target[position++] = length;
+} else if (length < 0x10000) {
+var { target, position } = allocateForWrite(length + 3);
+target[position++] = 0xc5;
+target[position++] = length >> 8;
+target[position++] = length & 0xff;
+} else {
+var { target, position, targetView } = allocateForWrite(length + 5);
+target[position++] = 0xc6;
+targetView.setUint32(position, length);
+position += 4;
+}
+target.set(buffer, position);
+}
+
+function writeExtensionData(result, target, position, type) {
+let length = result.length;
+switch (length) {
+case 1:
+target[position++] = 0xd4;
+break
+case 2:
+target[position++] = 0xd5;
+break
+case 4:
+target[position++] = 0xd6;
+break
+case 8:
+target[position++] = 0xd7;
+break
+case 16:
+target[position++] = 0xd8;
+break
+default:
+if (length < 0x100) {
+  target[position++] = 0xc7;
+  target[position++] = length;
+} else if (length < 0x10000) {
+  target[position++] = 0xc8;
+  target[position++] = length >> 8;
+  target[position++] = length & 0xff;
+} else {
+  target[position++] = 0xc9;
+  target[position++] = length >> 24;
+  target[position++] = (length >> 16) & 0xff;
+  target[position++] = (length >> 8) & 0xff;
+  target[position++] = length & 0xff;
+}
+}
+target[position++] = type;
+target.set(result, position);
+position += length;
+return position
+}
+
+function insertIds(serialized, idsToInsert) {
+// insert the ids that need to be referenced for structured clones
+let nextId;
+let distanceToMove = idsToInsert.length * 6;
+let lastEnd = serialized.length - distanceToMove;
+idsToInsert.sort((a, b) => a.offset > b.offset ? 1 : -1);
+while (nextId = idsToInsert.pop()) {
+let offset = nextId.offset;
+let id = nextId.id;
+serialized.copyWithin(offset + distanceToMove, offset, lastEnd);
+distanceToMove -= 6;
+let position = offset + distanceToMove;
+serialized[position++] = 0xd6;
+serialized[position++] = 0x69; // 'i'
+serialized[position++] = id >> 24;
+serialized[position++] = (id >> 16) & 0xff;
+serialized[position++] = (id >> 8) & 0xff;
+serialized[position++] = id & 0xff;
+lastEnd = offset;
+}
+return serialized
+}
+
+exports.addExtension = function(extension) {
+if (extension.Class) {
+if (!extension.pack)
+throw new Error('Extension has no pack function')
+extensionClasses.unshift(extension.Class);
+extensions.unshift(extension);
+}
+require$$1$1.addExtension(extension);
+};
+
+let defaultPackr = new Packr({ useRecords: false });
+exports.pack = defaultPackr.pack;
+exports.encode = defaultPackr.pack;
+Object.assign(exports, exports.FLOAT32_OPTIONS = require$$1$1.FLOAT32_OPTIONS);
+});
+
+const { Packr, Encoder: Encoder$1, pack: pack$1, encode: encode$2, addExtension: addExtension$1, FLOAT32_OPTIONS: FLOAT32_OPTIONS$1 } = pack;
+
+var pack$2 = /*#__PURE__*/Object.freeze({
+__proto__: null,
+Packr: Packr,
+Encoder: Encoder$1,
+pack: pack$1,
+encode: encode$2,
+addExtension: addExtension$1,
+FLOAT32_OPTIONS: FLOAT32_OPTIONS$1
+});
+
+var require$$0$3 = /*@__PURE__*/getAugmentedNamespace(pack$2);
+
+var browser = createCommonjsModule(function (module, exports) {
+exports.Packr = require$$0$3.Packr;
+exports.Encoder = exports.Packr;
+exports.Unpackr = require$$1$1.Unpackr;
+exports.Decoder = exports.Unpackr;
+exports.addExtension = require$$0$3.addExtension;
+let packr = new exports.Packr({ useRecords: false });
+exports.unpack = packr.unpack;
+exports.unpackMultiple = packr.unpackMultiple;
+exports.pack = packr.pack;
+exports.decode = packr.unpack;
+exports.encode = packr.pack;
+exports.FLOAT32_OPTIONS = require$$1$1.FLOAT32_OPTIONS;
+Object.assign(exports, {
+ALWAYS:1,
+DECIMAL_ROUND: 3,
+DECIMAL_FIT: 4
+});
+});
+
 var node_fetch_2 = /*@__PURE__*/getAugmentedNamespace(lib$1);
 
 var __createBinding = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
@@ -21261,6 +22934,7 @@ const zomeCall_1 = __importStar(zomeCall);
 const node_fetch_1 = __importDefault(node_fetch_2);
 
 
+const msgpackr_1 = __importDefault(browser);
 process.env.PATH = `${config.rootPath}:${process.env.PATH}`;
 startConductor_1$1.default().then((websocket) => __awaiter$2(void 0, void 0, void 0, function* () {
 try {
@@ -21300,11 +22974,11 @@ try {
           console.log("========================");
           console.log("Got certificate from Holochain");
           console.log("========================");
-          const json = JSON.stringify(result);
-          const base64 = Buffer.from(json).toString('base64');
-          JSON.parse(Buffer.from(base64, 'base64').toString()).entry_hash;
+          //const json = JSON.stringify(result)
+          const msgPack = msgpackr_1.default.pack(result);
+          const base64 = Buffer.from(msgPack).toString('base64');
           console.log("++++++++++++++++++++++++");
-          console.log("JSON:", json);
+          console.log("msgpack:", msgPack.toString());
           console.log("++++++++++++++++++++++++");
           console.log("BASE64:", base64);
           console.log("++++++++++++++++++++++++");
