@@ -179,7 +179,7 @@ in
     enable = true;
     working-directory = holochainWorkingDir;
     config = {
-      environment_path = "${holochainWorkingDir}/databases";
+      environment_path = "${holochainWorkingDir}/databases_lmdb2";
       keystore_path = "${holochainWorkingDir}/lair-shim";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
@@ -191,7 +191,7 @@ in
         }
       ];
       network = {
-        bootstrap_service = "https://bootstrap.holo.host";
+        bootstrap_service = "https://bootstrap-staging.holo.host";
         transport_pool = [{
           type = "proxy";
           sub_transport = {
