@@ -192,6 +192,7 @@ in
       ];
       network = {
         bootstrap_service = "https://bootstrap-staging.holo.host";
+        network_type = "quic_bootstrap";
         transport_pool = [{
           type = "proxy";
           sub_transport = {
