@@ -33,7 +33,7 @@ in
     };
 
     systemd.services.hpos-led-manager = {
-      path = [ pkgs.zerotierone ];
+      path = [ pkgs.zerotierone pkgs.holochainAllBinariesWithDeps.hpos.kitsune-p2p-proxy ];
       serviceConfig = {
         ExecStart = "${cfg.package}/bin/hpos-led-manager --device ${cfg.devicePath} --state ${cfg.statePath} --kitsune ${cfg.kitsuneAddress}";
         ExecStopPost = "${pkgs.aorura}/bin/aorura-cli ${cfg.devicePath} --set flash:blue";
