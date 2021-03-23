@@ -60,10 +60,7 @@ fn main() -> Fallible<()> {
         {   
             Ok(output) =>{ 
                 let output_string = String::from_utf8(output.stdout)?;
-                match output_string {
-                    _ if output_string.contains("tokio_task_count") => true,
-                    _ => false,
-                }
+                output_string.contains("tokio_task_count")
             },
             Err(_) => false,
         };
