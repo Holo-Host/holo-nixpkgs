@@ -57,7 +57,7 @@ fn main() -> Fallible<()> {
             Err(_) => false,
         };
 
-        if counter % 30 == 0 {
+        if counter == 0 {
             conn_kitsune_proxy = match Command::new("proxy-cli")
                 .args(&["--", &args.flag_kitsune])
                 .output()
@@ -68,11 +68,9 @@ fn main() -> Fallible<()> {
                 },
                 Err(_) => false,
             };
-
-            counter = 0;
         };
         
-        counter = counter + 1;
+        counter = (counter + 1) % 30;
 
         let hpos_config_found = Path::new("/run/hpos-init/hpos-config.json").exists();
 
