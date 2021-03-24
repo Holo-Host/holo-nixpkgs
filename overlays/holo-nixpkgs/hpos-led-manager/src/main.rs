@@ -44,6 +44,8 @@ fn main() -> Fallible<()> {
     let state_path = args.flag_state;
     let state_temp_path = state_path.with_extension("tmp");
 
+    let mut counter: u8 = 0;
+
     loop {
         let router_gateway_addrs = "router-gateway.holo.host:80".to_socket_addrs();
         let conn_zerotier = match router_gateway_addrs {
@@ -54,16 +56,24 @@ fn main() -> Fallible<()> {
             Err(_) => false,
         };
         
-        let conn_kitsune_proxy = match Command::new("proxy-cli")
-            .args(&["--", &args.flag_kitsune])
-            .output()
-        {   
-            Ok(output) => { 
-                let output_string = String::from_utf8(output.stdout)?;
-                output_string.contains("tokio_task_count")
-            },
-            Err(_) => false,
+        let mut conn_kitsune_proxy = true;
+
+        if counter % 30 == 0 {
+            conn_kitsune_proxy = match Command::new("proxy-cli")
+                .args(&["--", &args.flag_kitsune])
+                .output()
+            {   
+                Ok(output) => { 
+                    let output_string = String::from_utf8(output.stdout)?;
+                    output_string.contains("tokio_task_count")
+                },
+                Err(_) => false,
+            };
+
+            counter = 0;
         };
+        
+        counter = counter + 1;
 
         let hpos_config_found = Path::new("/run/hpos-init/hpos-config.json").exists();
 

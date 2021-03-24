@@ -43,7 +43,7 @@ in
   # REVIEW: `true` breaks gtk+ builds (cairo dependency)
   environment.noXlibs = false;
 
-  environment.systemPackages = [ git hc-state hpos-admin-client hpos-holochain-client hpos-reset hpos-update-cli holochainAllBinariesWithDeps.hpos.kitsune-p2p-proxy ];
+  environment.systemPackages = [ git hc-state hpos-admin-client hpos-holochain-client hpos-reset hpos-update-cli ];
 
   networking.firewall.allowedTCPPorts = [ 443 9000 ];
 
