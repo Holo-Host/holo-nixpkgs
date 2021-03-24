@@ -15,11 +15,11 @@ in
     src = fetchFromGitHub {
         owner = "Holo-Host";
         repo = "hpos-config";
-        rev = "920bd38401edf0b5e81da489d5e519852d7b3218";
-        sha256 = "1sc4jhn4h0phxi1pn20c5wq7x8zs3d8dis9il7fdc5iiszki5413";
+        rev = "a5dae5872f010be77a896247d55d35bf9a01978b";
+        sha256 = "1yzk4wg3h778y0yh3nz13m115qg21i3rl6g2903h5k1pbxmiyi5h";
     };
 
-    cargoSha256 = "19fk595k9nrqgn5nwfxd0mnzw3is448q2lpgc8m20d92sw2az8fx";
+    cargoSha256 = "1jc2ksdw1i6rh4q6bc1gxdxxa04g901289chhlq8alf1mcl7z9cd";
 
     nativeBuildInputs = [ perl ];
 
