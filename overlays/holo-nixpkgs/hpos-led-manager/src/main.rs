@@ -45,6 +45,7 @@ fn main() -> Fallible<()> {
     let state_temp_path = state_path.with_extension("tmp");
 
     let mut counter: u8 = 0;
+    let mut conn_kitsune_proxy = true;
 
     loop {
         let router_gateway_addrs = "router-gateway.holo.host:80".to_socket_addrs();
@@ -55,8 +56,6 @@ fn main() -> Fallible<()> {
             },
             Err(_) => false,
         };
-        
-        let mut conn_kitsune_proxy = true;
 
         if counter % 30 == 0 {
             conn_kitsune_proxy = match Command::new("proxy-cli")
