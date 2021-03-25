@@ -25,6 +25,8 @@ let
   holochainWorkingDir = "/var/lib/holochain-rsm";
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
+
+  kitsuneAddress = "kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/165.227.194.75/p/5788/--";
 in
 
 {
@@ -41,7 +43,7 @@ in
   # REVIEW: `true` breaks gtk+ builds (cairo dependency)
   environment.noXlibs = false;
 
-  environment.systemPackages = [ git hc-state hpos-admin-client hpos-holochain-client hpos-reset hpos-update-cli ];
+  environment.systemPackages = with holochainAllBinariesWithDeps.hpos; [ git hc-state hpos-admin-client hpos-holochain-client hpos-reset hpos-update-cli holochain hc kitsune-p2p-proxy ];
 
   networking.firewall.allowedTCPPorts = [ 443 9000 ];
 
@@ -77,6 +79,8 @@ in
   services.lair-keystore.enable = true;
 
   services.mingetty.autologinUser = "root";
+
+  services.hpos-led-manager.kitsuneAddress = kitsuneAddress;
 
   services.nginx = {
     enable = true;
@@ -200,7 +204,7 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = "kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/165.227.194.75/p/5788/--";
+            proxy_url = kitsuneAddress;
           };
         }];
         tuning_params = {
