@@ -58,11 +58,10 @@ const getPresentedHapps = async usageTimeInterval => {
 }
 
 app.get('/hosted_happs', async (req, res) => {
-  let usageTimeInterval
-  await req.on('data', (body) => {
-    usageTimeInterval = JSON.parse(body.toString())
+  const usageTimeInterval = await new Promise(resolve => req.on('data', (body) => {
+    resolve(JSON.parse(body.toString()))
     if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
-  })
+  }))
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
@@ -73,11 +72,10 @@ app.get('/hosted_happs', async (req, res) => {
 })
 
 app.get('/dashboard', async (req, res) => {
-  let usageTimeInterval
-  await req.on('data', (body) => {
-    usageTimeInterval = JSON.parse(body.toString())
+  const usageTimeInterval = await new Promise(resolve => req.on('data', (body) => {
+    resolve(JSON.parse(body.toString()))
     if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
-  })
+  }))
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
@@ -113,11 +111,10 @@ app.get('/dashboard', async (req, res) => {
 })
 
 app.post('/install_hosted_happ', async (req, res) => {
-  let data
   // Loading body
-  await req.on('data', (body) => {
-    data = JSON.parse(body.toString())
-  })
+  const data = await new Promise(resolve => req.on('data', (body) => {
+    resolve(JSON.parse(body.toString()))
+  }))
 
   // check if happ_id is passed else return error
   if (data.happ_id && data.preferences) {
