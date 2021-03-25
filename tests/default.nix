@@ -11,5 +11,5 @@ let
 in
 
 {
-  /* hpos-api-tests = callPackage ./hpos-api-tests {}; */
+  hpos-api-tests = callPackage ./hpos-api-tests {};
 }
