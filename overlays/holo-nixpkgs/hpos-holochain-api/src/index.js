@@ -151,6 +151,7 @@ app.post('/install_hosted_happ', async (req, res) => {
       return res.status(501).send(`hpos-holochain-api error: ${e}`)
     }
     console.log('Happ Bundle: ', happBundleDetails)
+    console.log('DNAS', happBundleDetails.happ_bundle.dnas)
     let listOfInstalledHapps
     // Instalation Process:
     try {
@@ -163,16 +164,13 @@ app.post('/install_hosted_happ', async (req, res) => {
       // Generate new agent in a test environment else read the location in hpos
       const hostPubKey = process.env.NODE_ENV === 'test' ? await createAgent(adminWs) : await getReadOnlyPubKey()
 
-      // Install DNAs
-      const dnas = happBundleDetails.happ_bundle.dnas
-
       // check if the hosted_happ is already listOfInstalledHapps
       if (listOfInstalledHapps.includes(`${happBundleDetails.happ_id}`)) {
         return res.status(501).send(`hpos-holochain-api error: ${happBundleDetails.happ_id} already installed on your holoport`)
       } else {
         const serviceloggerPref = parsePreferences(preferences, happBundleDetails.provider_pubkey)
         console.log('Parsed Preferences: ', serviceloggerPref)
-        await installHostedHapp(happBundleDetails.happ_id, dnas, hostPubKey, serviceloggerPref)
+        await installHostedHapp(happBundleDetails.happ_id, happBundleDetails.happ_bundle.bundle_url, hostPubKey, serviceloggerPref)
       }
 
       // Note: Do not need to install UI's for hosted happ
