@@ -230,14 +230,14 @@ in
         {
           app_id = "core-happs";
           uuid = "0001";
-          version = "alpha10";
-          dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha10/holo-hosting-app.dna.gz";
+          version = "alpha14";
+          dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha14/holo-hosting-app.dna.gz";
         }
         {
           app_id = "servicelogger";
           uuid = "0001";
-          version = "alpha4";
-          dna_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha4/servicelogger.dna.gz";
+          version = "alpha7";
+          dna_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha7/servicelogger.dna.gz";
         }
       ];
       self_hosted_happs = [
