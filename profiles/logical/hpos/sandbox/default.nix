@@ -17,7 +17,7 @@ in
 
   services.hpos-init.enable = false;
 
-  services.holo-envoy.enable = false;
+  services.holo-envoy.enable = true;
 
   services.zerotierone.enable = false;
 
@@ -30,7 +30,7 @@ in
     working-directory = holochainWorkingDir;
     config = {
       environment_path = "${holochainWorkingDir}/databases";
-      keystore_path = "${holochainWorkingDir}/lair-keystore";
+      keystore_path = "${holochainWorkingDir}/lair-shim";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
         {
