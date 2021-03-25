@@ -66,13 +66,13 @@ let
       profile = "<holo-nixpkgs/profiles/targets/holoport-plus>";
 
       prePhase = ''
-        parted /dev/sda --align optimal --script \
+        parted /dev/sdb --align optimal --script \
           mklabel msdos \
           mkpart primary 0% 100% \
           set 1 boot on
 
-        mkfs.ext4 -F /dev/sda1
-        mount /dev/sda1 /mnt
+        mkfs.ext4 -F /dev/sdb1
+        mount /dev/sdb1 /mnt
       '';
     };
   };
