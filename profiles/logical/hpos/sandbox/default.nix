@@ -42,6 +42,7 @@ in
       ];
       network = {
         transport_pool = [{
+          network_type = "quic_bootstrap";
           type = "mem";
         }];
       };
