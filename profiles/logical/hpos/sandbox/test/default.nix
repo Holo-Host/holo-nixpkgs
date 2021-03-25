@@ -26,7 +26,7 @@ in
     enable = true;
     virtualHosts.localhost.locations = {
       "/hpos-admin-api/".proxyPass = "http://unix:/run/hpos-admin-api/hpos-admin-api.sock:/";
-      "/hpos-holochain-api/".proxyPass = "http://unix:/run/hpos-holochain-api/hpos-holochain-api.sock:/";
+      "/holochain-api/".proxyPass = "http://unix:/run/hpos-holochain-api/hpos-holochain-api.sock:/";
     };
   };
 
@@ -36,5 +36,3 @@ in
 
   virtualisation.memorySize = 3072;
 }
-
- 
