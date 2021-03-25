@@ -36,7 +36,7 @@ in
 
       preStart = ''
         ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.config} > $STATE_DIRECTORY/holochain-config.yaml
-        sleep .1 # wait for keystore socket to be ready
+        sleep .5 # wait for keystore socket to be ready
       '';
 
       serviceConfig = {
