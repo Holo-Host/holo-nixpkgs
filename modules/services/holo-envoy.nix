@@ -32,6 +32,10 @@ in
         Environment = "LOG_LEVEL=debug";
         ExecStart = "${cfg.package}/bin/holo-envoy";
       };
+
+      postStart = ''
+        sleep 2.5 # wait for socket to be ready
+      '';
     };
   };
 }
