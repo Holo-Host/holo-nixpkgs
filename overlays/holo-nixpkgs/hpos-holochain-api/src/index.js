@@ -60,8 +60,8 @@ const getPresentedHapps = async usageTimeInterval => {
 app.get('/hosted_happs', async (req, res) => {
   const usageTimeInterval = await new Promise(resolve => req.on('data', (body) => {
     resolve(JSON.parse(body.toString()))
-    if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
   }))
+  if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
@@ -74,8 +74,8 @@ app.get('/hosted_happs', async (req, res) => {
 app.get('/dashboard', async (req, res) => {
   const usageTimeInterval = await new Promise(resolve => req.on('data', (body) => {
     resolve(JSON.parse(body.toString()))
-    if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
   }))
+  if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
@@ -167,7 +167,7 @@ app.post('/install_hosted_happ', async (req, res) => {
       } else {
         const serviceloggerPref = parsePreferences(preferences, happBundleDetails.provider_pubkey)
         console.log('Parsed Preferences: ', serviceloggerPref)
-        await installHostedHapp(happBundleDetails.happ_id, happBundleDetails.happ_bundle.bundle_url, hostPubKey, serviceloggerPref)
+        await installHostedHapp(happBundleDetails.happ_id, happBundleDetails.happ_bundle.bundle_url, hostPubKey, serviceloggerPref, data.membrane_proofs)
       }
 
       // Note: Do not need to install UI's for hosted happ

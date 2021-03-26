@@ -23,25 +23,15 @@ const getReadOnlyPubKey = async () => {
 const getAppIds = async () => {
   try {
     const config = yaml.load(fs.readFileSync(CONFIGURE_HC, 'utf8'))
-    const getId = (id) => {
-      const app = config.core_happs.find(h => h.app_id === id)
-      console.log("app is: ", app)
-      if (app.uuid === undefined) {
-        return `${id}:${app.version}`
-      } else {
-        return `${id}:${app.version}:${app.uuid}`
-      }
+    const getId = (name) => {
+      const { bundle_url } = config.core_happs.find(h => h.bundle_url.includes(name))
+      return new URL(bundle_url).pathname
+      .replace('.happ', '')
+      .replace('.', ':')
     }
-    if (process.env.NODE_ENV === 'test') {
-      return {
-        HHA: config[0].app_name,
-        SL: config[1].app_name
-      }
-    } else {
-      return {
-        HHA: getId('core-happ'),
-        SL: getId('servicelogger')
-      }
+    return {
+      HHA: getId('holo-hosting-app'),
+      SL: getId('servicelogger')
     }
   } catch (e) {
     throw new Error(e)

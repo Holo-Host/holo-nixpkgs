@@ -9,7 +9,6 @@
   "scripts": {
     "test": "jest --forceExit",
     "build": "webpack --config webpack.config.cjs",
-    "fetch-dnas": "sh ./scripts/fetch-dna.sh",
     "holochain": "node scripts/setup-holochain.js && hc sandbox -f=4444 run -p=42233"
   },
   "author": "robbie.carlton@holo.host",
