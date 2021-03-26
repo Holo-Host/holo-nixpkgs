@@ -31,7 +31,7 @@ const getAppIds = async () => {
         .replace('.', ':')
     }
     return {
-      HHA: getId('holo-hosting-app'),
+      HHA: getId('core-app'),
       SL: getId('servicelogger')
     }
   } catch (e) {
