@@ -21,7 +21,7 @@ case $1 in
         subdomain="hydra"
     ;;
     *)
-        subdomain="hydra-dev"
+        subdomain="hydra"
     ;;
 esac
 

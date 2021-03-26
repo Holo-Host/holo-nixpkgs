@@ -18,13 +18,6 @@ let
     sha256 = "0jrh5ghisaqdd0vldbywags20m2cxpkbbk5jjjmwaw0gr8nhsafv";
   };
 
-  hp-admin = fetchFromGitHub {
-    owner = "Holo-Host";
-    repo = "hp-admin";
-    rev = "e8cad8561580e028d917685539f44d53025c4ea5";
-    sha256 = "0mvhlgp6nlv069wvbc5nbd8229i3fjzyk0qszlmkv9hp0jyph51y";
-  };
-
   nixpkgs-mozilla = fetchTarball {
     url = "https://github.com/mozilla/nixpkgs-mozilla/archive/8c007b60731c07dd7a052cce508de3bb1ae849b4.tar.gz";
     sha256 = "1zybp62zz0h077zm2zmqs2wcg3whg6jqaah9hcl1gv4x8af4zhs6";
@@ -51,8 +44,6 @@ rec {
   inherit (callPackage ./holo-auth {}) holo-auth;
 
   inherit (callPackage ./holo-router {}) holo-router;
-
-  inherit (callPackage hp-admin {}) hp-admin-ui;
 
   inherit (callPackage ./hp-admin-crypto {}) hp-admin-crypto;
 
@@ -135,7 +126,7 @@ rec {
   holo-cli = callPackage ./holo-cli {};
 
   holo-envoy = callPackage ./holo-envoy {
-    inherit (rust.packages.nightly) rustPlatform;
+    inherit (rust.packages.stable) rustPlatform;
   };
 
   holo-nixpkgs.path = gitignoreSource ../..;
@@ -144,13 +135,40 @@ rec {
     import "${holo-nixpkgs.path}/tests" { inherit pkgs; }
   );
 
-  inherit (callPackage ./holochain {
+  holochainMeta = callPackage ./holochain {
     inherit (rust.packages.stable) rustPlatform;
-  }) mkHolochainBinary holochain;
+  };
 
-  dna-util = mkHolochainBinary { crate = "dna_util"; };
+  inherit (holochainMeta)
+    # utility functions
+    mkHolochainBinary
+    mkHolochainAllBinaries
+    mkHolochainAllBinariesWithDeps
 
-  kitsune-p2p-proxy = mkHolochainBinary { crate = "kitsune_p2p/proxy"; };
+    # meta packages
+    holochainVersions
+
+    # expose all vesrions to make hydra build them
+    holochainAllBinariesWithDeps
+    ;
+
+  inherit (holochainAllBinariesWithDeps.hpos)
+    # packages with HPOS default versions
+    holochain
+    hc
+    kitsune-p2p-proxy
+    lair-keystore
+    ;
+
+  # expose all versions to make hydra build them
+  holochain_main = holochainAllBinariesWithDeps.main.holochain;
+  dna-util_main = holochainAllBinariesWithDeps.main.dna-util;
+  lair-keystore_main = holochainAllBinariesWithDeps.main.lair-keystore;
+  kitsune-p2p-proxy_main = holochainAllBinariesWithDeps.main.kitsune-p2p-proxy;
+  holochain_develop = holochainAllBinariesWithDeps.develop.holochain;
+  hc_develop = holochainAllBinariesWithDeps.develop.hc;
+  lair-keystore_develop = holochainAllBinariesWithDeps.develop.lair-keystore;
+  kitsune-p2p-proxy_develop = holochainAllBinariesWithDeps.develop.kitsune-p2p-proxy;
 
   holoport-nano-dtb = callPackage ./holoport-nano-dtb {};
 
@@ -222,10 +240,6 @@ rec {
       };
     }
   );
-
-  lair-keystore = callPackage ./lair-keystore {
-    inherit (rust.packages.stable) rustPlatform;
-  };
 
   libsodium = previous.libsodium.overrideAttrs (
     super: {

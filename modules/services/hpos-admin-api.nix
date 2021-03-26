@@ -18,7 +18,7 @@ in
 
   config = mkIf cfg.enable {
     systemd.services.hpos-admin-api = {
-      after = [ "network.target" ];
+      after = [ "network.target" "nginx.service" ];
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
