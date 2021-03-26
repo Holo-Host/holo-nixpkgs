@@ -38,7 +38,7 @@ const getAppIds = async () => {
       }
     } else {
       return {
-        HHA: getId('core-happs'),
+        HHA: getId('core-app'),
         SL: getId('servicelogger')
       }
     }

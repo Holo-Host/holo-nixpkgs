@@ -229,16 +229,16 @@ in
     install-list = {
       core_happs = [
        {
-         app_id = "core-happs";
+         app_id = "core-happ";
          uuid = "0001";
-         version = "alpha1";
-         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha1/holo-hosting-app.happ";
+         version = "alpha2";
+         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha2/core-app.happ";
        }
        {
          app_id = "servicelogger";
          uuid = "0001";
-         version = "alpha2";
-         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha2/servicelogger.happ";
+         version = "alpha3";
+         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha3/servicelogger.happ";
        }
       ];
       self_hosted_happs = [
