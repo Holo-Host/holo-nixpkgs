@@ -10,12 +10,12 @@
     "test": "jest --forceExit",
     "build": "webpack --config webpack.config.cjs",
     "fetch-dnas": "sh ./scripts/fetch-dna.sh",
-    "holochain": "holochain-run-dna -c ./tests/config.yml -a 4444"
+    "holochain": "node scripts/setup-holochain.js && hc sandbox -f=4444 run -p=42233"
   },
   "author": "robbie.carlton@holo.host",
   "license": "ISC",
   "dependencies": {
-    "@holochain/conductor-api": "0.0.1-dev.16",
+    "@holochain/conductor-api": "0.0.1",
     "@msgpack/msgpack": "^2.3.0",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
