@@ -25,7 +25,9 @@ async function main () {
   for (const happ of core_happs) {
     const { bundle_url, ui_url } = happ
     const bundlePath = await downloadFile(bundle_url)
-    const appId = new URL(bundle_url).pathname
+    const bundleUrlPath = new URL(bundle_url).pathname
+    const appId = bundleUrlPath
+      .slice(bundleUrlPath.lastIndexOf('/') + 1)
       .replace('.happ', '')
       .replace('.', ':')
 
