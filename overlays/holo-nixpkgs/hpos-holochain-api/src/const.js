@@ -25,9 +25,10 @@ const getAppIds = async () => {
     const config = yaml.load(fs.readFileSync(CONFIGURE_HC, 'utf8'))
     const getId = (name) => {
       const { bundle_url } = config.core_happs.find(h => h.bundle_url.includes(name))
-      return new URL(bundle_url).pathname
-      .replace('.happ', '')
-      .replace('.', ':')
+      const bundleUrlPath = new URL(bundle_url).pathname
+      return bundleUrlPath.slice(bundleUrlPath.lastIndexOf('/') + 1)
+        .replace('.happ', '')
+        .replace('.', ':')
     }
     return {
       HHA: getId('holo-hosting-app'),
