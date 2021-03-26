@@ -58,10 +58,13 @@ const getPresentedHapps = async usageTimeInterval => {
 }
 
 app.get('/hosted_happs', async (req, res) => {
-  const usageTimeInterval = await new Promise(resolve => req.on('data', (body) => {
-    resolve(JSON.parse(body.toString()))
-  }))
-  if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
+  const usageTimeInterval = await Promise.race([
+    new Promise(resolve => req.on('data', (body) => {
+      resolve(JSON.parse(body.toString()))
+    })), 
+    new Promise(resolve => setTimeout(() => resolve(undefined), 100))
+  ])
+  if (usageTimeInterval !== undefined && !isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
