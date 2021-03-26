@@ -91,7 +91,6 @@ This endpoint is called to install/enable a hosted happ by passing the happ_id a
 - ### Testing locally:
   - See that you are root of the `/hpos-holochain-api/` folder
   - `yarn install`
-  - To get the dna for testing run `yarn fetch-dnas`
   - In one terminal run `yarn holochain`
   - In a new terminal run `yarn test` to test out this module
   - After each test, make sure to <kbd>Ctrl</kbd>+<kbd>C</kbd> Holochain and re-run the command, in order to reset its state.
