@@ -17,7 +17,7 @@ def request(ctx, method, path, **kwargs):
 @cli.command(help='Get info on happs currently hosted')
 @click.pass_context
 def hosted_happs(ctx):
-    print(request(ctx, 'GET', '/hosted_happs').json())
+    print(request(ctx, 'GET', '/hosted_happs').text)
 
 @cli.command(help='Pass a happ_id to be installed as a hosted happ')
 @click.argument('happ_id')
