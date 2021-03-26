@@ -18,7 +18,7 @@ in
 
   config = mkIf cfg.enable {
     systemd.services.hpos-holochain-api = {
-      after = [ "network.target" ];
+      after = [ "network.target" "nginx.service" "holochain.service" ];
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
