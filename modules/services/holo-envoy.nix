@@ -34,7 +34,13 @@ in
       };
 
       postStart = ''
-        sleep 2.5 # wait for socket to be ready
+        START_LINE=$(journalctl -u holo-envoy -rn 50 | grep -n -m 1 "Starting holo-envoy.service" | cut -d : -f 1)
+        COUNTER=600 # Give up after 1 minute
+        until [ $COUNTER == 0 ] || [[ $(journalctl -u holo-envoy -rn $START_LINE | grep -qm 1 "Server has started on port:") ]]; do # wait for envoy to be ready
+             sleep 0.1
+             let COUNTER-=1
+             START_LINE=$(journalctl -u holo-envoy -rn 50 | grep -n -m 1 "Starting holo-envoy.service" | cut -d : -f 1) 
+         done
       '';
     };
   };
