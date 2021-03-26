@@ -24,7 +24,7 @@ const getAppIds = async () => {
   try {
     const config = yaml.load(fs.readFileSync(CONFIGURE_HC, 'utf8'))
     const getId = (name) => {
-      const bundle_url = config.core_happs.find(h => h.bundle_url.includes(name))
+      const { bundle_url } = config.core_happs.find(h => h.bundle_url.includes(name))
       return new URL(bundle_url).pathname
       .replace('.happ', '')
       .replace('.', ':')
