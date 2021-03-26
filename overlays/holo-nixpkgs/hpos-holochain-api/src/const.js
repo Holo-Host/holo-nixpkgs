@@ -25,6 +25,7 @@ const getAppIds = async () => {
     const config = yaml.load(fs.readFileSync(CONFIGURE_HC, 'utf8'))
     const getId = (id) => {
       const app = config.core_happs.find(h => h.app_id === id)
+      console.log("app is: ", app)
       if (app.uuid === undefined) {
         return `${id}:${app.version}`
       } else {
@@ -38,7 +39,7 @@ const getAppIds = async () => {
       }
     } else {
       return {
-        HHA: getId('core-app'),
+        HHA: getId('core-happ'),
         SL: getId('servicelogger')
       }
     }
