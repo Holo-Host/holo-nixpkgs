@@ -2,7 +2,7 @@ const child_process = require('child_process')
 const { promisify } = require('util')
 const yaml = require('js-yaml')
 const fs = require('fs')
-const downloadFile = require('../src/utils.js')
+const { downloadFile } = require('../src/utils.js')
 
 const exec = promisify(child_process.exec)
 const readFile = promisify(fs.readFile)
@@ -25,6 +25,9 @@ async function main () {
   for (const happ of core_happs) {
     const { bundle_url, ui_url } = happ
     const bundlePath = await downloadFile(bundle_url)
+    const appId = new URL(bundle_url).pathname
+      .replace('.happ', '')
+      .replace('.', ':')
 
     await exec(
       `hc sandbox call install-app-bundle --agent-key '${agentPubKey}' --app-id '${appId}' '${bundlePath}'`
