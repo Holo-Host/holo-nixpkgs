@@ -10,7 +10,8 @@ const installHostedHapp = async (
   happId,
   bundleUrl,
   agentPubKey,
-  serviceloggerPref
+  serviceloggerPref,
+  membraneProofs
 ) => {
   console.log('Installing hApp...', happId)
   // How to install a bundle
@@ -35,7 +36,7 @@ const installHostedHapp = async (
       path: bundlePath,
       agent_key: agentPubKey,
       installed_app_id: happId,
-      membrane_proofs: {}
+      membrane_proofs: membraneProofs || {}
     }
     console.log('Installing happ: ', payload)
     const installedApp = await adminWebsocket.installAppBundle(payload)
@@ -87,18 +88,26 @@ const installServicelogger = async (adminWebsocket, happId, preferences) => {
   await adminWebsocket.installApp({
     agent_key: hostPubKey,
     installed_app_id: installedApp,
-    dnas: [{
-      nick: 'servicelogger',
-      hash: registeredHash
-    }]
+    dnas: [
+      {
+        nick: 'servicelogger',
+        hash: registeredHash
+      }
+    ]
   })
 
   console.log(`Activating ${installedApp}...`)
   await adminWebsocket.activateApp({ installed_app_id: installedApp })
-  return callZome(appWebsocket, installedApp, 'service', 'set_logger_settings', preferences)
+  return callZome(
+    appWebsocket,
+    installedApp,
+    'service',
+    'set_logger_settings',
+    preferences
+  )
 }
 
-const createAgent = async (adminWebsocket) => {
+const createAgent = async adminWebsocket => {
   try {
     const agentPubKey = await adminWebsocket.generateAgentPubKey()
     console.log(`Generated new agent ${agentPubKey.toString('base64')}`)
@@ -108,7 +117,7 @@ const createAgent = async (adminWebsocket) => {
   }
 }
 
-const listInstalledApps = async (adminWebsocket) => {
+const listInstalledApps = async adminWebsocket => {
   try {
     const apps = await adminWebsocket.listActiveApps()
     console.log('listActiveApps app result: ', apps)
@@ -118,7 +127,7 @@ const listInstalledApps = async (adminWebsocket) => {
   }
 }
 
-const startHappInterface = async (adminWebsocket) => {
+const startHappInterface = async adminWebsocket => {
   try {
     console.log(`Starting app interface on port ${HAPP_PORT}`)
     await adminWebsocket.attachAppInterface({ port: HAPP_PORT })
