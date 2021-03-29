@@ -1,0 +1,8 @@
+core_happs:
+  # HoloHosting App
+  - bundle_url: https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha2/core-app.happ
+    ui_url: https://example.org
+  # Servicelogger App
+  - bundle_url: https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha2/servicelogger.happ
+    ui_url: https://example.org
+self_hosted_happs: []
