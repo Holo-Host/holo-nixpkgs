@@ -5,7 +5,7 @@ The hpos-holochain-api is an express server that exposes endpoints that interact
 ## Exposed Endpoints
 
 ### 1. `GET /hosted_happs`
-This endpoint is called to read all current hosted happs and return the usage data for each by passing the usageTimeInterval object to query usage entry data in each servicelogger instance
+This endpoint is called to read all current hosted happs and return the usage data for each by passing the usageTimeInterval object to query usage entry data in each `servicelogger` instance
 
 **Request Body**
 ```json
@@ -16,7 +16,7 @@ This endpoint is called to read all current hosted happs and return the usage da
 ```
 
 **Response Body:**
-#### Response with all successful servicelogger calls
+#### Response with all successful `servicelogger` calls
 `HTTP STATUS 200`:
 ```json
   [{ // enabled app with usage stats
@@ -68,7 +68,7 @@ Returns data for the dashboard page of host-console. Mostly usage data aggregate
 `bandwidth` and `currentTotalStorage` are both presented as number of *bytes*. `cpu` as number of *microseconds*.
 
 ### 3. `POST /install_hosted_happ`
-This endpoint is called to install/enable a hosted happ by passing the happ_id and preferences to set up the servicelogger instance
+This endpoint is called to install/enable a hosted happ by passing the happ_id and preferences to set up the `servicelogger` instance
 
 **Request Body**
 ```json
