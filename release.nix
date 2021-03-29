@@ -4,7 +4,7 @@ with pkgs;
 with lib;
 
 let
-  dotName = key: set: map( val: key + "." + val ) attrNames (getAttr key set);
+  dotName = key: set: (map ( val: key + "." + val ) (attrNames (getAttr key set)));
 
   overlay = import ./overlays/holo-nixpkgs;
 
