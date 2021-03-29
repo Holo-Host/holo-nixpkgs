@@ -4,6 +4,8 @@ with pkgs;
 with lib;
 
 let
+  dotName = key: set: map( val: key + "." + val ) attrNames (getAttr key set);
+
   overlay = import ./overlays/holo-nixpkgs;
 
   overlayPackages =
@@ -29,6 +31,6 @@ in
       holo-nixpkgs = releaseTools.channel {
         name = "holo-nixpkgs";
         src = gitignoreSource ./.;
-        constituents = [ "aorura.aarch64-linux" ];
+        constituents = concatLists (map (key: dotName key self) (attrNames self));
       };
     }
