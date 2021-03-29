@@ -4,7 +4,12 @@ with pkgs;
 with lib;
 
 let
-  dotName = key: set: (map ( val: key + "." + val ) (attrNames (getAttr key set)));
+  dotName = key: set:
+    let
+      jobset = getAttr key set;
+      derivations = filter (system: isDerivation (getAttr system jobset)) (attrNames jobset);
+    in
+      map( val: key + "." + val ) derivations;
 
   overlay = import ./overlays/holo-nixpkgs;
 
