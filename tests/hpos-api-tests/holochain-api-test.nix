@@ -11,7 +11,7 @@
 
     happs = machine.succeed("hc-state -d").strip()
     print(happs)
-
+    """
     list_of_happs = machine.succeed(
         "hpos-holochain-client --url=http://localhost/holochain-api/ hosted-happs"
     ).strip()
@@ -19,9 +19,9 @@
         "'name': 'Elemental Chat'" in list_of_happs
     ), "Failed to Get the list of hosted happs from hha"
     print(list_of_happs)
-    """
+    
     # The following tests only pass in a non sandbox environment
-    happ_id = list_of_happs[9:62]s
+    happ_id = list_of_happs[9:62]
     print("Happ ID to install: ", happ_id)
     preferences = {
         "max_fuel_before_invoice": 10,
