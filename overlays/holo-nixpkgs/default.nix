@@ -126,7 +126,7 @@ rec {
   holo-cli = callPackage ./holo-cli {};
 
   holo-envoy = callPackage ./holo-envoy {
-    inherit (rust.packages.nightly) rustPlatform;
+    inherit (rust.packages.stable) rustPlatform;
   };
 
   holo-nixpkgs.path = gitignoreSource ../..;
@@ -135,13 +135,40 @@ rec {
     import "${holo-nixpkgs.path}/tests" { inherit pkgs; }
   );
 
-  inherit (callPackage ./holochain {
+  holochainMeta = callPackage ./holochain {
     inherit (rust.packages.stable) rustPlatform;
-  }) mkHolochainBinary holochain;
+  };
 
-  dna-util = mkHolochainBinary { crate = "dna_util"; };
+  inherit (holochainMeta)
+    # utility functions
+    mkHolochainBinary
+    mkHolochainAllBinaries
+    mkHolochainAllBinariesWithDeps
 
-  kitsune-p2p-proxy = mkHolochainBinary { crate = "kitsune_p2p/proxy"; };
+    # meta packages
+    holochainVersions
+
+    # expose all vesrions to make hydra build them
+    holochainAllBinariesWithDeps
+    ;
+
+  inherit (holochainAllBinariesWithDeps.hpos)
+    # packages with HPOS default versions
+    holochain
+    hc
+    kitsune-p2p-proxy
+    lair-keystore
+    ;
+
+  # expose all versions to make hydra build them
+  holochain_main = holochainAllBinariesWithDeps.main.holochain;
+  dna-util_main = holochainAllBinariesWithDeps.main.dna-util;
+  lair-keystore_main = holochainAllBinariesWithDeps.main.lair-keystore;
+  kitsune-p2p-proxy_main = holochainAllBinariesWithDeps.main.kitsune-p2p-proxy;
+  holochain_develop = holochainAllBinariesWithDeps.develop.holochain;
+  hc_develop = holochainAllBinariesWithDeps.develop.hc;
+  lair-keystore_develop = holochainAllBinariesWithDeps.develop.lair-keystore;
+  kitsune-p2p-proxy_develop = holochainAllBinariesWithDeps.develop.kitsune-p2p-proxy;
 
   holoport-nano-dtb = callPackage ./holoport-nano-dtb {};
 
@@ -160,9 +187,9 @@ rec {
       meta.platforms = [ "x86_64-linux" ];
     };
 
-    # virtualbox = (hpos.buildImage [ "${hpos.physical}/vm/virtualbox" ]) // {
-    #   meta.platforms = [ "x86_64-linux" ];
-    # };
+    test = (buildImage [ "${hpos.physical}/vm/qemu" "${hpos.logical}/sandbox/test"]) // {
+      meta.platforms = [ "x86_64-linux" ];
+    };
   };
 
   hpos-admin-api = callPackage ./hpos-admin-api {
@@ -205,10 +232,6 @@ rec {
       };
     }
   );
-
-  lair-keystore = callPackage ./lair-keystore {
-    inherit (rust.packages.stable) rustPlatform;
-  };
 
   libsodium = previous.libsodium.overrideAttrs (
     super: {
@@ -268,6 +291,11 @@ rec {
   });
 
   inherit (callPackage ./hpos-holochain-api {}) hpos-holochain-api;
+
+  # here for testing purposes only for trycp_server installation
+  tryorama = callPackage ./tryorama {
+    inherit (rust.packages.stable) rustPlatform;
+  };
 
   hpos-holochain-client = callPackage ./hpos-holochain-client {
     stdenv = stdenvNoCC;

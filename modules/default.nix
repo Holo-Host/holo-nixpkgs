@@ -23,6 +23,7 @@
     ./services/hpos-led-manager.nix
     ./services/lair-keystore.nix
     ./services/configure-holochain.nix
+    ./services/trycp-server.nix
     ./system/holo-nixpkgs/auto-upgrade.nix
     ./system/holo-nixpkgs/usb-reset.nix
     ./system/holo-nixpkgs/install.nix

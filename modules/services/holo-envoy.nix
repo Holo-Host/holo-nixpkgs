@@ -4,6 +4,7 @@ with lib;
 
 let
   cfg = config.services.holo-envoy;
+  holochain-home = config.services.holochain.working-directory;
 in
 
 {
@@ -18,12 +19,17 @@ in
 
   config = mkIf cfg.enable {
     systemd.services.holo-envoy = {
-      after = [ "network.target" "holochain-conductor.service" ];
-      requires = [ "holochain-conductor.service" ];
+      after = [ "network.target" "lair-keystore.service" ];
+      requires = [ "lair-keystore.service" ];
       wantedBy = [ "multi-user.target" ];
 
+      preStart = ''
+        mkdir -p ${holochain-home}/lair-shim
+        rm -rf ${holochain-home}/lair-shim/*
+      '';
+
       serviceConfig = {
-        Environment = "LOG_LEVEL=silly";
+        Environment = "LOG_LEVEL=debug";
         ExecStart = "${cfg.package}/bin/holo-envoy";
       };
     };
