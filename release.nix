@@ -29,6 +29,6 @@ in
       holo-nixpkgs = releaseTools.channel {
         name = "holo-nixpkgs";
         src = gitignoreSource ./.;
-        constituents = [ aorura.aarch64-linux ];
+        constituents = [ "aorura.aarch64-linux" ];
       };
     }
