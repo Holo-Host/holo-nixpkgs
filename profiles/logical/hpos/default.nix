@@ -25,6 +25,8 @@ let
   holochainWorkingDir = "/var/lib/holochain-rsm";
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
+
+  kitsuneAddress = "kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/165.227.194.75/p/5788/--";
 in
 
 {
@@ -41,9 +43,9 @@ in
   # REVIEW: `true` breaks gtk+ builds (cairo dependency)
   environment.noXlibs = false;
 
-  environment.systemPackages = [ hc-state hpos-reset hpos-admin-client hpos-update-cli git ];
+  environment.systemPackages = with holochainAllBinariesWithDeps.hpos; [ git hc-state hpos-admin-client hpos-holochain-client hpos-reset hpos-update-cli holochain hc kitsune-p2p-proxy ];
 
-  networking.firewall.allowedTCPPorts = [ 443 ];
+  networking.firewall.allowedTCPPorts = [ 443 9000 ];
 
   networking.hostName = lib.mkOverride 1100 "hpos";
 
@@ -78,6 +80,8 @@ in
 
   services.mingetty.autologinUser = "root";
 
+  services.hpos-led-manager.kitsuneAddress = kitsuneAddress;
+
   services.nginx = {
     enable = true;
 
@@ -87,6 +91,9 @@ in
       locations = {
         "/" = {
           alias = "${pkgs.host-console-ui}/";
+          tryFiles = ''
+             $uri $uri/ /index.html
+           '';
           extraConfig = ''
             limit_req zone=zone1 burst=30;
           '';
@@ -151,11 +158,17 @@ in
           proxyPass = "http://127.0.0.1:4656";
           proxyWebsockets = true;   # TODO: add proxy_send_timeout, proxy_read_timeout HERE
         };
+
+         "/trycp/" = {
+          proxyPass = "http://127.0.0.1:9000";
+          proxyWebsockets = true;
+        };
       };
     };
 
     virtualHosts.localhost = {
         locations."/".proxyPass = "http://unix:/run/hpos-admin-api/hpos-admin-api.sock:/";
+        locations."/holochain-api/".proxyPass = "http://unix:/run/hpos-holochain-api/hpos-holochain-api.sock:/";
       };
 
     appendHttpConfig = ''
@@ -171,8 +184,8 @@ in
     restart-interval = "00/2:30"; # every 2 hours at 30 past
     working-directory = holochainWorkingDir;
     config = {
-      environment_path = "${holochainWorkingDir}/databases";
-      keystore_path = "${holochainWorkingDir}/lair-keystore";
+      environment_path = "${holochainWorkingDir}/databases_lmdb2";
+      keystore_path = "${holochainWorkingDir}/lair-shim";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
         {
@@ -183,7 +196,8 @@ in
         }
       ];
       network = {
-        bootstrap_service = "https://bootstrap.holo.host";
+        bootstrap_service = "https://bootstrap-staging.holo.host";
+        network_type = "quic_bootstrap";
         transport_pool = [{
           type = "proxy";
           sub_transport = {
@@ -191,7 +205,7 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = "kitsune-proxy://nFCWLsuRC0X31UMv8cJxioL-lBRFQ74UQAsb8qL4XyM/kitsune-quic/h/165.22.32.11/p/5775/--";
+            proxy_url = kitsuneAddress;
           };
         }];
         tuning_params = {
@@ -201,7 +215,7 @@ in
           default_rpc_single_timeout_ms = 20000;
           default_rpc_multi_remote_agent_count = 2;
           default_rpc_multi_timeout_ms = 2000;
-          agent_info_expires_after_ms = 1000 * 60 * 30; #// 20 minutes
+          agent_info_expires_after_ms = 1000 * 60 * 30; #// Default was 20 minutes
           tls_in_mem_session_storage = 512;
           proxy_keepalive_ms = 1000 * 60 * 2;
           proxy_to_expire_ms = 1000 * 60 * 5;
@@ -214,14 +228,24 @@ in
     enable = true;
     working-directory = configureHolochainWorkingDir;
     install-list = {
-      core_happs = [];
+      core_happs = [
+#        {
+#          app_id = "core-happs";
+#          uuid = "0001";
+#          version = "alpha14";
+#          dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha14/holo-hosting-app.dna.gz";
+#        }
+#        {
+#          app_id = "servicelogger";
+#          uuid = "0001";
+#          version = "alpha4";
+#          dna_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha7/servicelogger.dna.gz";
+#        }
+      ];
       self_hosted_happs = [
         {
-          app_id = "elemental-chat";
-          uuid = "0002";
-          version = "alpha19";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha29/elemental-chat-for-dna-alpha19-0002.zip";
-          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha19/elemental-chat.dna.gz";
+          bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.1.0-alpha1/elemental-chat.0_1_0_alpha1.0001.happ";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-catchup/elemental-chat-for-dna-0_1_0_alpha1-0001.zip";
         }
       ];
     };

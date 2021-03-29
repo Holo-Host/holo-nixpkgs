@@ -1,16 +1,15 @@
-{ stdenv, rustPlatform, fetchFromGitHub, perl, xcbuild, darwin, libsodium, openssl, pkgconfig, lib, callPackage }:
+{ stdenv, rustPlatform, fetchFromGitHub, perl, xcbuild, darwin, libsodium, openssl, pkgconfig, lib, callPackage, rust, libiconv }:
 
-rec {
+let
   mkHolochainBinary = {
-      version ? "2021-03-02"
-      , rev ? "8c30c5dccd7a988ef1df169a6f4369fd93a18b49"
-      , sha256 ? "11imsc25wf8abszm2yq1r4gss791kslzp94vgl2bjypnmzfmchqb"
-      , cargoSha256 ? "1hh0w8akjzm1zndx40rhbmmi2vvyfin7garl97kimxxyzilj02xq"
+      rev
+      , sha256
+      , cargoSha256
       , crate
       , ... } @ overrides: rustPlatform.buildRustPackage (lib.attrsets.recursiveUpdate {
     name = "holochain";
 
-    src = fetchFromGitHub {
+    src = lib.makeOverridable fetchFromGitHub {
       owner = "holochain";
       repo = "holochain";
       inherit rev sha256;
@@ -32,6 +31,7 @@ rec {
       CoreFoundation
       CoreServices
       Security
+      libiconv
     ]);
 
     RUST_SODIUM_LIB_DIR = "${libsodium}/lib";
@@ -43,14 +43,79 @@ rec {
         "x86_64-linux"
         "x86_64-darwin"
     ];
-  } (builtins.removeAttrs overrides [
+  } # remove attributes that cause failure when they're passed to `buildRustPackage`
+    (builtins.removeAttrs overrides [
     "rev"
     "sha256"
     "cargoSha256"
     "crate"
+    "bins"
   ]));
 
-  holochain = mkHolochainBinary {
-    crate = "holochain";
+  mkHolochainAllBinaries = {
+    rev
+    , sha256
+    , cargoSha256
+    , bins
+    , ...
+  } @ overrides:
+    lib.attrsets.mapAttrs (_: crate:
+      mkHolochainBinary ({
+        inherit rev sha256 cargoSha256 crate;
+      } // overrides)
+    ) bins
+  ;
+
+  mkHolochainAllBinariesWithDeps = { rev, sha256, cargoSha256, otherDeps, bins }:
+    mkHolochainAllBinaries {
+      inherit rev sha256 cargoSha256 bins;
+    }
+    // otherDeps
+    ;
+
+  lair-keystore-0_0_1-alpha_10 = callPackage ./lair-keystore {
+    inherit (rust.packages.stable) rustPlatform;
+  };
+
+  versions = import ./versions.nix;
+
+  versionsWithDeps = {
+    hpos = versions.hpos // {
+      otherDeps = {
+        lair-keystore = lair-keystore-0_0_1-alpha_10;
+      };
+    };
+
+    develop = versions.develop // {
+      otherDeps = {
+        lair-keystore = lair-keystore-0_0_1-alpha_10;
+      };
+    };
+
+    main = versions.main // {
+      otherDeps = {
+        lair-keystore = lair-keystore-0_0_1-alpha_10;
+      };
+    };
+  };
+in
+
+{
+  inherit
+    mkHolochainBinary
+    mkHolochainAllBinaries
+    mkHolochainAllBinariesWithDeps
+    ;
+
+  holochainVersions = versions;
+
+  holochainAllBinariesWithDeps = builtins.mapAttrs (_name: value:
+    mkHolochainAllBinariesWithDeps value
+  ) {
+    inherit (versionsWithDeps)
+      hpos
+      develop
+      main
+      ;
   };
 }
