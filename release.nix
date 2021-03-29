@@ -4,13 +4,11 @@ with pkgs;
 with lib;
 
 let
-  constitute = sets: concatMap (collect isDerivation) sets;
-
   overlay = import ./overlays/holo-nixpkgs;
 
   overlayPackages =
     recurseIntoAttrs (getAttrs (attrNames (overlay {} {})) pkgs);
-  
+
   release-lib = import (pkgs.path + "/pkgs/top-level/release-lib.nix");
 in
 
@@ -31,6 +29,6 @@ in
       holo-nixpkgs = releaseTools.channel {
         name = "holo-nixpkgs";
         src = gitignoreSource ./.;
-        constituents = constitute (attrNames self);
+        constituents = attrNames self;
       };
     }
