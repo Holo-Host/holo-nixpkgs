@@ -68,7 +68,7 @@ async def receive_config(backoff_exp=1):
 
 
 def scan_config_paths():
-    return glob(state_config_path()) + glob('/media/*/hpos-config.json')
+    return glob(state_config_path()) + glob('/dev/*/hpos-config.json')
 
 
 @ensureDeferred
