@@ -1,4 +1,4 @@
-{ pkgs }: with pkgs;
+{ pkgs, darwin }: with pkgs;
 
 let
   inherit (rust.packages.nightly) rustPlatform;
@@ -15,6 +15,10 @@ in
     };
 
     cargoSha256 = "0bvd872z8xnld1wkgrhlnh6rn0phzazx67ldp6whwjlgnii1f1zr";
+
+    buildInputs = [ ] ++ stdenv.lib.optionals stdenv.isDarwin [
+      darwin.libiconv
+    ];
 
   };
 }
