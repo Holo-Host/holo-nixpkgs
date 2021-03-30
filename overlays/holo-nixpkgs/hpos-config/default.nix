@@ -23,7 +23,7 @@ in
 
     nativeBuildInputs = [ perl ];
 
-    buildInputs = lib.optionals stdenv.isDarwin [ Security ];
+    buildInputs = lib.optionals stdenv.isDarwin [ Security darwin.libiconv ];
 
     RUST_SODIUM_LIB_DIR = "${libsodium}/lib";
     RUST_SODIUM_SHARED = "1";
