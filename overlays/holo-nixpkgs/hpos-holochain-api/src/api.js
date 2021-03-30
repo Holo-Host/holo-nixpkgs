@@ -2,13 +2,20 @@ const { ADMIN_PORT, HAPP_PORT, getAppIds } = require('./const')
 const { AdminWebsocket, AppWebsocket } = require('@holochain/conductor-api')
 const { downloadFile } = require('./utils')
 const msgpack = require('@msgpack/msgpack')
+const util = require('util')
 
 // NOTE: this code assumes a single DNA per hApp.  This will need to be updated when the hApp bundle
 // spec is completed, and the hosted-happ config Yaml file will also need to be likewise updated
-const installHostedHapp = async (happId, dna, agentPubKey, serviceloggerPref) => {
-  console.log('Installing DNA...', dna)
-  // How to install a DNA
-  // We need to download the DNA to a perticular location.
+const installHostedHapp = async (
+  happId,
+  bundleUrl,
+  agentPubKey,
+  serviceloggerPref,
+  membraneProofs
+) => {
+  console.log('Installing hApp...', happId)
+  // How to install a bundle
+  // We need to download the bundle to a perticular location.
   // Use that location and install
   // NOTE: we also have to install a servicelogger instance
   // We need to know the path to the servicelogger
@@ -21,57 +28,59 @@ const installHostedHapp = async (happId, dna, agentPubKey, serviceloggerPref) =>
     const adminWebsocket = await AdminWebsocket.connect(
       `ws://localhost:${ADMIN_PORT}`
     )
-    console.log('Downloading DNA URL...')
-    const payloadDna = []
-    for (let i = 0; i < dna.length; i++) {
+    console.log('Downloading bundle URL...', bundleUrl)
 
-      const dnaPath = await downloadFile(dna[i].src_url)
-      const registeredHash = await adminWebsocket.registerDna({
-        source: { path: dnaPath }
-      })
-      payloadDna.push({
-        nick: dna[i].nick,
-        hash: registeredHash
-      })
-    }
+    const bundlePath = await downloadFile(bundleUrl)
+
     const payload = {
+      path: bundlePath,
       agent_key: agentPubKey,
       installed_app_id: happId,
-      dnas: payloadDna
+      membrane_proofs: membraneProofs || {}
     }
     console.log('Installing happ: ', payload)
-    const installedApp = await adminWebsocket.installApp(payload)
+    const installedApp = await adminWebsocket.installAppBundle(payload)
     console.log('Activate happ...', installedApp)
 
     // Install servicelogger instance
     await installServicelogger(adminWebsocket, happId, serviceloggerPref)
 
-    await adminWebsocket.activateApp({ installed_app_id: installedApp.installed_app_id })
-    console.log(`Successfully installed ${happId} (read-only instance and service logger) for key ${agentPubKey.toString('base64')}`)
+    await adminWebsocket.activateApp({
+      installed_app_id: installedApp.installed_app_id
+    })
+    console.log(
+      `Successfully installed ${happId} (read-only instance and service logger) for key ${agentPubKey.toString(
+        'base64'
+      )}`
+    )
   } catch (e) {
-    console.log(`Failed to install dna ${dna.nick} with error: `, e)
-    throw new Error(`Failed to install dna ${dna.nick} with error: `, e)
+    console.log(`Failed to install happ bundle ${happId} with error: `, e)
+    throw new Error(
+      `Failed to install happ bundle ${happId} with error: ${util.inspect(e)}`
+    )
   }
 }
 
 const installServicelogger = async (adminWebsocket, happId, preferences) => {
-  console.log(`Staring installation process of servicelogger for hosted happ {${happId}}`)
-  const appWebsocket = await AppWebsocket.connect(
-    `ws://localhost:${HAPP_PORT}`
+  console.log(
+    `Starting installation process of servicelogger for hosted happ {${happId}}`
   )
+  const appWebsocket = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
   // TODO: Get servicelogger appID
   const APP_ID = await getAppIds()
-  const cell = await appWebsocket.appInfo({ installed_app_id: APP_ID.SL })
-  const serviceloggerDnaHash = cell.cell_data[0][0][0]
-  const hostPubKey = cell.cell_data[0][0][1]
+  const {
+    cell_data: [
+      {
+        cell_id: [serviceloggerDnaHash, hostPubKey]
+      }
+    ]
+  } = await appWebsocket.appInfo({ installed_app_id: APP_ID.SL })
 
   const installedApp = `${happId}::servicelogger`
-  console.log(`Registring ${installedApp}...`)
+  console.log(`Registering ${installedApp}...`)
 
   const registeredHash = await adminWebsocket.registerDna({
-    source: {
-      hash: serviceloggerDnaHash
-    },
+    hash: serviceloggerDnaHash,
     properties: Array.from(msgpack.encode({ bound_happ_id: happId }))
   })
 
@@ -79,18 +88,26 @@ const installServicelogger = async (adminWebsocket, happId, preferences) => {
   await adminWebsocket.installApp({
     agent_key: hostPubKey,
     installed_app_id: installedApp,
-    dnas: [{
-      nick: 'servicelogger',
-      hash: registeredHash
-    }]
+    dnas: [
+      {
+        nick: 'servicelogger',
+        hash: registeredHash
+      }
+    ]
   })
 
   console.log(`Activating ${installedApp}...`)
   await adminWebsocket.activateApp({ installed_app_id: installedApp })
-  return callZome(appWebsocket, installedApp, 'service', 'set_logger_settings', preferences)
+  return callZome(
+    appWebsocket,
+    installedApp,
+    'service',
+    'set_logger_settings',
+    preferences
+  )
 }
 
-const createAgent = async (adminWebsocket) => {
+const createAgent = async adminWebsocket => {
   try {
     const agentPubKey = await adminWebsocket.generateAgentPubKey()
     console.log(`Generated new agent ${agentPubKey.toString('base64')}`)
@@ -100,7 +117,7 @@ const createAgent = async (adminWebsocket) => {
   }
 }
 
-const listInstalledApps = async (adminWebsocket) => {
+const listInstalledApps = async adminWebsocket => {
   try {
     const apps = await adminWebsocket.listActiveApps()
     console.log('listActiveApps app result: ', apps)
@@ -110,7 +127,7 @@ const listInstalledApps = async (adminWebsocket) => {
   }
 }
 
-const startHappInterface = async (adminWebsocket) => {
+const startHappInterface = async adminWebsocket => {
   try {
     console.log(`Starting app interface on port ${HAPP_PORT}`)
     await adminWebsocket.attachAppInterface({ port: HAPP_PORT })
@@ -125,10 +142,11 @@ const callZome = async (ws, installedAppId, zomeName, fnName, payload) => {
   if (!appInfo) {
     throw new Error(`Couldn't find Holo Hosting App with id ${installedAppId}`)
   }
-  const cellId = appInfo.cell_data[0][0]
-  const agentKey = cellId[1]
+  const [{ cell_id }] = appInfo.cell_data
+  const [_dnaHash, agentKey] = cell_id
+
   return ws.callZome({
-    cell_id: cellId,
+    cell_id,
     zome_name: zomeName,
     fn_name: fnName,
     provenance: agentKey,
