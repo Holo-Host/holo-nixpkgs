@@ -8,7 +8,7 @@ const { hideBin } = require('yargs/helpers')
 yargs(hideBin(process.argv))
 const { UNIX_SOCKET, HAPP_PORT, ADMIN_PORT } = require('./const')
 const { callZome, createAgent, listInstalledApps, installHostedHapp } = require('./api')
-const { parsePreferences, isusageTimeInterval } = require('./utils')
+const { parsePreferences, isUsageTimeInterval } = require('./utils')
 const { getAppIds, getReadOnlyPubKey } = require('./const')
 const { AdminWebsocket, AppWebsocket } = require('@holochain/conductor-api')
 
@@ -16,6 +16,7 @@ const getPresentedHapps = async usageTimeInterval => {
   const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
   const APP_ID = await getAppIds()
   const happs = await callZome(appWs, APP_ID.HHA, 'hha', 'get_happs', null)
+
   const presentedHapps = []
   for (let i = 0; i < happs.length; i++) {
     const usage = {
@@ -58,6 +59,7 @@ const getPresentedHapps = async usageTimeInterval => {
 }
 
 app.get('/hosted_happs', async (req, res) => {
+<<<<<<< HEAD
   const usageTimeInterval = await Promise.race([
     new Promise(resolve => req.on('data', (body) => {
       resolve(JSON.parse(body.toString()))
@@ -65,6 +67,18 @@ app.get('/hosted_happs', async (req, res) => {
     new Promise(resolve => setTimeout(() => resolve(undefined), 100))
   ])
   if (usageTimeInterval !== undefined && !isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
+=======
+
+  const usageTimeInterval = {
+    duration_unit: req.query.duration_unit,
+    amount: Number(req.query.amount)
+  }
+
+  if (!isUsageTimeInterval(usageTimeInterval)) {
+    return res.status(501).send('failed to provide proper time interval query params: expected duration_unit and amount')
+  }
+
+>>>>>>> c8b832b... consume the query params to hosted_happs endpoint properly
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
@@ -75,10 +89,18 @@ app.get('/hosted_happs', async (req, res) => {
 })
 
 app.get('/dashboard', async (req, res) => {
+<<<<<<< HEAD
   const usageTimeInterval = await new Promise(resolve => req.on('data', (body) => {
     resolve(JSON.parse(body.toString()))
   }))
   if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
+=======
+  let usageTimeInterval
+  await req.on('data', (body) => {
+    usageTimeInterval = JSON.parse(body.toString())
+    if (!isUsageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
+  })
+>>>>>>> c8b832b... consume the query params to hosted_happs endpoint properly
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
