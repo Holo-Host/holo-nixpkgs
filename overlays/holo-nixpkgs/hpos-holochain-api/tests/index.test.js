@@ -17,6 +17,9 @@ function delay(t, val) {
 }
 
 test('holochain-api endpoint ', async () => {
+  const listOfHappsResponse = await request(app).get('/hosted_happs').send('badjson')
+  expect(listOfHappsResponse.status).toBe(400)
+
   const listOfHappsResponse = await request(app).get('/hosted_happs').send(usageTimeInterval)
   expect(listOfHappsResponse.status).toBe(200)
   const listOfHapps = JSON.parse(listOfHappsResponse.text)
