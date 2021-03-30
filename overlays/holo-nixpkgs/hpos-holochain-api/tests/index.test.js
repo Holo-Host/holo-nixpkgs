@@ -17,8 +17,8 @@ function delay(t, val) {
 }
 
 test('holochain-api endpoint ', async () => {
-  const listOfHappsResponse = await request(app).get('/hosted_happs').send('badjson')
-  expect(listOfHappsResponse.status).toBe(400)
+  const badHostedHappsRequest = await request(app).get('/hosted_happs').send('badjson')
+  expect(badHostedHappsRequest.status).toBe(501)
 
   const listOfHappsResponse = await request(app).get('/hosted_happs').send(usageTimeInterval)
   expect(listOfHappsResponse.status).toBe(200)
@@ -37,6 +37,9 @@ test('holochain-api endpoint ', async () => {
     "price_storage": 2,
     "price_bandwidth": 1
   }
+
+  const badInstallHostedHappRequest = await request(app).post('/install_hosted_happ').send('badjson')
+  expect(badInstallHostedHappRequest.status).toBe(501)
 
   const res = await request(app)
     .post('/install_hosted_happ')
@@ -64,6 +67,9 @@ test('dashboard endpoint', async () => {
     duration_unit: 'DAY',
     amount: 1
   }
+
+  const badDashboardRequest = await request(app).get('/dashboard').send('badjson')
+  expect(badDashboardRequest.status).toBe(501)
 
   const dashboardResponse = await request(app).get('/dashboard').send(usageTimeInterval)
   expect(dashboardResponse.status).toBe(200)

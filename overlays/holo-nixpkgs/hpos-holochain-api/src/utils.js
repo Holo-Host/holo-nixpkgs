@@ -60,7 +60,7 @@ const toInt = i => {
 }
 
 const isusageTimeInterval = value => {
-  if (value === null) return false
+  if (value === null || value === undefined) return false
   const keys = Object.keys(value)
   return keys.includes('duration_unit') && keys.includes('amount')
 }

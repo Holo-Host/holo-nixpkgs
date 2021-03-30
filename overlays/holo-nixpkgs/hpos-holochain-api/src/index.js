@@ -57,28 +57,38 @@ const getPresentedHapps = async usageTimeInterval => {
   return presentedHapps
 }
 
-app.get('/hosted_happs', async (req, res) => {
-  const usageTimeInterval = await Promise.race([
+// process the 'body' of the request, and parse it into JSON
+// falling back to returning undefined either if no body is passed
+// or the string fails to parse as valid JSON
+const handleBodyData = (req) => {
+  return Promise.race([
     new Promise(resolve => req.on('data', (body) => {
-      resolve(JSON.parse(body.toString()))
+      try {
+        resolve(JSON.parse(body.toString()))
+      } catch (_) {
+        // parse error
+        resolve(undefined)
+      }
     })), 
     new Promise(resolve => setTimeout(() => resolve(undefined), 100))
   ])
-  if (usageTimeInterval !== undefined && !isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
+}
+
+app.get('/hosted_happs', async (req, res) => {
+  const usageTimeInterval = await handleBodyData(req)
+  if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
     res.status(200).send(presentedHapps)
   } catch (e) {
-    return res.status(501).send(`hpos-holochain-api error: ${e}`)
+    return res.status(501).send(`hpos-holochain-api error: ${JSON.stringify(e)}`)
   }
 })
 
 app.get('/dashboard', async (req, res) => {
-  const usageTimeInterval = await new Promise(resolve => req.on('data', (body) => {
-    resolve(JSON.parse(body.toString()))
-  }))
-  if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
+  const usageTimeInterval = await handleBodyData(req)
+  if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /dashboard: param provided is not an object')
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
@@ -109,18 +119,16 @@ app.get('/dashboard', async (req, res) => {
 
     res.status(200).send(dashboard)
   } catch (e) {
-    return res.status(501).send(`hpos-holochain-api error: ${e}`)
+    return res.status(501).send(`hpos-holochain-api error: ${JSON.stringify(e)}`)
   }
 })
 
 app.post('/install_hosted_happ', async (req, res) => {
   // Loading body
-  const data = await new Promise(resolve => req.on('data', (body) => {
-    resolve(JSON.parse(body.toString()))
-  }))
+  const data = await handleBodyData(req)
 
-  // check if happ_id is passed else return error
-  if (data.happ_id && data.preferences) {
+  // check if happ_id and preferences are passed else return error
+  if (data && data.happ_id && data.preferences) {
     const happId = data.happ_id
     // preferences: {
     //   max_fuel_before_invoice: '5', // how much holofuel to accumulate before sending invoice
@@ -148,7 +156,7 @@ app.post('/install_hosted_happ', async (req, res) => {
       const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
       happBundleDetails = await callZome(appWs, APP_ID.HHA, 'hha', 'get_happ', happId)
     } catch (e) {
-      return res.status(501).send(`hpos-holochain-api error: ${e}`)
+      return res.status(501).send(`hpos-holochain-api error: ${JSON.stringify(e)}`)
     }
     console.log('Happ Bundle: ', happBundleDetails)
     console.log('DNAS', happBundleDetails.happ_bundle.dnas)
@@ -176,10 +184,10 @@ app.post('/install_hosted_happ', async (req, res) => {
       // Note: Do not need to install UI's for hosted happ
       return res.status(200).send(`Successfully installed happ_id: ${happId}`)
     } catch (e) {
-      return res.status(501).send(`hpos-holochain-api error: Failed to install hosted Happ with error - ${e}`)
+      return res.status(501).send(`hpos-holochain-api error: Failed to install hosted Happ with error - ${JSON.stringify(e)}`)
     }
   } else {
-    return res.status(501).send(`hpos-holochain-api error: Failed to pass happId in body`)
+    return res.status(501).send(`hpos-holochain-api error: Failed to pass 'happ_id' and 'preferences' in body`)
   }
 })
 
