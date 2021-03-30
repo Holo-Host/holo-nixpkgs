@@ -112,7 +112,7 @@ rec {
   };
 
   configure-holochain = callPackage ./configure-holochain {
-    inherit (rust.packages.stable) rustPlatform;
+    inherit (rust.packages.nightly) rustPlatform;
   };
 
   extlinux-conf-builder = callPackage ./extlinux-conf-builder {};
@@ -260,8 +260,8 @@ rec {
 
     rustNightly = (rustChannelOf {
       channel = "nightly";
-      date = "2019-11-16";
-      sha256 = "17l8mll020zc0c629cypl5hhga4hns1nrafr7a62bhsp4hg9vswd";
+      date = "2021-03-24";
+      sha256 = "0y7ijxqbjac9gn038lihlcq7ynsvgi3f8fzn06bhmqhvww5dbwzn";
     }).rust.override { inherit targets; };
 
     rustStable = (rustChannelOf {
