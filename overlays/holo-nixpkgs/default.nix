@@ -172,6 +172,11 @@ rec {
 
   holoport-nano-dtb = callPackage ./holoport-nano-dtb {};
 
+  elemental-chat-ui = callPackage ./elemental-chat-ui {
+    dnaUUID = "0001"; 
+    dnaVersion = "alpha1";
+  } ;
+
   inherit (callPackage ./host-console-ui {}) host-console-ui;
 
   hpos-install = callPackage ./hpos-install {};
