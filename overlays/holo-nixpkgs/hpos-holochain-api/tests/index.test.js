@@ -16,8 +16,12 @@ function delay(t, val) {
   })
 }
 
+function pathWithTimeInterval(path, usageTimeInterval) {
+  return `${path}?duration_unit=${usageTimeInterval.duration_unit}&amount=${usageTimeInterval.amount}`
+}
+
 test('holochain-api endpoint ', async () => {
-  const listOfHappsResponse = await request(app).get('/hosted_happs').send(usageTimeInterval)
+  const listOfHappsResponse = await request(app).get(pathWithTimeInterval('/hosted_happs', usageTimeInterval))
   expect(listOfHappsResponse.status).toBe(200)
   const listOfHapps = JSON.parse(listOfHappsResponse.text)
   expect(listOfHapps[0].name).toBe(HAPP_NAME)
@@ -42,7 +46,7 @@ test('holochain-api endpoint ', async () => {
 
   await delay(10000)
 
-  const listOfHappsReloadResponse = await request(app).get('/hosted_happs').send(usageTimeInterval)
+  const listOfHappsReload = await request(app).get(pathWithTimeInterval('/hosted_happs', usageTimeInterval))
   const usage = {
     bandwidth: 0,
     cpu: 0
@@ -62,7 +66,7 @@ test('dashboard endpoint', async () => {
     amount: 1
   }
 
-  const dashboardResponse = await request(app).get('/dashboard').send(usageTimeInterval)
+  const dashboardResponse = await request(app).get(pathWithTimeInterval('/dashboard', usageTimeInterval))
   expect(dashboardResponse.status).toBe(200)
   expect(dashboardResponse.body.totalSourceChains).toBe(0)
   expect(dashboardResponse.body.currentTotalStorage).toBe(0)

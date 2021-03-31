@@ -59,16 +59,6 @@ const getPresentedHapps = async usageTimeInterval => {
 }
 
 app.get('/hosted_happs', async (req, res) => {
-<<<<<<< HEAD
-  const usageTimeInterval = await Promise.race([
-    new Promise(resolve => req.on('data', (body) => {
-      resolve(JSON.parse(body.toString()))
-    })), 
-    new Promise(resolve => setTimeout(() => resolve(undefined), 100))
-  ])
-  if (usageTimeInterval !== undefined && !isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
-=======
-
   const usageTimeInterval = {
     duration_unit: req.query.duration_unit,
     amount: Number(req.query.amount)
@@ -77,8 +67,6 @@ app.get('/hosted_happs', async (req, res) => {
   if (!isUsageTimeInterval(usageTimeInterval)) {
     return res.status(501).send('failed to provide proper time interval query params: expected duration_unit and amount')
   }
-
->>>>>>> c8b832b... consume the query params to hosted_happs endpoint properly
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
@@ -89,18 +77,14 @@ app.get('/hosted_happs', async (req, res) => {
 })
 
 app.get('/dashboard', async (req, res) => {
-<<<<<<< HEAD
-  const usageTimeInterval = await new Promise(resolve => req.on('data', (body) => {
-    resolve(JSON.parse(body.toString()))
-  }))
-  if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
-=======
-  let usageTimeInterval
-  await req.on('data', (body) => {
-    usageTimeInterval = JSON.parse(body.toString())
-    if (!isUsageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
-  })
->>>>>>> c8b832b... consume the query params to hosted_happs endpoint properly
+  const usageTimeInterval = {
+    duration_unit: req.query.duration_unit,
+    amount: Number(req.query.amount)
+  }
+
+  if (!isUsageTimeInterval(usageTimeInterval)) {
+    return res.status(501).send('failed to provide proper time interval query params: expected duration_unit and amount')
+  }
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
