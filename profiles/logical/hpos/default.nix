@@ -228,18 +228,18 @@ in
     working-directory = configureHolochainWorkingDir;
     install-list = {
       core_happs = [
-#        {
-#          app_id = "core-happs";
-#          uuid = "0001";
-#          version = "alpha14";
-#          dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha14/holo-hosting-app.dna.gz";
-#        }
-#        {
-#          app_id = "servicelogger";
-#          uuid = "0001";
-#          version = "alpha4";
-#          dna_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha7/servicelogger.dna.gz";
-#        }
+       {
+         app_id = "core-happ";
+         uuid = "0001";
+         version = "alpha2";
+         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha2/core-app.happ";
+       }
+       {
+         app_id = "servicelogger";
+         uuid = "0001";
+         version = "alpha3";
+         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha3/servicelogger.happ";
+       }
       ];
       self_hosted_happs = [
         {
