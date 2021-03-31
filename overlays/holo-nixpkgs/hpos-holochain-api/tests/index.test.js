@@ -46,7 +46,7 @@ test('holochain-api endpoint ', async () => {
 
   await delay(10000)
 
-  const listOfHappsReload = await request(app).get(pathWithTimeInterval('/hosted_happs', usageTimeInterval))
+  const listOfHappsReloadResponse = await request(app).get(pathWithTimeInterval('/hosted_happs', usageTimeInterval))
   const usage = {
     bandwidth: 0,
     cpu: 0
