@@ -177,6 +177,8 @@ rec {
     dnaVersion = "alpha1";
   } ;
 
+  elemental-chat-dna = callPackage ./elemental-chat-dna { inherit (holochainAllBinariesWithDeps.hpos) holochain hc; };
+
   inherit (callPackage ./host-console-ui {}) host-console-ui;
 
   hpos-install = callPackage ./hpos-install {};

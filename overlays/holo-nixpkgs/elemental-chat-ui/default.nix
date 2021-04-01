@@ -6,8 +6,8 @@
     src = fetchFromGitHub {
       owner = "holochain";
       repo = "elemental-chat-ui";
-      rev = "f72e7edf2618a63a16f7ad6271167b8a5c6f05bd";
-      sha256 = "023b7jgv67yv9b0ms9qw5c17ckz5k44kgyiasdrrg3wk7389b619";
+      rev = "08341112d59223a2286f89171ad85e660df6bc6d";
+      sha256 = "00vsa494hmjq5z1hq86gdaq7d29789fsf5i4nx9hqvv8a7srz27m";
     };
 
     packageJSON = "${src}/package.json";
