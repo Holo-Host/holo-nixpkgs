@@ -9,8 +9,8 @@ rustPlatform.buildRustPackage {
   src = fetchFromGitHub {
     owner = "holochain";
     repo = "elemental-chat";
-    rev = "1cdb6d6f52b45f4c4d9d7bed776bf92d3aea099e";
-    sha256 = "1yslpq3gyqx3h4dpwzp32dws8xgqg980p93wffg3vxcyscy5gz6z";
+    rev = "fd7ce6a1b74c28f7ee3b3712a9c77cc4239cb679";
+    sha256 = "0yslpq3gyqx3h4dpwzp32dws8xgqg980p93wffg3vxcyscy5gz6z";
   };
 
   cargoSha256 = "10527mp02w4yqxqlrvcg2p497qhg4ri84vkkg0sfk9hk0a1wid04";
@@ -27,5 +27,5 @@ rustPlatform.buildRustPackage {
     libiconv
   ]);
   
-  doCheck = false;
+#   doCheck = false;
 }
