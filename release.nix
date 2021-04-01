@@ -10,7 +10,7 @@ let
 
   overlayPackages =
     recurseIntoAttrs (getAttrs (attrNames (overlay {} {})) pkgs);
-  
+
   release-lib = import (pkgs.path + "/pkgs/top-level/release-lib.nix");
 in
 
@@ -31,6 +31,6 @@ in
       holo-nixpkgs = releaseTools.channel {
         name = "holo-nixpkgs";
         src = gitignoreSource ./.;
-        constituents = constitute (attrNames self);
+        constituents = constitute (attrValues self);
       };
     }
