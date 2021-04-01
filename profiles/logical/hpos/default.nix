@@ -229,21 +229,17 @@ in
     install-list = {
       core_happs = [
        {
-         app_id = "core-happ";
-         uuid = "0001";
-         version = "alpha2";
-         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha2/core-app.happ";
+         app_id = "core-app";
+         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha3/core-app.0_1_0-alpha3.happ";
        }
        {
          app_id = "servicelogger";
-         uuid = "0001";
-         version = "alpha3";
-         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha3/servicelogger.happ";
+         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha4/servicelogger.0_1_0-alpha4.happ";
        }
       ];
       self_hosted_happs = [
         {
-          bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.1.0-alpha1/elemental-chat.0_1_0_alpha1.develop.happ";
+          bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha1/elemental-chat.0_2_0-alpha1.happ";
           ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-catchup/elemental-chat-for-dna-0_1_0_alpha1-develop.zip";
         }
       ];
