@@ -41,19 +41,6 @@ const parsePreferences = (p, key) => {
   }
 }
 
-const formatBytesByUnit = (bytes, decimals = 2) => {
-  if (bytes === 0) return { size: 0, unit: 'Bytes' }
-  const units = ['Bytes', 'KB', 'MB', 'GB']
-  const dm = decimals < 0
-    ? 0
-    : decimals
-  const i = Math.floor(Math.log(bytes) / Math.log(1024))
-  return {
-    size: parseFloat((bytes / Math.pow(1024, i)).toFixed(dm)),
-    unit: units[i]
-  }
-}
-
 const toInt = i => {
   if (typeof i === 'string') return parseInt(i)
   else return i
@@ -65,9 +52,27 @@ const isUsageTimeInterval = value => {
   return keys.includes('duration_unit') && keys.includes('amount')
 }
 
+// process the 'body' of the request, and parse it into JSON
+// falling back to returning undefined either if no body is passed
+// or the string fails to parse as valid JSON
+const parseBodyData = req => {
+  return Promise.race([
+    new Promise(resolve => req.on('data', (body) => {
+      try {
+        resolve(JSON.parse(body.toString()))
+      } catch (e) {
+        console.error('Failed to parse request body:')
+        console.log(e)
+        resolve(undefined)
+      }
+    })),
+    new Promise(resolve => setTimeout(() => resolve(undefined), 100))
+  ])
+}
+
 module.exports = {
   parsePreferences,
-  formatBytesByUnit,
   downloadFile,
-  isUsageTimeInterval
+  isUsageTimeInterval,
+  parseBodyData
 }

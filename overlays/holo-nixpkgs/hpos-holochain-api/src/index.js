@@ -8,7 +8,7 @@ const { hideBin } = require('yargs/helpers')
 yargs(hideBin(process.argv))
 const { UNIX_SOCKET, HAPP_PORT, ADMIN_PORT } = require('./const')
 const { callZome, createAgent, listInstalledApps, installHostedHapp } = require('./api')
-const { parsePreferences, isUsageTimeInterval } = require('./utils')
+const { parsePreferences, isUsageTimeInterval, parseBodyData } = require('./utils')
 const { getAppIds, getReadOnlyPubKey } = require('./const')
 const { AdminWebsocket, AppWebsocket } = require('@holochain/conductor-api')
 
@@ -121,9 +121,7 @@ app.get('/dashboard', async (req, res) => {
 
 app.post('/install_hosted_happ', async (req, res) => {
   // Loading body
-  const data = await new Promise(resolve => req.on('data', (body) => {
-    resolve(JSON.parse(body.toString()))
-  }))
+  const data = await parseBodyData(req)
 
   // check if happ_id is passed else return error
   if (data.happ_id && data.preferences) {
