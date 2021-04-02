@@ -73,7 +73,7 @@ let
     // otherDeps
     ;
 
-  lair-keystore-0_0_1-alpha_10 = callPackage ./lair-keystore {
+  lair-keystore = callPackage ./lair-keystore {
     inherit (rust.packages.stable) rustPlatform;
   };
 
@@ -82,19 +82,19 @@ let
   versionsWithDeps = {
     hpos = versions.hpos // {
       otherDeps = {
-        lair-keystore = lair-keystore-0_0_1-alpha_10;
+        inherit lair-keystore;
       };
     };
 
     develop = versions.develop // {
       otherDeps = {
-        lair-keystore = lair-keystore-0_0_1-alpha_10;
+        inherit lair-keystore;
       };
     };
 
     main = versions.main // {
       otherDeps = {
-        lair-keystore = lair-keystore-0_0_1-alpha_10;
+        inherit lair-keystore;
       };
     };
   };
