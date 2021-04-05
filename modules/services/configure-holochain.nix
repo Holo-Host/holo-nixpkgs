@@ -48,7 +48,7 @@ in
       serviceConfig = {
         User = "configure-holochain";
         Group = "configure-holochain";
-        ExecStart = "${cfg.package}/bin/configure-holochain ${cfg.working-directory}/config.yaml --membrane-proofs-file-path ${cfg.working-directory}/membrane-proofs.yaml";
+        ExecStart = "${cfg.package}/bin/configure-holochain ${cfg.working-directory}/config.yaml ${cfg.working-directory}/membrane-proofs.yaml";
         RemainAfterExit = true;
         StateDirectory = "configure-holochain";
         Type = "oneshot";
