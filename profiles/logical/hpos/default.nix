@@ -223,6 +223,8 @@ in
     };
   };
 
+  systemd.globalEnvironment.DEV_UID_OVERRIDE = "0000-override";
+
   services.configure-holochain = lib.mkDefault {
     enable = true;
     working-directory = configureHolochainWorkingDir;
