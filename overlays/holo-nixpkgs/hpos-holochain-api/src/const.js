@@ -28,9 +28,13 @@ const getAppIds = async () => {
     const getId = (name) => {
       const { bundle_url } = config.core_happs.find(h => h.bundle_url.includes(name))
       const bundleUrlPath = new URL(bundle_url).pathname
-      return bundleUrlPath.slice(bundleUrlPath.lastIndexOf('/') + 1)
+      const id =  bundleUrlPath.slice(bundleUrlPath.lastIndexOf('/') + 1)
         .replace('.happ', '')
         .replace('.', ':')
+      if DEV_UID_OVERRIDE {
+        return id.concat(`::${DEV_UID_OVERRIDE}`)
+      }
+      return id
     }
     return {
       HHA: getId('core-app'),
