@@ -32,7 +32,7 @@ const getAppIds = async () => {
         .replace('.happ', '')
         .replace('.', ':')
       if DEV_UID_OVERRIDE {
-        return id.concat(`::${DEV_UID_OVERRIDE}`)
+        return `${id}::${DEV_UID_OVERRIDE}`
       }
       return id
     }
