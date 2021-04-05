@@ -7,6 +7,8 @@ const ADMIN_PORT = 4444
 
 const HAPP_PORT = 42233
 
+const DEV_UID_OVERRIDE = process.env.DEV_UID_OVERRIDE
+
 const CONFIGURE_HC = process.env.NODE_ENV === 'test' ? './tests/config.yaml' : '/var/lib/configure-holochain/config.yaml'
 const READ_ONLY_PUBKEY = '/var/lib/configure-holochain/agent_key.pub'
 
@@ -43,6 +45,7 @@ module.exports = {
   UNIX_SOCKET,
   ADMIN_PORT,
   HAPP_PORT,
+  DEV_UID_OVERRIDE,
   getReadOnlyPubKey,
   getAppIds
 }
