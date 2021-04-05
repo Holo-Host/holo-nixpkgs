@@ -34,21 +34,24 @@ const checkoutOrCreateBranch = (github, repo, branch) => {
 const execUpdateFor = (github, repo, branch, dep, rev) => {
   console.log(`${repo}: updating ${dep} to rev ${rev}`)
   cmd(`scripts/bump.sh ${dep} ${rev}`)
-
+  console.log(`.... mock output from the bump script...`)
+  console.log(`bump completed successfully`)
+  // TODO stop if bump failed.
   mockGithub[github].repos[repo].branches[branch]+=1
   let newRev = mockGithub[github].repos[repo].branches[branch]
   console.log(`${repo}: commit yields new rev ${newRev}`)
-  cmd(`git commit -am "Bump ${dep} to ${rev}`)
+  cmd(`git commit -am "Bump ${dep} to ${rev}"`)
   return newRev
 }
 const pushPullRequest = (github, repo, branch) => {
   console.log(`${repo}: looking for branch ${branch}`)
-  cmd(`github pull-request ${branch}`) //TODO what's the github api for making a PR branch idempotently
+  cmd(`github ${github}/$repo pull-request ${branch} # TODO use actual github cli`)
   cmd(`git push`)
 }
 
 const awaitCI = (repo, branch) => {
   console.log(`${repo}: waiting for CI`)
+  console.log(`${repo}: CI completed green`)
   return true
 }
 const bumpRepo = (dep, github, repo, branch, rev) => {
@@ -82,22 +85,35 @@ const bump = (dep, branch, rev) => {
 }
 
 const matchDeps = (dep, spec) => {
-  return spec.deps.includes(dep)
+  let deps = spec.deps
+  if (spec.multis) {
+    for (const multi of spec.multis) {
+      deps.concat(depSpecs[multi].repos)
+    }
+  }
+  if (deps) {
+    for (const d of deps) {
+      let re = new RegExp(d)
+      if (re.test(dep)) {
+        return true
+      }
+    }
+    return false
+  }
 }
 
 const gatherRepos = (dep) => {
   console.log(`Gathering repos for: ${dep}`)
   let repos = {}
-  for (const spec of depSpecs) {
+  for (const [repo, spec] of Object.entries(depSpecs)) {
     if (matchDeps(dep, spec)) {
       if (spec.multi) {
         for (const repo of spec.repos) {
-          const [github, r] = repo.split("/")
-          repos[r] = github
+          console.log(`looking for ${repo} in depSepc`, depSpecs[repo])
+          repos[repo] = depSpecs[repo].github
         }
       } else {
-        const [github, repo] = spec.repo.split("/")
-        repos[repo] = github
+        repos[repo] = spec.github
       }
     }
   }
@@ -105,30 +121,47 @@ const gatherRepos = (dep) => {
   return repos
 }
 
-const depSpecs = [
-  {
-    repo: "holochain/holochain-conductor-api",
+const depSpecs = {
+  "holochain-conductor-api": {
+    github: "holochain",
     deps: ["holochain:api"]
   },
-  {
-    repo: "holochain/tryorama",
+  "tryorama" : {
+    github: "holochain",
     deps: ["holochain:hdk", "holochain-conductor-api" ]
   },
-  {
-    repo: "holo-host/holo-nixpkgs",
-    deps: ["holochain:*", "hpos-configure-holochain"]
-  },
-  {
-    multi: "dna",
-    repos: ["holochain/elemental-chat", "holo-host/service-logger", "holo-host/holofuel", "holo-host/hha"],
+  "dna": {
+    multi: true,
+    repos: ["elemental-chat", "service-logger", "holofuel", "hha"],
     deps: ["holochain:hdk", "tryorama"]
   },
-  {
-    multi: "ui",
-    repos: ["holochain/elemental-chat-ui"],
+  "ui": {
+    multi: true,
+    repos: ["elemental-chat-ui"],
     deps: ["holochain-conductor-api", "tryorama" ]
+  },
+  "holo-nixpkgs": {
+    github: "holo-host",
+    deps: ["holochain:*", "hpos-configure-holochain"],
+    multis: ["dna", "ui"]
+  },
+  "elemental-chat": {
+    github: "holochain"
+  },
+  "elemental-chat-ui": {
+    github: "holochain"
+  },
+  "service-logger": {
+    github: "holo-host"
+  },
+  "holofuel": {
+    github: "holo-host"
+  },
+  "hha": {
+    github: "holo-host"
   }
-]
+
+}
 
 
 // bump("holochain", "bug-x-fix", "0000000")
