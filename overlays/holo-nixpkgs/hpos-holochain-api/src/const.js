@@ -31,7 +31,7 @@ const getAppIds = async () => {
       const id =  bundleUrlPath.slice(bundleUrlPath.lastIndexOf('/') + 1)
         .replace('.happ', '')
         .replace('.', ':')
-      if DEV_UID_OVERRIDE {
+      if (DEV_UID_OVERRIDE) {
         return `${id}::${DEV_UID_OVERRIDE}`
       }
       return id
