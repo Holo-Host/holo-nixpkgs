@@ -14,7 +14,7 @@
   "author": "robbie.carlton@holo.host",
   "license": "ISC",
   "dependencies": {
-    "@holochain/conductor-api": "0.0.3",
+    "@holochain/conductor-api": "0.0.1",
     "@msgpack/msgpack": "^2.3.0",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
