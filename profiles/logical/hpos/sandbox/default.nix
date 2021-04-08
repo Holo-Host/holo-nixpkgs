@@ -73,11 +73,11 @@ in
       self_hosted_happs = [
         {
           app_id = "elemental-chat";  # not used, just for clarity here
-          bundle_url =  builtins.fetchurl {
+          bundle_path =  builtins.fetchurl {
             url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha3/elemental-chat.0_2_0_alpha3.happ";
             sha256 = "1y9naf3dbkxz5bjb0dz16bscpv97r9pwlm0zya3ms3kfldwwznd3";
           };
-          ui_url = builtins.fetchurl {
+          ui_path = builtins.fetchurl {
             url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha31/elemental-chat.zip";
             sha256 = "1a3viqrsjcz0n0wrl3wzwm9raamm5292gl0kl449ziwdp4b3vik6";
           };
