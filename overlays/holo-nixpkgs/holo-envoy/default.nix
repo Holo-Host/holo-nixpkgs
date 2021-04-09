@@ -13,7 +13,12 @@
 
 mkYarnPackage rec {
   name = "holo-envoy";
-  src = gitignoreSource /home/robbie/code/holo/holo-envoy;
+  src = fetchFromGitHub {
+    owner = "Holo-Host";
+    repo = "holo-envoy";
+    rev = "4e56f2832ef80748841a27939b36e311feb84858";
+    sha256 = "16xqhs6lfn2w4376q368skck7j6safhnyhqdkbsymz0jm7162nby";
+  };
 
   buildInputs = [ python ];
 
