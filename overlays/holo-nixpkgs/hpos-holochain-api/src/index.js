@@ -11,6 +11,7 @@ const { callZome, createAgent, listInstalledApps, installHostedHapp } = require(
 const { parsePreferences, isusageTimeInterval } = require('./utils')
 const { getAppIds, getReadOnlyPubKey } = require('./const')
 const { AdminWebsocket, AppWebsocket } = require('@holochain/conductor-api')
+const WebSocketClient = require('websocket').client
 
 const getPresentedHapps = async usageTimeInterval => {
   const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
@@ -113,6 +114,48 @@ app.get('/dashboard', async (req, res) => {
   }
 })
 
+const WS_ADDRESS = 'wss://15ro3eddkk4bvjg6lc9p1yditiwfl89uo9ow7eiqdyioaan70x.holohost.net/hosting?anonymous=true&agent_id=uhCAkdaMp6_KR6XdI6PysW_NSiydLZwz-PafwMoQow-xqJUCzVMe6&hha_hash=uhCkkQQ7x8qPkHNtgSQnlZx79_6y0TX5ZSCL2I_yoXiJ6Gm4x4Sf2'
+
+const superlog = (...rest) => console.log('*********', ...rest)
+
+app.get('/ws_test', async (req, res) => {
+  try {
+    superlog('1')
+    const ws = new WebSocketClient()
+  
+    
+    ws.on('connectFailed', (error) => {
+      superlog('connection failed', error.toString())
+    })
+
+    ws.on('connect', connection => {
+      superlog('ws connected')
+      connection.on('error', error => {
+        superlog('connection error', error.toString())
+      })
+      connection.on('close', () => {
+        superlog('connection closed')
+      })
+      connection.on('message', message => {
+        superlog('got message', message.utf8Data)
+      })
+    })
+  
+    setTimeout(() => {
+      superlog('closing time')
+      ws.close()
+    }, 60 * 1000 * 10)
+  
+    superlog('2')
+
+    ws.connect(WS_ADDRESS, 'echo-protocol')
+
+    superlog('k thx bai')
+  } finally {
+    return res.status(200).send('donezo')
+  }
+})
+
 app.post('/install_hosted_happ', async (req, res) => {
   // Loading body
   const data = await new Promise(resolve => req.on('data', (body) => {
@@ -148,6 +191,7 @@ app.post('/install_hosted_happ', async (req, res) => {
       const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
       happBundleDetails = await callZome(appWs, APP_ID.HHA, 'hha', 'get_happ', happId)
     } catch (e) {
+      console.error('install happ error', e)
       return res.status(501).send(`hpos-holochain-api error: ${e}`)
     }
     console.log('Happ Bundle: ', happBundleDetails)

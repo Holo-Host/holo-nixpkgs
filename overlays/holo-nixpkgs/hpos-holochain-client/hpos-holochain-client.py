@@ -19,6 +19,11 @@ def request(ctx, method, path, **kwargs):
 def hosted_happs(ctx):
     print(request(ctx, 'GET', '/hosted_happs').text)
 
+@cli.command(help='Differently help')
+@click.pass_context
+def monkey(ctx):
+    print(request(ctx, 'GET', '/ws_test').text)
+
 @cli.command(help='Pass a happ_id to be installed as a hosted happ')
 @click.argument('happ_id')
 @click.argument('max_fuel_before_invoice')
