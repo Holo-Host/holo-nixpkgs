@@ -23,7 +23,6 @@
     "request": "^2.88.2",
     "supertest": "^6.1.1",
     "tmp": "^0.2.1",
-    "websocket": "^1.0.33",
     "yargs": "^16.2.0"
   },
   "devDependencies": {

@@ -11,7 +11,6 @@ const { callZome, createAgent, listInstalledApps, installHostedHapp } = require(
 const { parsePreferences, isusageTimeInterval } = require('./utils')
 const { getAppIds, getReadOnlyPubKey } = require('./const')
 const { AdminWebsocket, AppWebsocket } = require('@holochain/conductor-api')
-const WebSocketClient = require('websocket').client
 
 const getPresentedHapps = async usageTimeInterval => {
   const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
