@@ -15,7 +15,7 @@ in
   nix.buildMachines = [
     {
       hostName = "localhost";
-      maxJobs = 8;
+      maxJobs = 2;
       supportedFeatures = [
         "benchmark"
         "big-parallel"
@@ -29,7 +29,7 @@ in
     }
     {
       hostName = "hydra-minion-1.holo.host";
-      maxJobs = 96;
+      maxJobs = 8;
       sshKey = "/var/lib/hydra/queue-runner/.ssh/id_ed25519";
       sshUser = "root";
       supportedFeatures = [
@@ -45,7 +45,7 @@ in
     }
     {
       hostName = "hydra-minion-2.holo.host";
-      maxJobs = 12;
+      maxJobs = 4;
       sshKey = "/var/lib/hydra/queue-runner/.ssh/id_ed25519";
       sshUser = "administrator";
       supportedFeatures = [];
