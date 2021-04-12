@@ -15,7 +15,7 @@ in
   nix.buildMachines = [
     {
       hostName = "localhost";
-      maxJobs = config.nix.maxJobs;
+      maxJobs = 8;
       supportedFeatures = [
         "benchmark"
         "big-parallel"
