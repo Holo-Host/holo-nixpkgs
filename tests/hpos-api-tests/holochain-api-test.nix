@@ -13,7 +13,7 @@
     print(happs)
     """
     list_of_happs = machine.succeed(
-        "hpos-holochain-client --url=http://localhost/holochain-api/ hosted-happs"
+        "hpos-holochain-client --url=http://localhost/holochain-api/ hosted-happs 1 DAY"
     ).strip()
     assert (
         "'name': 'Elemental Chat'" in list_of_happs
