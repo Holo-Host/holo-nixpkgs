@@ -23,6 +23,9 @@ in
         "nixos-test"
       ];
       system = "x86_64-linux";
+      extraOptions = ''
+        timeout = 3600
+      '';
     }
     {
       hostName = "hydra-minion-1.holo.host";
@@ -36,6 +39,9 @@ in
         "nixos-test"
       ];
       system = "aarch64-linux";
+      extraOptions = ''
+        timeout = 3600
+      '';
     }
     {
       hostName = "hydra-minion-2.holo.host";
@@ -44,6 +50,9 @@ in
       sshUser = "administrator";
       supportedFeatures = [];
       system = "x86_64-darwin";
+      extraOptions = ''
+        timeout = 3600
+      '';
     }
   ];
 
