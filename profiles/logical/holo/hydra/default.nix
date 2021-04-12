@@ -5,6 +5,10 @@
     ../.
   ];
 
+  nix.binaryCaches = lib.mkForce [
+    "https://cache.nixos.org/"
+  ];
+
   nix.gc = {
     automatic = true;
     dates = "hourly";
