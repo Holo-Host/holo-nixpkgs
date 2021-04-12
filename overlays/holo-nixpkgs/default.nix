@@ -260,8 +260,8 @@ rec {
 
     rustNightly = (rustChannelOf {
       channel = "nightly";
-      date = "2019-11-16";
-      sha256 = "17l8mll020zc0c629cypl5hhga4hns1nrafr7a62bhsp4hg9vswd";
+      date = "2019-11-17";
+      sha256 = "080mq9jgx78qfpv9ib1fvqbdwr58la8xwm5kv033nzv3pz6z6b51";
     }).rust.override { inherit targets; };
 
     rustStable = (rustChannelOf {
