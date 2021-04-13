@@ -242,7 +242,7 @@ in
       self_hosted_happs = [
         {
           bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha4/elemental-chat.0_2_0_alpha4.happ";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha31/elemental-chat-for-dna-0_2_0_alpha4-0000.zip";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha32/elemental-chat-for-dna-0_2_0_alpha4-0000.zip";
         }
       ];
     };
