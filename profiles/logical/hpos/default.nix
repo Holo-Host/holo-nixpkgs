@@ -183,7 +183,7 @@ in
     enable = true;
     working-directory = holochainWorkingDir;
     config = {
-      environment_path = "${holochainWorkingDir}/databases_lmdb2";
+      environment_path = "${holochainWorkingDir}/databases_lmdb3";
       keystore_path = "${holochainWorkingDir}/lair-shim";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
