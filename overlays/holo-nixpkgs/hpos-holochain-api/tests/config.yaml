@@ -1,6 +1,6 @@
 core_happs:
   # HoloHosting App
-  - bundle_url: https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha4/core-app.0_1_0-alpha4.happ
+  - bundle_url: https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha7/core-app.0_1_0_alpha7.happ
     ui_url: https://example.org
   # Servicelogger App
   - bundle_url: https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha5/servicelogger.0_1_0-alpha5.happ
