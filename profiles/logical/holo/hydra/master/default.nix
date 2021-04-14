@@ -53,11 +53,11 @@ in
     builders-use-substitutes = true
     restrict-eval = false
   '';
-  
+
   security.acme = {
     acceptTerms = true;
     # REVIEW: maybe a dedicated email for Hydra?
-    email = "oleksii.filonenko@holo.host";
+    email = "przemek.klimek@holo.host";
   };
 
   services.postgresql.settings = {
