@@ -183,7 +183,7 @@ in
     enable = true;
     working-directory = holochainWorkingDir;
     config = {
-      environment_path = "${holochainWorkingDir}/databases_lmdb3";
+      environment_path = "${holochainWorkingDir}/databases_lmdb4";
       keystore_path = "${holochainWorkingDir}/lair-shim";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
@@ -232,7 +232,7 @@ in
       core_happs = [
        {
          app_id = "core-app";
-         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha7/core-app.0_1_0_alpha7.happ";
+         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha8/core-app.0_1_0_alpha8.happ";
        }
        {
          app_id = "servicelogger";
@@ -241,8 +241,8 @@ in
       ];
       self_hosted_happs = [
         {
-          bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha5/elemental-chat.0_2_0_alpha5.happ";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha5-0000.zip";
+          bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha6/elemental-chat.0_2_0_alpha6.happ";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha6-0000.zip";
         }
       ];
     };
