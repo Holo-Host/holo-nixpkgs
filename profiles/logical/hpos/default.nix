@@ -223,7 +223,7 @@ in
     };
   };
 
-  systemd.globalEnvironment.DEV_UID_OVERRIDE = "0000";
+  systemd.globalEnvironment.DEV_UID_OVERRIDE = "0001";
 
   services.configure-holochain = lib.mkDefault {
     enable = true;
@@ -242,7 +242,7 @@ in
       self_hosted_happs = [
         {
           bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha6/elemental-chat.0_2_0_alpha6.happ";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha6-0000.zip";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha6-0001.zip";
         }
       ];
     };
