@@ -32,7 +32,7 @@ in
       requires = [ "lair-keystore.service" "holo-envoy.service" ];
       wantedBy = [ "multi-user.target" ];
 
-      #environment.RUST_LOG = "debug";
+      # environment.RUST_LOG = "debug";
       environment.HC_LMDB_SIZE = "1073741824";  # 1G instead of default 100M
 
       preStart = ''
@@ -45,6 +45,8 @@ in
         Group = "holochain-rsm";
         ExecStart = "${cfg.package}/bin/holochain -c ${cfg.working-directory}/holochain-config.yaml";
         StateDirectory = "holochain-rsm";
+        Restart = "always";
+        RestartSec = 1;
       };
     };
 
