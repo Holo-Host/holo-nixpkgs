@@ -44,7 +44,7 @@ in
         User = "configure-holochain";
         Group = "configure-holochain";
         ExecStart = "${cfg.package}/bin/configure-holochain ${cfg.working-directory}/config.yaml";
-        RemainAfterExit = true;
+        RemainAfterExit = true; # can be set to false because no other service depends on this one running
         StateDirectory = "configure-holochain";
         Type = "oneshot";
       };
