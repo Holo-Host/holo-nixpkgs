@@ -47,6 +47,8 @@ in
         StateDirectory = "holochain-rsm";
         Restart = "always";
         RestartSec = 1;
+        Type = "notify";
+        NotifyAccess = "exec";
       };
     };
 
