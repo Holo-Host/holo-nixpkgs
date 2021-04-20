@@ -22,7 +22,9 @@ makeTest {
     # check if happ installed
     happs = machine.succeed("hc-state -a")
     if "servicelogger" not in happs or "holo-hosting-app" not in happs:
-        raise Exception("Can't find any installed core happs - configure holochain failure?")
+        raise Exception(
+            "Can't find any installed core happs - configure holochain failure?"
+        )
 
     # kill lair & wait for lair and hc
     lair = machine.get_unit_info("lair-keystore")
@@ -45,7 +47,9 @@ makeTest {
     machine.wait_for_open_port("42233")
     happs2 = machine.succeed("hc-state -a")
     if "servicelogger" not in happs or "holo-hosting-app" not in happs2:
-        raise Exception("Can't find any installed core happs - configure holochain failure?")
+        raise Exception(
+            "Can't find any installed core happs - holochain restart changed something?"
+        )
 
     machine.shutdown()
   '';
