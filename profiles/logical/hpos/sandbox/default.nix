@@ -79,7 +79,7 @@ in
           };
           ui_path = builtins.fetchurl {
             url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha6-0002.zip";
-            sha256 = "06gwkqmsq2zpb0ji0zcb53f1sr9pb03b1y1ksj3h8rgg5n4yikwz";  # To get sha run `nix-prefetch-url URL`
+            sha256 = "1vjw5dfbladvr0ww284pnyswvwzlyxdnb1w5dw4k3f661km8akkg";  # To get sha run `nix-prefetch-url URL`
           };
         }
       ];
