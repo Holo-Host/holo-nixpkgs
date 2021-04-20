@@ -1,7 +1,7 @@
 { stdenv, rustPlatform, fetchFromGitHub, lib, darwin, libiconv }:
 
 let
-  version = "v0.0.1-alpha.11";
+  version = "v0.0.1-alpha.12";
 in
 
 rustPlatform.buildRustPackage {
