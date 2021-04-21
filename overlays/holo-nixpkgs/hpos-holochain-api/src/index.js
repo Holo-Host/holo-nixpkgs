@@ -59,14 +59,13 @@ const getPresentedHapps = async usageTimeInterval => {
 }
 
 app.get('/hosted_happs', async (req, res) => {
-  const usageTimeInterval = {
-    duration_unit: req.query.duration_unit,
-    amount: Number(req.query.amount)
-  }
-
-  if (!isUsageTimeInterval(usageTimeInterval)) {
-    return res.status(501).send('failed to provide proper time interval query params: expected duration_unit and amount')
-  }
+  const usageTimeInterval = await Promise.race([
+    new Promise(resolve => req.on('data', (body) => {
+      resolve(JSON.parse(body.toString()))
+    })),
+    new Promise(resolve => setTimeout(() => resolve(undefined), 100))
+  ])
+  if (usageTimeInterval !== undefined && !isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
