@@ -17,6 +17,7 @@ mkYarnPackage rec {
     repo = "holo-envoy";
     rev = "c4618422197d48f9336735f6a0f059281d4f8b9d";
     sha256 = "1bdjyii6kzn0cgw8i3i3hp3pxjx7f8ffycpq82yz87qwddsivj15";
+
   };
 
   buildInputs = [ python ];
