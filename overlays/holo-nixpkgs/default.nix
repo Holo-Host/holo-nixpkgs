@@ -136,7 +136,12 @@ rec {
   );
 
   holochainMeta = callPackage ./holochain {
-    inherit (rust.packages.stable) rustPlatform;
+    rustPlatform = let
+        isArm = stdenv.hostPlatform.isAarch32 || stdenv.hostPlatform.isAarch64;
+      in
+        if isArm
+        then rust.packages.nightly2.rustPlatform
+        else rust.packages.stable.rustPlatform;
   };
 
   inherit (holochainMeta)
@@ -264,6 +269,12 @@ rec {
       sha256 = "17l8mll020zc0c629cypl5hhga4hns1nrafr7a62bhsp4hg9vswd";
     }).rust.override { inherit targets; };
 
+    rustNightly2 = (rustChannelOf {
+      channel = "nightly";
+      date = "2021-03-24";
+      sha256 = "17l8mll020zc0c629cypl5hhga4hns1nrafr7a62bhsp4hg9vswd";
+    }).rust.override { inherit targets; };
+
     rustStable = (rustChannelOf {
       channel = "1.48.0";
       sha256 = "0b56h3gh577wv143ayp46fv832rlk8yrvm7zw1dfiivifsn7wfzg";
@@ -274,6 +285,15 @@ rec {
         rustPlatform = final.makeRustPlatform {
           rustc = rustNightly;
           cargo = rustNightly;
+        };
+
+        inherit (final.rust.packages.nightly.rustPlatform) rust;
+      };
+
+      nightly2 = {
+        rustPlatform = final.makeRustPlatform {
+          rustc = rustNightly2;
+          cargo = rustNightly2;
         };
 
         inherit (final.rust.packages.nightly.rustPlatform) rust;
