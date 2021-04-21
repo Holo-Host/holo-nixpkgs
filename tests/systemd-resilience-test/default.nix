@@ -21,7 +21,7 @@ makeTest {
 
     # check if happ installed
     happs = machine.succeed("hc-state -a")
-    if "servicelogger" not in happs or "holo-hosting-app" not in happs:
+    if "servicelogger" not in happs or "core-app" not in happs:
         raise Exception(
             "Can't find any installed core happs - configure holochain failure?"
         )
@@ -46,7 +46,7 @@ makeTest {
     # Final checks
     machine.wait_for_open_port("42233")
     happs2 = machine.succeed("hc-state -a")
-    if "servicelogger" not in happs or "holo-hosting-app" not in happs2:
+    if "servicelogger" not in happs or "core-app" not in happs2:
         raise Exception(
             "Can't find any installed core happs - holochain restart changed something?"
         )
