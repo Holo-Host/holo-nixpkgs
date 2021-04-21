@@ -33,6 +33,7 @@ in
         Group = "holochain-rsm";
         ExecStart = "${cfg.package}/bin/lair-keystore -d ${holochain-home}/lair-keystore";
         StateDirectory = "holochain-rsm";
+        Restart = "always";
       };
     };
 

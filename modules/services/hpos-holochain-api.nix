@@ -26,6 +26,7 @@ in
         User = "hc-api";
         Group = "apis";
         UMask = "0002";
+        Restart = "always";
       };
     };
 
