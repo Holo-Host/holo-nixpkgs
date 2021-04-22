@@ -1,7 +1,7 @@
 {
   hpos = {
-    rev = "6ddb333ecbd96193b8eb2d64fe153ff8f630d24a";
-    sha256 = "sha256:1gfcl8qmkzg3kvhv5irb82hs8m9psc1n5nfgl2nifbq1mdynihwm";
+    rev = "22c432f3d11df2c67758e7983611890b1d3640b8";
+    sha256 = "sha256:14gdhf8bigxzw700m0pcah02cd0b2smmrqaiqa655aidqzyaks61";
     cargoSha256 = "sha256:1fml9bngmp9dsgcrly0vavvdgii6fkcj4mjyakbck45kd8xx449d";
     bins = {
       holochain = "holochain";
