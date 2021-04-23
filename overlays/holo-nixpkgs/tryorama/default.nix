@@ -7,8 +7,8 @@ rustPlatform.buildRustPackage {
   src = let repo = fetchFromGitHub {
     owner = "Holochain";
     repo = "tryorama";
-    rev = "7b472f82637fd718478e5815ca532331d671886d";
-    sha256 = "sha256:1bmjs4l7gzadzgpxkhx1szbjp092x3dvdyyscbmpyxnssrq0glzj";
+    rev = "0ba62e93fb2796a4f9456d4eee2d62f0675238fb";
+    sha256 = "sha256:1pg75xp58gflrki08ad2xa50pak3nx4p5h9ad5n4r0a0xbxw4cw3";
   };
   in "${repo}/crates/trycp_server";
 
