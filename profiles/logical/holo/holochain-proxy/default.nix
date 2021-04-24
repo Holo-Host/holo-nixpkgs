@@ -9,4 +9,8 @@
   };
 
   system.defaultChannel = lib.mkDefault "https://hydra.holo.host/channel/custom/holo-nixpkgs/develop/holo-nixpkgs";
+
+  networking.hostName = "holochain-proxy";
+
+  services.openssh.enable = true;
 }
