@@ -1,6 +1,8 @@
 {
   imports = [ ../. ];
 
+  networking.hostName = "holochain-proxy";
+
   services.holochain-proxy.enable = {
     enable = true;
     cert-file = "proxy.cert";
@@ -10,7 +12,10 @@
 
   system.defaultChannel = lib.mkDefault "https://hydra.holo.host/channel/custom/holo-nixpkgs/develop/holo-nixpkgs";
 
-  networking.hostName = "holochain-proxy";
-
   services.openssh.enable = true;
+
+  system.holo-nixpkgs.autoUpgrade = {
+    enable = true;
+    dates = "*:0/59";
+  };
 }
