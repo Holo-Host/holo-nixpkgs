@@ -49,6 +49,7 @@ in
 
       timerConfig = {
         OnUnitActiveSec = cfg.interval;
+        OnBootSec = "10sec";
         Unit = "holo-nixpkgs-auto-upgrade.service";
       };
     };
