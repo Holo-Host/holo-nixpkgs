@@ -55,6 +55,6 @@ in
 
     users.groups.holochain-proxy = {};
 
-    networking.firewall.allowedTCPPorts = [ ${cfg.port} ];
+    networking.firewall.allowedTCPPorts = [ cfg.port ];
   };
 }
