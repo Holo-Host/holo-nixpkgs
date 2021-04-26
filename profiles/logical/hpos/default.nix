@@ -253,7 +253,7 @@ in
 
   system.holo-nixpkgs.autoUpgrade = {
     enable = lib.mkDefault true;
-    dates = "*:0/10";
+    interval = "10min";
   };
 
   system.holo-nixpkgs.usbReset = {
