@@ -3,7 +3,7 @@
 
   networking.hostName = "holochain-proxy";
 
-  services.holochain-proxy.enable = {
+  services.holochain-proxy = {
     enable = true;
     cert-file = "proxy.cert";
     working-directory = "/var/lib/holochain-proxy";
