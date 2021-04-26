@@ -40,7 +40,7 @@ in
       serviceConfig = {
         User = "holochain-proxy";
         Group = "holochain-proxy";
-        ExecStart = "${cfg.package}/bin/kitsune-p2p-proxy -b kitsune-quic://0.0.0.0:${cfg.port} --danger-use-unenc-cert ${cfg.working-directory}/${cfg.cert-file}";
+        ExecStart = "${cfg.package}/bin/kitsune-p2p-proxy -b kitsune-quic://0.0.0.0:${toString cfg.port} --danger-use-unenc-cert ${cfg.working-directory}/${cfg.cert-file}";
         Restart = "always";
         RestartSec = 1;
         Type = "exec";
