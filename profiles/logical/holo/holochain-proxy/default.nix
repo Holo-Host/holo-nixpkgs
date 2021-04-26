@@ -10,12 +10,12 @@
     port = 5779;
   };
 
-  system.defaultChannel = lib.mkDefault "https://hydra.holo.host/channel/custom/holo-nixpkgs/develop/holo-nixpkgs";
-
   services.openssh.enable = true;
 
   system.holo-nixpkgs.autoUpgrade = {
     enable = true;
     dates = "*:0/59";
   };
+
+  boot.cleanTmpDir = true;
 }
