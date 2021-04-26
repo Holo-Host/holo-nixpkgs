@@ -23,7 +23,7 @@ in
     };
 
     package = mkOption {
-      default = pkgs.holochain-proxy;
+      default = pkgs.kitsune-p2p-proxy;
       type = types.package;
     };
   };
