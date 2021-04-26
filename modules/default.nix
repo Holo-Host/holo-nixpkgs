@@ -15,9 +15,10 @@
     ./services/holo-router-agent.nix
     ./services/holo-router-gateway.nix
     ./services/holochain.nix
+    ./services/holochain-proxy.nix
     ./services/hp-admin-crypto-server.nix
     ./services/hpos-admin-api.nix
-    ./services/hpos-holochain-api.nix    
+    ./services/hpos-holochain-api.nix
     ./services/holo-envoy.nix
     ./services/hpos-init.nix
     ./services/hpos-led-manager.nix
