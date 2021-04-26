@@ -43,9 +43,14 @@ in
       '';
     };
 
-    systemd.timers.auto-upgrade.timerConfig = {
-      OnUnitActiveSec = cfg.interval;
-      Unit = "holo-nixpkgs-auto-upgrade.service";
+    systemd.timers.auto-upgrade = {
+      enable = true;
+      wantedBy = [ "multi-user.target" ];
+
+      timerConfig = {
+        OnUnitActiveSec = cfg.interval;
+        Unit = "holo-nixpkgs-auto-upgrade.service";
+      };
     };
   };
 }
