@@ -11,7 +11,14 @@ in
     system.holo-nixpkgs.autoUpgrade = {
       enable = mkEnableOption "Holo Nixpkgs auto-upgrade";
 
-      dates = mkOption {};
+      interval = mkOption {
+        description = ''
+          Update interval in systemd.time(7) units.
+        '';
+        example = "1 h";
+        default = "15min";
+        type = types.str;
+      };
     };
   };
 
@@ -34,8 +41,11 @@ in
         curl -L -H Content-Type:application/json https://hydra.holo.host/jobset/holo-nixpkgs/$channel_name/latest-eval | jq -r '.jobsetevalinputs | ."holo-nixpkgs" | .revision' | perl -pe 'chomp' > /run/.nix-revision
         ${config.system.build.nixos-rebuild}/bin/nixos-rebuild switch
       '';
+    };
 
-      startAt = cfg.dates;
+    systemd.timers.auto-upgrade.timerConfig = {
+      OnUnitActiveSec = cfg.interval;
+      Unit = "holo-nixpkgs-auto-upgrade.service";
     };
   };
 }
