@@ -14,7 +14,7 @@
 
   system.holo-nixpkgs.autoUpgrade = {
     enable = true;
-    dates = "*:0/59";
+    interval = "59min";
   };
 
   boot.cleanTmpDir = true;
