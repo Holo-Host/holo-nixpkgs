@@ -7,7 +7,7 @@
     enable = true;
     cert-file = "proxy.cert";
     working-directory = "/var/lib/holochain-proxy";
-    port = 5779;
+    port = 5788;
   };
 
   services.openssh.enable = true;
