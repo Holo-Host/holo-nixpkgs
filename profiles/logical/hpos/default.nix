@@ -26,7 +26,7 @@ let
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
 
-  kitsuneAddress = "kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/167.172.0.245/p/5788/--";
+  kitsuneAddress = "kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/206.189.182.123/p/5788/--";
 in
 
 {
