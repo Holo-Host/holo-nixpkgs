@@ -41,7 +41,7 @@ in
       wantedBy = [ "multi-user.target" ];
 
       #environment.RUST_LOG = "debug";
-      environment.HC_LMDB_SIZE = "10737418240";  # 1G instead of default 100M
+      environment.HC_LMDB_SIZE = "1073741824";  # 1G instead of default 100M
 
       preStart = ''
         ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.config} > $STATE_DIRECTORY/holochain-config.yaml
