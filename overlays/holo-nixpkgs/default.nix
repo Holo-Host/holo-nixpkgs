@@ -197,9 +197,17 @@ rec {
     python3 = python3.withPackages (ps: with ps; [ http-parser flask gevent toml requests websockets ]);
   };
 
+
   hpos-admin-client = callPackage ./hpos-admin-client {
     stdenv = stdenvNoCC;
     python3 = python3.withPackages (ps: [ ps.click ps.requests ]);
+  };
+
+  match-service-api = callPackage ./match-service-api {};
+
+  matching-engine = callPackage ./matching-engine {
+    stdenv = stdenvNoCC;
+    python3 = python3.withPackages (ps: with ps; [ requests pandas pymongo numpy dns]);
   };
 
   hpos-init = python3Packages.callPackage ./hpos-init {};
@@ -291,6 +299,8 @@ rec {
   });
 
   inherit (callPackage ./hpos-holochain-api {}) hpos-holochain-api;
+
+  inherit (callPackage ./hosted-happ-monitor {}) hosted-happ-monitor;
 
   # here for testing purposes only for trycp_server installation
   tryorama = callPackage ./tryorama {
