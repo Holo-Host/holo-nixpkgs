@@ -280,10 +280,12 @@ rec {
       sha256 = "17l8mll020zc0c629cypl5hhga4hns1nrafr7a62bhsp4hg9vswd";
     }).rust.override { inherit targets; };
 
-    rustStable = (rustChannelOf {
+    rust_1_52_0 = (rustChannelOf {
       channel = "1.52.0";
       sha256 = "0qzaq3hsxh7skxjix4d4k38rv0cxwwnvi32arg08p11cxvpsmikx";
     }).rust.override { inherit targets; };
+
+    rustStable = rust_1_52_0;
   in {
     packages = previous.rust.packages // {
       nightly = {
