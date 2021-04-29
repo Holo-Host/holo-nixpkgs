@@ -14,6 +14,10 @@ in
       type = types.attrs;
     };
 
+    membrane-proofs = mkOption {
+      type = types.attrs;
+    };
+
     package = mkOption {
       default = pkgs.configure-holochain;
       type = types.package;
@@ -26,8 +30,8 @@ in
 
   config = mkIf (cfg.enable) {
     systemd.services.configure-holochain = {
-      after = [ "network.target" "holochain.service" "hpos-holochain-api.service" ];
-      requisite = [ "holochain.service" "hpos-holochain-api.service" ];
+      after = [ "network.target" "hpos-holochain-api.service" ];
+      requisite = [ "hpos-holochain-api.service" ];
       wantedBy = [ "multi-user.target" ];
 
       environment.RUST_LOG = "configure_holochain=debug";
@@ -37,13 +41,14 @@ in
 
       preStart = ''
         ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.install-list} > ${cfg.working-directory}/config.yaml
+        ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.membrane-proofs} > ${cfg.working-directory}/membrane-proofs.yaml
         sleep 2 # wait for holochian admin interface to be ready
       '';
 
       serviceConfig = {
         User = "configure-holochain";
         Group = "configure-holochain";
-        ExecStart = "${cfg.package}/bin/configure-holochain ${cfg.working-directory}/config.yaml";
+        ExecStart = "${cfg.package}/bin/configure-holochain ${cfg.working-directory}/config.yaml ${cfg.working-directory}/membrane-proofs.yaml";
         RemainAfterExit = true;
         StateDirectory = "configure-holochain";
         Type = "oneshot";

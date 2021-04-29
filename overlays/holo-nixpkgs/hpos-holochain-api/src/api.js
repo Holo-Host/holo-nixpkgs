@@ -1,4 +1,4 @@
-const { ADMIN_PORT, HAPP_PORT, getAppIds } = require('./const')
+const { ADMIN_PORT, HAPP_PORT, DEV_UID_OVERRIDE, getAppIds } = require('./const')
 const { AdminWebsocket, AppWebsocket } = require('@holochain/conductor-api')
 const { downloadFile } = require('./utils')
 const msgpack = require('@msgpack/msgpack')
@@ -36,7 +36,8 @@ const installHostedHapp = async (
       path: bundlePath,
       agent_key: agentPubKey,
       installed_app_id: happId,
-      membrane_proofs: membraneProofs || {}
+      membrane_proofs: membraneProofs || {},
+      uid: DEV_UID_OVERRIDE
     }
     console.log('Installing happ: ', payload)
     const installedApp = await adminWebsocket.installAppBundle(payload)

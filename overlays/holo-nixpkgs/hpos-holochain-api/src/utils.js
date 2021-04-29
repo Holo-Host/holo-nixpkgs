@@ -59,8 +59,8 @@ const toInt = i => {
   else return i
 }
 
-const isusageTimeInterval = value => {
-  if (value === null) return false
+const isUsageTimeInterval = value => {
+  if (!value) return false
   const keys = Object.keys(value)
   return keys.includes('duration_unit') && keys.includes('amount')
 }
@@ -69,5 +69,5 @@ module.exports = {
   parsePreferences,
   formatBytesByUnit,
   downloadFile,
-  isusageTimeInterval
+  isUsageTimeInterval
 }
