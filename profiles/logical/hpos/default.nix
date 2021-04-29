@@ -26,7 +26,7 @@ let
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
 
-  kitsuneAddress = "kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/165.227.194.75/p/5788/--";
+  kitsuneAddress = "kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/206.189.182.123/p/5788/--";
 in
 
 {
@@ -253,7 +253,7 @@ in
 
   system.holo-nixpkgs.autoUpgrade = {
     enable = lib.mkDefault true;
-    dates = "*:0/10";
+    interval = "10min";
   };
 
   system.holo-nixpkgs.usbReset = {

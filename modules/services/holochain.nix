@@ -24,6 +24,10 @@ in
     };
 
     restart-interval = mkOption {
+      description = ''
+        Update interval in systemd.time(7) units.
+      '';
+      example = "1 h";
       type = types.str;
     };
   };
