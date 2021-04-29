@@ -25,7 +25,7 @@ def hosted_happs(ctx, amount, duration_unit):
 @click.argument('amount')
 @click.argument('duration_unit')
 @click.pass_context
-def dashboard(ctx):
+def dashboard(ctx, amount, duration_unit):
     print(request(ctx, 'GET', f"/dashboard?duration_unit={duration_unit}&amount={amount}").text)
 
 @cli.command(help='Pass a happ_id to be installed as a hosted happ')
