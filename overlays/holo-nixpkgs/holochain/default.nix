@@ -22,17 +22,16 @@ let
       "--manifest-path=crates/${crate}/Cargo.toml"
     ];
 
-    nativeBuildInputs = [ perl pkgconfig ] ++ stdenv.lib.optionals stdenv.isDarwin [
+    nativeBuildInputs = [ perl pkgconfig ] ++ lib.optionals stdenv.isDarwin [
       xcbuild
     ];
 
-    buildInputs = [ openssl ] ++ stdenv.lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
-      AppKit
-      CoreFoundation
-      CoreServices
-      Security
-      libiconv
-    ]);
+    buildInputs = [ openssl ]
+      ++ lib.optionals stdenv.isDarwin (
+        builtins.attrValues (darwin.apple_sdk.frameworks)
+        ++ [ libiconv ]
+      )
+      ;
 
     RUST_SODIUM_LIB_DIR = "${libsodium}/lib";
     RUST_SODIUM_SHARED = "1";
