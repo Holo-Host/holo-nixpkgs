@@ -36,6 +36,15 @@ let
     RUST_SODIUM_LIB_DIR = "${libsodium}/lib";
     RUST_SODIUM_SHARED = "1";
 
+    NIX_LDFLAGS =
+      if stdenv.isDarwin
+      then builtins.foldl' (sum: item:
+          sum + "-F${darwin.apple_sdk.frameworks.${item}}/Library/Frameworks "
+        )
+        ""
+        (builtins.attrNames darwin.apple_sdk.frameworks)
+      else "";
+
     doCheck = false;
     meta.platforms = [
         "aarch64-linux"
