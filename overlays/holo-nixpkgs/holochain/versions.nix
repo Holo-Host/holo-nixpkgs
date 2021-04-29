@@ -11,9 +11,9 @@
   };
 
   develop = {
-    rev = "78e2591449f1467f32b24219b4ffac75b6b840ee";
-    sha256 = "10znmmxba2n74np8kriwwbk977x9asq7abbjz5w8angzi1nhibfm";
-    cargoSha256 = "19faydkxid1d2s0k4jks6y6plgchdhidcckacrcs841my6dvy131";
+    rev = "a6ac0439670ba367c723a80d3b8bc7c419aa5f6e";
+    sha256 = "16a9mjq8g40mp5120714ff5wpks74n3n39liswikqqf1sxabza9c";
+    cargoSha256 = "0sbr6ag5dyv7gdchpp5zjwzbsr1ggvxnmik21wm71gjd8hhwcdy6";
     bins = {
       holochain = "holochain";
       hc = "hc";
