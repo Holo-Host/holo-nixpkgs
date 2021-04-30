@@ -58,7 +58,7 @@ fn main() -> Fallible<()> {
         };
 
         if counter == 0 {
-            conn_kitsune_proxy = match Command::new("proxy-cli")
+            conn_kitsune_proxy = match Command::new("proxy-tx2-cli")
                 .args(&["--", &args.flag_kitsune])
                 .output()
             {   
