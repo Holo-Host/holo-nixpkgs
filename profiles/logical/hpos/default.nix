@@ -26,7 +26,7 @@ let
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
 
-  kitsuneAddress = "kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/45.55.107.33/p/5788/--";
+  kitsuneAddress = "kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/159.89.55.170/p/5788/--";
 in
 
 {
@@ -223,7 +223,7 @@ in
     };
   };
 
-  systemd.globalEnvironment.DEV_UID_OVERRIDE = "develop";
+  systemd.globalEnvironment.DEV_UID_OVERRIDE = "0000";
 
   services.configure-holochain = lib.mkDefault {
     enable = true;
@@ -242,7 +242,7 @@ in
       self_hosted_happs = [
         {
           bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha7/elemental-chat.0_2_0_alpha7.happ";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha7-develop.zip";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha7-0000.zip";
         }
       ];
     };
