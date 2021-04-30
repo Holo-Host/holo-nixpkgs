@@ -223,7 +223,7 @@ in
     };
   };
 
-  systemd.globalEnvironment.DEV_UID_OVERRIDE = "0004";
+  systemd.globalEnvironment.DEV_UID_OVERRIDE = "0005";
 
   services.configure-holochain = lib.mkDefault {
     enable = true;
