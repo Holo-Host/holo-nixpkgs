@@ -29,7 +29,7 @@ in
       '';
 
       serviceConfig = {
-        Environment = "LOG_LEVEL=debug";
+        Environment = "LOG_LEVEL=silly";
         ExecStart = "${cfg.package}/bin/holo-envoy";
         TimeoutStartSec = 300;
         Restart = "always";
