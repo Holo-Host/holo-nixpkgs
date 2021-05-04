@@ -232,7 +232,7 @@ in
       core_happs = [
        {
          app_id = "core-app";
-         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha9/core-app.0_1_0_alpha10.happ";
+         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha10/core-app.0_1_0_alpha10.happ";
        }
        {
          app_id = "servicelogger";
