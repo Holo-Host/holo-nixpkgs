@@ -17,6 +17,6 @@
 
   system.holo-nixpkgs.autoUpgrade = {
     enable = true;
-    dates = "*:0/10";
+    interval = "1h";
   };
 }

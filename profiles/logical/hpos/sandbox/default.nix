@@ -75,12 +75,12 @@ in
         {
           app_id = "elemental-chat";  # not used, just for clarity here
           bundle_path =  builtins.fetchurl {
-            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha6/elemental-chat.0_2_0_alpha6.happ";
-            sha256 = "0d4ncwlmbl3zwjp8c1n32bzq5j2b60s3cf1nzwdf2fz383c8zf6d";
+            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha7/elemental-chat.0_2_0_alpha7.happ";
+            sha256 = "19j3kj5jsna4j732qmwjnwdvd2bcnihx4gs1yaqh8zrmm3r5rb0y";
           };
           ui_path = builtins.fetchurl {
-            url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha6-0002.zip";
-            sha256 = "1vjw5dfbladvr0ww284pnyswvwzlyxdnb1w5dw4k3f661km8akkg";  # To get sha run `nix-prefetch-url URL`
+            url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha7-develop.zip";
+            sha256 = "1yd8rqfywwhd212mmc056x8kwc7nrmqssqzyzqp3iyg961iqjrfy";  # To get sha run `nix-prefetch-url URL`
           };
         }
       ];
