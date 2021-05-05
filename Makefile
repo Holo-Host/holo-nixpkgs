@@ -6,7 +6,7 @@
 # make HC_REV="HC_REV" update-hc
 # Example use: make HC_REV="78e2591449f1467f32b24219b4ffac75b6b840ee" update-hc
 
-# The reason this is broken into 3 commends is because
+# The reason this is broken into 3 commands is because
 # in the update-nix-by-failure will fail with exit code 102
 # and breaking it into 3 commands helps handle the error
 update-hc:
