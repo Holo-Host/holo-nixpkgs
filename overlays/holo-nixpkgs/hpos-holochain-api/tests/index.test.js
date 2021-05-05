@@ -16,15 +16,20 @@ function delay(t, val) {
   })
 }
 
+function pathWithTimeInterval(path, usageTimeInterval) {
+  return `${path}?duration_unit=${usageTimeInterval.duration_unit}&amount=${usageTimeInterval.amount}`
+}
+
 test('holochain-api endpoint ', async () => {
-  const listOfHappsResponse = await request(app).get('/hosted_happs').send(usageTimeInterval)
+  const listOfHappsResponse = await request(app).get(pathWithTimeInterval('/hosted_happs', usageTimeInterval))
   expect(listOfHappsResponse.status).toBe(200)
-  expect(listOfHappsResponse.body[0].name).toBe(HAPP_NAME)
-  expect(listOfHappsResponse.body[0].enabled).toBe(false)
-  expect(listOfHappsResponse.body[0].error.message).toBeTruthy()
-  expect(listOfHappsResponse.body[0].error.source).toBeTruthy()
-  expect(listOfHappsResponse.body[0].sourceChains).toBeFalsy()
-  expect(listOfHappsResponse.body[0].usage).toBeFalsy()
+  const listOfHapps = JSON.parse(listOfHappsResponse.text)
+  expect(listOfHapps[0].name).toBe(HAPP_NAME)
+  expect(listOfHapps[0].enabled).toBe(false)
+  expect(listOfHapps[0].error.message).toBeTruthy()
+  expect(listOfHapps[0].error.source).toBeTruthy()
+  expect(listOfHapps[0].sourceChains).toBeFalsy()
+  expect(listOfHapps[0].usage).toBeFalsy()
 
   const preferences = {
     "max_fuel_before_invoice": 1,
@@ -36,22 +41,23 @@ test('holochain-api endpoint ', async () => {
 
   const res = await request(app)
     .post('/install_hosted_happ')
-    .send({ happ_id: listOfHappsResponse.body[0].id, preferences })
+    .send({ happ_id: listOfHapps[0].id, preferences })
   expect(res.status).toBe(200)
 
   await delay(10000)
 
-  const listOfHappsReload = await request(app).get('/hosted_happs').send(usageTimeInterval)
+  const listOfHappsReloadResponse = await request(app).get(pathWithTimeInterval('/hosted_happs', usageTimeInterval))
   const usage = {
     bandwidth: 0,
     cpu: 0
   }
-  expect(listOfHappsReload.status).toBe(200)
-  expect(listOfHappsReload.body[0].enabled).toBe(true)
-  expect(listOfHappsReload.body[0].name).toBe(HAPP_NAME)
-  expect(listOfHappsReload.body[0].sourceChains).toBe(0)
-  expect(listOfHappsReload.body[0].storage).toBe(0)
-  expect(listOfHappsReload.body[0].usage).toStrictEqual(usage)
+  expect(listOfHappsReloadResponse.status).toBe(200)
+  const listOfHappsReload = JSON.parse(listOfHappsReloadResponse.text)
+  expect(listOfHappsReload[0].enabled).toBe(true)
+  expect(listOfHappsReload[0].name).toBe(HAPP_NAME)
+  expect(listOfHappsReload[0].sourceChains).toBe(0)
+  expect(listOfHappsReload[0].storage).toBe(0)
+  expect(listOfHappsReload[0].usage).toStrictEqual(usage)
 }, 50000)
 
 test('dashboard endpoint', async () => {
@@ -60,7 +66,7 @@ test('dashboard endpoint', async () => {
     amount: 1
   }
 
-  const dashboardResponse = await request(app).get('/dashboard').send(usageTimeInterval)
+  const dashboardResponse = await request(app).get(pathWithTimeInterval('/dashboard', usageTimeInterval))
   expect(dashboardResponse.status).toBe(200)
   expect(dashboardResponse.body.totalSourceChains).toBe(0)
   expect(dashboardResponse.body.currentTotalStorage).toBe(0)

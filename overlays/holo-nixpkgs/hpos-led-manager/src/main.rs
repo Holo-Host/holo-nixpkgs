@@ -9,7 +9,7 @@ use std::net::{TcpStream, ToSocketAddrs};
 use std::path::{Path, PathBuf};
 use std::thread::sleep;
 use std::time::Duration;
-use std::process::Command;
+// use std::process::Command;
 
 const POLLING_INTERVAL: u64 = 1;
 
@@ -44,7 +44,7 @@ fn main() -> Fallible<()> {
     let state_path = args.flag_state;
     let state_temp_path = state_path.with_extension("tmp");
 
-    let mut counter: u8 = 0;
+    // let mut counter: u8 = 0;
     let mut conn_kitsune_proxy = true;
 
     loop {
@@ -57,20 +57,20 @@ fn main() -> Fallible<()> {
             Err(_) => false,
         };
 
-        if counter == 0 {
-            conn_kitsune_proxy = match Command::new("proxy-cli")
-                .args(&["--", &args.flag_kitsune])
-                .output()
-            {   
-                Ok(output) => { 
-                    let output_string = String::from_utf8(output.stdout)?;
-                    output_string.contains("tokio_task_count")
-                },
-                Err(_) => false,
-            };
-        };
+        // if counter == 0 {
+        //     conn_kitsune_proxy = match Command::new("proxy-tx2-cli")
+        //         .args(&["--", &args.flag_kitsune])
+        //         .output()
+        //     {   
+        //         Ok(output) => { 
+        //             let output_string = String::from_utf8(output.stdout)?;
+        //             output_string.contains("tokio_task_count")
+        //         },
+        //         Err(_) => false,
+        //     };
+        // };
         
-        counter = (counter + 1) % 30;
+        // counter = (counter + 1) % 30;
 
         let hpos_config_found = Path::new("/run/hpos-init/hpos-config.json").exists();
 

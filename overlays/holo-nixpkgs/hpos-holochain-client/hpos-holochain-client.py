@@ -15,9 +15,16 @@ def request(ctx, method, path, **kwargs):
     return requests.request(method, ctx.obj['url'] + path, **kwargs)
 
 @cli.command(help='Get info on happs currently hosted')
+@click.argument('amount')
+@click.argument('duration_unit')
 @click.pass_context
-def hosted_happs(ctx):
-    print(request(ctx, 'GET', '/hosted_happs').json())
+def hosted_happs(ctx, amount, duration_unit):
+    print(request(ctx, 'GET', '/hosted_happs?duration_unit=${duration_unit}&amount=${amount}').text)
+
+@cli.command(help='Get info for the host-console-ui dashboard')
+@click.pass_context
+def dashboard(ctx):
+    print(request(ctx, 'GET', '/dashboard').text)
 
 @cli.command(help='Pass a happ_id to be installed as a hosted happ')
 @click.argument('happ_id')

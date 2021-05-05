@@ -11,5 +11,6 @@ let
 in
 
 {
-  /* hpos-api-tests = callPackage ./hpos-api-tests {}; */
+  hpos-api-tests = callPackage ./hpos-api-tests {};
+  systemd-resilience-test = callPackage ./systemd-resilience-test {};
 }

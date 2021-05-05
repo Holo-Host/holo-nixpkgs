@@ -17,7 +17,7 @@ in
 
   services.hpos-init.enable = false;
 
-  services.holo-envoy.enable = false;
+  services.holo-envoy.enable = true;
 
   services.zerotierone.enable = false;
 
@@ -30,7 +30,7 @@ in
     working-directory = holochainWorkingDir;
     config = {
       environment_path = "${holochainWorkingDir}/databases";
-      keystore_path = "${holochainWorkingDir}/lair-keystore";
+      keystore_path = "${holochainWorkingDir}/lair-shim";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
         {
@@ -41,47 +41,56 @@ in
         }
       ];
       network = {
+        network_type = "quic_bootstrap";
         transport_pool = [{
+          network_type = "quic_bootstrap";
           type = "mem";
         }];
       };
     };
   };
 
+  # overwrites configuration from ../default.nix because bundle_path is local
   services.configure-holochain = {
     enable = true;
     working-directory = configureHolochainWorkingDir;
     install-list = {
       core_happs = [
         {
-          app_id = "core-happs";
-          uuid = "0001";
-          version = "alpha0";
-          /* dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha6/holo-hosting-app.dna.gz"; */
-          dna_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha6/holo-hosting-app.dna.gz";
-            sha256 = "0z94sg70xi0p3sybi6w1i7rbrnj8pv60m91ybizma0wc5jwmlnq3"; # To get sha run `nix-prefetch-url URL`
+          app_id = "core-app"; # not used, just for clarity here
+          bundle_path = builtins.fetchurl {
+            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha8/core-app.0_1_0_alpha8.happ";
+            sha256 = "1dbss94h8cxbb87d3p36ba6y2ajg0pc4b2mpc05bfzs4rkxs78bl"; # To get sha run `nix-prefetch-url URL`
           };
         }
         {
-          app_id = "servicelogger";
-          uuid = "0001";
-          version = "alpha0";
-          /* dna_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha4/servicelogger.dna.gz"; */
-          dna_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha4/servicelogger.dna.gz";
-            sha256 = "11w0a1fmm4js9i298ahzmwswv7sza2n0rv9nshl76nl0zi37bdi0"; # To get sha run `nix-prefetch-url URL`
+          app_id = "servicelogger";  # not used, just for clarity here
+          bundle_path = builtins.fetchurl {
+            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha4/servicelogger.0_1_0-alpha4.happ";
+            sha256 = "0z128p7pcnay78w4z3cfka55z29win8hdraifz73xnlwq1bm0w3v"; # To get sha run `nix-prefetch-url URL`
           };
         }
       ];
       self_hosted_happs = [
-        /* {
-          app_id = "elemental-chat";
-          uuid = "0666";
-          version = "alpha14";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha20/elemental-chat.zip";
-          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha14/elemental-chat.dna.gz";
-          } */
+        {
+          app_id = "elemental-chat";  # not used, just for clarity here
+          bundle_path =  builtins.fetchurl {
+            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha7/elemental-chat.0_2_0_alpha7.happ";
+            sha256 = "19j3kj5jsna4j732qmwjnwdvd2bcnihx4gs1yaqh8zrmm3r5rb0y";
+          };
+          ui_path = builtins.fetchurl {
+            url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha7-develop.zip";
+            sha256 = "1yd8rqfywwhd212mmc056x8kwc7nrmqssqzyzqp3iyg961iqjrfy";  # To get sha run `nix-prefetch-url URL`
+          };
+        }
+      ];
+    };
+    membrane-proofs = {
+      payload = [
+        {
+          cell_nick = "elemental-chat";
+          proof = "3gACrXNpZ25lZF9oZWFkZXLeAAKmaGVhZGVy3gACp2NvbnRlbnTeAAekdHlwZaZDcmVhdGWmYXV0aG9yxCeEICR/PJxdzJx345LodAe+FOB4NWOWQV0Tb5cfP5/8AL/nF6VBfU2pdGltZXN0YW1wks5gUzqazhJyV9WqaGVhZGVyX3NlcQmrcHJldl9oZWFkZXLEJ4QpJEIwak+vC8awMx0vdAe8XSbRRage/CuXmCjRhkkTtWWAUUOp8qplbnRyeV90eXBl3gABo0FwcN4AA6JpZACnem9tZV9pZACqdmlzaWJpbGl0ed4AAaZQdWJsaWPAqmVudHJ5X2hhc2jEJ4QhJAf4ZKktdaQZ6JJj4l+UDRCTwspZSchRPYXtwbdRVvyQBnB8ZqRoYXNoxCeEKSSebKOWLx1D9uHxPBkzVjOgm3gtO6w8VkiiEvigSfgTeFWLVN+pc2lnbmF0dXJlxEC+3INgyz2PfsiwtpBpTZIcx0JYVy9t7rYp2HWnK5x9Vw/uITWUzfIO4uaNl6MQppfkraxHLeNZqamjyEtRWggApWVudHJ53gABp1ByZXNlbnTeAAKqZW50cnlfdHlwZaNBcHClZW50cnnEMoKkcm9sZalkZXZlbG9wZXKucmVjb3JkX2xvY2F0b3Kybmljb2xhc0BsdWNrc3VzLmV1";
+        }
       ];
     };
   };

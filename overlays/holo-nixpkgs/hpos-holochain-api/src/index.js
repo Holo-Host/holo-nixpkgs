@@ -8,7 +8,7 @@ const { hideBin } = require('yargs/helpers')
 yargs(hideBin(process.argv))
 const { UNIX_SOCKET, HAPP_PORT, ADMIN_PORT } = require('./const')
 const { callZome, createAgent, listInstalledApps, installHostedHapp } = require('./api')
-const { parsePreferences, isusageTimeInterval } = require('./utils')
+const { parsePreferences, isUsageTimeInterval } = require('./utils')
 const { getAppIds, getReadOnlyPubKey } = require('./const')
 const { AdminWebsocket, AppWebsocket } = require('@holochain/conductor-api')
 
@@ -16,6 +16,7 @@ const getPresentedHapps = async usageTimeInterval => {
   const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
   const APP_ID = await getAppIds()
   const happs = await callZome(appWs, APP_ID.HHA, 'hha', 'get_happs', null)
+
   const presentedHapps = []
   for (let i = 0; i < happs.length; i++) {
     const usage = {
@@ -58,11 +59,13 @@ const getPresentedHapps = async usageTimeInterval => {
 }
 
 app.get('/hosted_happs', async (req, res) => {
-  let usageTimeInterval
-  await req.on('data', (body) => {
-    usageTimeInterval = JSON.parse(body.toString())
-    if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
-  })
+  const usageTimeInterval = await Promise.race([
+    new Promise(resolve => req.on('data', (body) => {
+      resolve(JSON.parse(body.toString()))
+    })),
+    new Promise(resolve => setTimeout(() => resolve(undefined), 100))
+  ])
+  if (usageTimeInterval !== undefined && !isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
@@ -73,11 +76,14 @@ app.get('/hosted_happs', async (req, res) => {
 })
 
 app.get('/dashboard', async (req, res) => {
-  let usageTimeInterval
-  await req.on('data', (body) => {
-    usageTimeInterval = JSON.parse(body.toString())
-    if (!isusageTimeInterval(usageTimeInterval)) return res.status(501).send('error from /hosted_happs: param provided is not an object')
-  })
+  const usageTimeInterval = {
+    duration_unit: req.query.duration_unit,
+    amount: Number(req.query.amount)
+  }
+
+  if (!isUsageTimeInterval(usageTimeInterval)) {
+    return res.status(501).send('failed to provide proper time interval query params: expected duration_unit and amount')
+  }
 
   try {
     const presentedHapps = await getPresentedHapps(usageTimeInterval)
@@ -113,11 +119,10 @@ app.get('/dashboard', async (req, res) => {
 })
 
 app.post('/install_hosted_happ', async (req, res) => {
-  let data
   // Loading body
-  await req.on('data', (body) => {
-    data = JSON.parse(body.toString())
-  })
+  const data = await new Promise(resolve => req.on('data', (body) => {
+    resolve(JSON.parse(body.toString()))
+  }))
 
   // check if happ_id is passed else return error
   if (data.happ_id && data.preferences) {
@@ -151,6 +156,7 @@ app.post('/install_hosted_happ', async (req, res) => {
       return res.status(501).send(`hpos-holochain-api error: ${e}`)
     }
     console.log('Happ Bundle: ', happBundleDetails)
+    console.log('DNAS', happBundleDetails.happ_bundle.dnas)
     let listOfInstalledHapps
     // Instalation Process:
     try {
@@ -163,16 +169,13 @@ app.post('/install_hosted_happ', async (req, res) => {
       // Generate new agent in a test environment else read the location in hpos
       const hostPubKey = process.env.NODE_ENV === 'test' ? await createAgent(adminWs) : await getReadOnlyPubKey()
 
-      // Install DNAs
-      const dnas = happBundleDetails.happ_bundle.dnas
-
       // check if the hosted_happ is already listOfInstalledHapps
       if (listOfInstalledHapps.includes(`${happBundleDetails.happ_id}`)) {
         return res.status(501).send(`hpos-holochain-api error: ${happBundleDetails.happ_id} already installed on your holoport`)
       } else {
         const serviceloggerPref = parsePreferences(preferences, happBundleDetails.provider_pubkey)
         console.log('Parsed Preferences: ', serviceloggerPref)
-        await installHostedHapp(happBundleDetails.happ_id, dnas, hostPubKey, serviceloggerPref)
+        await installHostedHapp(happBundleDetails.happ_id, happBundleDetails.happ_bundle.bundle_url, hostPubKey, serviceloggerPref, data.membrane_proofs)
       }
 
       // Note: Do not need to install UI's for hosted happ
