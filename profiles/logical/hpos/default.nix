@@ -181,6 +181,7 @@ in
 
   services.holochain = lib.mkDefault {
     enable = true;
+    restart-interval = "00/2:30"; # every 2 hours at 30 past
     working-directory = holochainWorkingDir;
     config = {
       environment_path = "${holochainWorkingDir}/databases_lmdb4";
