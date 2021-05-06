@@ -6,15 +6,15 @@
     src = fetchFromGitHub {
       owner = "holo-host";
       repo = "host-console-ui";
-      rev = "1b18fe215ddcc92e8de47305109a85dd9c7e3981";
-      sha256 = "0cldp6y2ghi3wkwr2r8rmj8m5r0ar4mg4pijh2iv80vml43g5rhy";
+      rev = "da009ce9e486ffa9e9312377064da886ac6d1a68";
+      sha256 = "12fvyqmpqi4xmq2x5ydb92bdnilwnvb5d5iykzzl0g8ak2w2arjp";
     };
 
     packageJSON = "${src}/package.json";
     yarnLock = "${src}/yarn.lock";
 
     buildPhase = ''
-      yarn build
+      yarn build:dev
     '';
 
     installPhase = ''

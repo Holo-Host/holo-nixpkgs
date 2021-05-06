@@ -59,15 +59,15 @@ in
         {
           app_id = "core-app"; # not used, just for clarity here
           bundle_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha8/core-app.0_1_0_alpha8.happ";
-            sha256 = "1dbss94h8cxbb87d3p36ba6y2ajg0pc4b2mpc05bfzs4rkxs78bl"; # To get sha run `nix-prefetch-url URL`
+            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha11/core-app.0_1_0_alpha11.happ";
+            sha256 = "0ps7h6h11k0jl9lssy0v0ra3wl0v7irc18p9rn8zcazkkp70kswn"; # To get sha run `nix-prefetch-url URL`
           };
         }
         {
           app_id = "servicelogger";  # not used, just for clarity here
           bundle_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha4/servicelogger.0_1_0-alpha4.happ";
-            sha256 = "0z128p7pcnay78w4z3cfka55z29win8hdraifz73xnlwq1bm0w3v"; # To get sha run `nix-prefetch-url URL`
+            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha7/servicelogger.0_1_0-alpha7.happ";
+            sha256 = "1h9yjrrk13h965ycww5r6y4drqcxw2g3p7a4f8dfszqkjyx0pwm7"; # To get sha run `nix-prefetch-url URL`
           };
         }
       ];
