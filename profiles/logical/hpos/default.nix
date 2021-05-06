@@ -223,7 +223,7 @@ in
     };
   };
 
-  systemd.globalEnvironment.DEV_UID_OVERRIDE = "0002";
+  systemd.globalEnvironment.DEV_UID_OVERRIDE = "develop";
 
   services.configure-holochain = lib.mkDefault {
     enable = true;
@@ -232,17 +232,17 @@ in
       core_happs = [
        {
          app_id = "core-app";
-         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha8/core-app.0_1_0_alpha8.happ";
+         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha11/core-app.0_1_0_alpha11.happ";
        }
        {
          app_id = "servicelogger";
-         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha6/servicelogger.0_1_0-alpha6.happ";
+         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha7/servicelogger.0_1_0-alpha7.happ";
        }
       ];
       self_hosted_happs = [
         {
-          bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha6/elemental-chat.0_2_0_alpha6.happ";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha6-0002.zip";
+          bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha7/elemental-chat.0_2_0_alpha7.happ";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha7-develop.zip";
         }
       ];
     };
