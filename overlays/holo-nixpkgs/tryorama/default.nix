@@ -7,12 +7,12 @@ rustPlatform.buildRustPackage {
   src = let repo = fetchFromGitHub {
     owner = "Holochain";
     repo = "tryorama";
-    rev = "0ba62e93fb2796a4f9456d4eee2d62f0675238fb";
-    sha256 = "sha256:1pg75xp58gflrki08ad2xa50pak3nx4p5h9ad5n4r0a0xbxw4cw3";
+    rev = "99c9c35d2961c3c90f3f9f330ee9495cf4310233";
+    sha256 = "10nywspr7iv3mzwggcr6gbjha1n7np2x6lh732mf9khssk7i0q1q";
   };
   in "${repo}/crates/trycp_server";
 
-  cargoSha256 = "1kvh9bykw6x5il5xb1sl38152qvzq83ip96pim1xsz80fwbpzbkm";
+  cargoSha256 = "1zarjrrvwwifyp4sfphrbd1zw071m456qrdi0rfspc53m2zqrlq6";
 
   nativeBuildInputs = [ pkgconfig ];
   buildInputs = [ openssl ];

@@ -24,7 +24,7 @@ in
 
       path = [ pkgs.holochain pkgs.lair-keystore ];
 
-      serviceConfig.ExecStart = "${cfg.package}/bin/trycp_server -r 9100-9400";
+      serviceConfig.ExecStart = "${cfg.package}/bin/trycp_server";
     };
   };
 }
