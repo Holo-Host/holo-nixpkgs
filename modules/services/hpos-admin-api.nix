@@ -26,6 +26,7 @@ in
         User = "admin-api";
         Group = "apis";
         UMask = "0002";
+        Restart = "always";
       };
     };
 
