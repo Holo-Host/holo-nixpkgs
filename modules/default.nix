@@ -15,14 +15,19 @@
     ./services/holo-router-agent.nix
     ./services/holo-router-gateway.nix
     ./services/holochain.nix
+    ./services/hosted-happ-monitor.nix
+    ./services/holochain-proxy.nix
     ./services/hp-admin-crypto-server.nix
     ./services/hpos-admin-api.nix
-    ./services/hpos-holochain-api.nix    
+    ./services/hpos-holochain-api.nix
     ./services/holo-envoy.nix
     ./services/hpos-init.nix
     ./services/hpos-led-manager.nix
+    ./services/kv-uploader.nix
     ./services/lair-keystore.nix
     ./services/configure-holochain.nix
+    ./services/match-service-api.nix
+    ./services/zt-collector.nix
     ./services/trycp-server.nix
     ./system/holo-nixpkgs/auto-upgrade.nix
     ./system/holo-nixpkgs/usb-reset.nix

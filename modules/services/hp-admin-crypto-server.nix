@@ -22,7 +22,10 @@ in
 
       environment.RUST_LOG = "info";
 
-      serviceConfig.ExecStart = "${cfg.package}/bin/hp-admin-crypto-server";
+      serviceConfig = {
+        ExecStart = "${cfg.package}/bin/hp-admin-crypto-server";
+        Restart = "always";
+      };
     };
   };
 }
