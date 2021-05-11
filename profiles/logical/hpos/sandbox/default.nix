@@ -59,8 +59,8 @@ in
         {
           app_id = "core-app"; # not used, just for clarity here
           bundle_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha11/core-app.0_1_0_alpha11.happ";
-            sha256 = "0ps7h6h11k0jl9lssy0v0ra3wl0v7irc18p9rn8zcazkkp70kswn"; # To get sha run `nix-prefetch-url URL`
+            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.1.0-alpha12/core-app.0_1_0_alpha12.happ";
+            sha256 = "FIXME"; # To get sha run `nix-prefetch-url URL`
           };
         }
         {
@@ -75,7 +75,7 @@ in
         {
           app_id = "elemental-chat";  # not used, just for clarity here
           bundle_path =  builtins.fetchurl {
-            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha7/elemental-chat.0_2_0_alpha7.happ";
+            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha7/elemental-chat.0_2_0_alpha.happ";
             sha256 = "19j3kj5jsna4j732qmwjnwdvd2bcnihx4gs1yaqh8zrmm3r5rb0y";
           };
           ui_path = builtins.fetchurl {
