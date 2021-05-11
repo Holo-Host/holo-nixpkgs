@@ -24,6 +24,8 @@ in
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
 
+      environment.RUST_LOG = "trace";
+
       preStart = ''
         rm -f ${holochain-home}/lair-keystore/pid
       '';
