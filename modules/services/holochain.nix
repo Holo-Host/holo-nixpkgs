@@ -33,7 +33,7 @@ in
       wantedBy = [ "multi-user.target" ];
 
       # environment.RUST_LOG = "debug";
-      environment.HC_LMDB_SIZE = "1073741824";  # 1G instead of default 100M
+      environment.HC_LMDB_SIZE = if systemd.globalEnvironment.TEST_CONTEXT then "104857600" else "1073741824";  # 1G instead of default 100M unless in the test context
 
       preStart = ''
         ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.config} > $STATE_DIRECTORY/holochain-config.yaml

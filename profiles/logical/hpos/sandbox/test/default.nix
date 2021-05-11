@@ -31,6 +31,7 @@ in
   };
 
   systemd.globalEnvironment.HPOS_CONFIG_PATH = hposConfigPath;
+  systemd.globalEnvironment.TEST_CONTEXT= 1;
 
   users.users.nginx.extraGroups = [ "apis" ];
 
