@@ -31,7 +31,7 @@ in
   };
 
   systemd.globalEnvironment.HPOS_CONFIG_PATH = hposConfigPath;
-  systemd.globalEnvironment.TEST_CONTEXT= 1;
+  services.holochain.hc-lmdb-size = "104857600"; # default 1G breaks VM
 
   users.users.nginx.extraGroups = [ "apis" ];
 
