@@ -25,12 +25,14 @@ in
 
   services.lair-keystore.enable = true;
 
+  services.holo-envoy.enable = lib.mkDefault true; # Enabling because Holochain systemd service depends on it. We're not using it or lair-shim
+
   services.holochain = lib.mkDefault {
     enable = true;
     working-directory = holochainWorkingDir;
     config = {
       environment_path = "${holochainWorkingDir}/databases_lmdb4";
-      keystore_path = "${holochainWorkingDir}/lair-shim";
+      keystore_path = "${holochainWorkingDir}/lair-keystore";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
         {
