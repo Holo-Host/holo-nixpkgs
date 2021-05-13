@@ -21,6 +21,7 @@ in
       wantedBy = [ "multi-user.target" ];
 
       environment.RUST_LOG = "info";
+      environment.HC_LMDB_SIZE = "1073741824";
 
       path = [ pkgs.holochain pkgs.lair-keystore ];
 
