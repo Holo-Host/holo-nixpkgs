@@ -74,7 +74,7 @@ test('dashboard endpoint', async () => {
   expect(dashboardResponse.body.usage.bandwidth).toBe(0)
 }, 50000)
 
-test('registe_happ endpoint ', async () => {
+test('register_happ endpoint ', async () => {
   const res = await request(app)
     .post('/register_happ')
     .send({ url: "testing.url" })
