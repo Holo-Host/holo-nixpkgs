@@ -5,7 +5,7 @@ const HAPP_NAME = 'Elemental Chat'
 const USAGE_DURATION_INTERVAL = 'WEEK'
 const usageTimeInterval = {
   duration_unit: USAGE_DURATION_INTERVAL,
-  amount: 1
+  amount: 10
 }
 
 function delay(t, val) {
@@ -72,4 +72,17 @@ test('dashboard endpoint', async () => {
   expect(dashboardResponse.body.currentTotalStorage).toBe(0)
   expect(dashboardResponse.body.usage.cpu).toBe(0)
   expect(dashboardResponse.body.usage.bandwidth).toBe(0)
+}, 50000)
+
+test('registe_happ endpoint ', async () => {
+  const res = await request(app)
+    .post('/register_happ')
+    .send({ url: "testing.url" })
+  expect(res.status).toBe(200)
+
+  await delay(10000)
+
+  const listOfHapps = await request(app).get(pathWithTimeInterval('/hosted_happs', usageTimeInterval))
+  expect(listOfHapps.status).toBe(200)
+  expect(JSON.parse(listOfHapps.text).length).toBe(2)
 }, 50000)

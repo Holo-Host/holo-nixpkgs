@@ -27,6 +27,18 @@ const getPresentedHapps = async usageTimeInterval => {
     try {
       appStats = await callZome(appWs, `${happs[i].happ_id}::servicelogger`, 'service', 'get_stats', usageTimeInterval)
       enabled = true
+      const { source_chain_count: sourceChains, bandwidth, cpu, disk_usage: storage } = appStats
+      usage.cpu = cpu
+      usage.bandwidth = bandwidth
+
+      presentedHapps.push({
+        id: happs[i].happ_id,
+        name: happs[i].happ_bundle.name,
+        enabled,
+        sourceChains,
+        usage,
+        storage
+      })
     } catch (e) {
       const happServiceloggerError = {
         id: happs[i].happ_id,
@@ -39,24 +51,30 @@ const getPresentedHapps = async usageTimeInterval => {
         }
       }
       presentedHapps.push(happServiceloggerError)
-      break
     }
-
-    const { source_chain_count: sourceChains, bandwidth, cpu, disk_usage: storage } = appStats
-    usage.cpu = cpu
-    usage.bandwidth = bandwidth
-
-    presentedHapps.push({
-      id: happs[i].happ_id,
-      name: happs[i].happ_bundle.name,
-      enabled,
-      sourceChains,
-      usage,
-      storage
-    })
   }
   return presentedHapps
 }
+
+const registerECHapp = async url => {
+  const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
+  const APP_ID = await getAppIds()
+  const ecHappBundle = {
+    hosted_url: "https://chat.holo.host",
+    bundle_url: url,
+    happ_alias: "chat",
+    ui_src_url: "fake-path",
+    name: "Elemental Chat",
+    dnas: [{
+      hash: "fake-hash",
+      src_url: "fake-path",
+      nick: "elemental-chat",
+    }]
+  }
+  let happ =  await callZome(appWs, APP_ID.HHA, 'hha', 'register_happ', ecHappBundle)
+  return happ
+}
+
 
 app.get('/hosted_happs', async (req, res) => {
   const usageTimeInterval = {
@@ -186,6 +204,27 @@ app.post('/install_hosted_happ', async (req, res) => {
     }
   } else {
     return res.status(501).send(`hpos-holochain-api error: Failed to pass happId in body`)
+  }
+})
+
+// This is a temporary function: eventually when the ui registeds happ it will call the zome call directly
+// This currently only registers new EC happ as default
+// You can pass a new url to the happ bundle that is the only thing needed
+app.post('/register_happ', async (req, res) => {
+  // Loading body
+  const data = await new Promise(resolve => req.on('data', (body) => {
+    resolve(JSON.parse(body.toString()))
+  }))
+  if (data.url) {
+    try {
+      const happ = await registerECHapp(data.url)
+      res.status(200).send(happ)
+    } catch (e) {
+      return res.status(501).send(`hpos-holochain-api error: ${e}`)
+    }
+
+  } else {
+    return res.status(501).send(`hpos-holochain-api error: Failed to pass url in body`)
   }
 })
 
