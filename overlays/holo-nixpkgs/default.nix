@@ -111,6 +111,10 @@ rec {
     wormhole-relay = holo.buildProfile "wormhole-relay";
   };
 
+  holo-auto-pilot = callPackage ./holo-auto-pilot {
+    inherit (rust.packages.stable) rustPlatform;
+  };
+
   configure-holochain = callPackage ./configure-holochain {
     inherit (rust.packages.stable) rustPlatform;
   };
