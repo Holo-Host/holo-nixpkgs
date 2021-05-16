@@ -7,8 +7,8 @@ rustPlatform.buildRustPackage {
   src = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "holo-auto-pilot";
-    rev = "e5833b28cfe894e1a5616400782cb3f4545a835a";
-    sha256 = "1qwhp14xcjdig8rymv0r2z0hz5fkbjijq8adgchjxr90dis2kivr";
+    rev = "584ef7365500aa12442eb11802d73a0f8f27768a";
+    sha256 = "08yqw7jq9z1vyvx8hgny7k8dl90ns4yhr6f299xzfh6py2as3yy2";
   };
 
   cargoSha256 = "0s2fzy9903z3s107asv8jkkw020l7k5vkc9kv86fv8jg76zdllas";
