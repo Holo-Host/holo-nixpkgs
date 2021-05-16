@@ -30,7 +30,7 @@ in
 
   config = mkIf (cfg.enable) {
     systemd.services.holo-auto-pilot = {
-      after = [ "network.target" "holochain.service" "hpos-holochain-api.service" ];
+      after = [ "network.target" "holochain.service" "hpos-holochain-api.service" "configure-holochain.service" ];
       requisite = [ "holochain.service" "hpos-holochain-api.service" "configure-holochain.service" ];
       wantedBy = [ "multi-user.target" ];
 
@@ -39,11 +39,9 @@ in
       path = with pkgs; [ unzip ];
 
       preStart = ''
-        ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.install-list} > ${cfg.working-directory}/config.yaml
-        ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.membrane-proofs} > ${cfg.working-directory}/membrane-proofs.yaml
-        sleep 2 # wait for holochian admin interface to be ready
+        sleep 2 # wait for configure-holochain to build config files
       '';
-      
+
       serviceConfig = {
         User = "holo-auto-pilot";
         Group = "holo-auto-pilot";

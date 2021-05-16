@@ -227,25 +227,9 @@ in
 
   services.holo-auto-pilot = lib.mkDefault {
     enable = true;
-    working-directory = "/var/lib/holo-auto-pilot";
-    install-list = {
-      core_happs = [
-       {
-         app_id = "core-app";
-         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha15/core-app.0_1_0_alpha15.happ";
-       }
-      ];
-      self_hosted_happs = [];
-    };
-    membrane-proofs = {
-      payload = [
-        {
-          cell_nick = "elemental-chat";
-          proof = "AA==";
-        }
-      ];
-    };
+    working-directory = configureHolochainWorkingDir;
   };
+
   services.configure-holochain = lib.mkDefault {
     enable = true;
     working-directory = configureHolochainWorkingDir;
