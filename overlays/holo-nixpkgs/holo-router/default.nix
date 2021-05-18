@@ -12,10 +12,10 @@ in
     src = fetchFromGitHub {
       owner = "Holo-Host";
       repo = "holo-router";
-      rev = "01421a799a2df06272307fc322f86e73595ff006";
-      sha256 = "1qv9h82gl8lcm3kbkkq0gskd38c5msp9lxz5hvaxj6q8amc8884v";
+      rev = "9d99427a4321e02453937afcf7d4e47e22182e62";
+      sha256 = "17zj84ws966v1gfcfbgzwg1517c5rq8jv9j3j35g14wswyvvrnqy";
     };
-    
+
     cargoSha256 = "0i9k6cwiim53sgask2n2cgl6l0rl84dcaqqrmdqinxlqr4vi66kp";
 
     nativeBuildInputs = [ pkgconfig ];
