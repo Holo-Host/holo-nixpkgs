@@ -49,7 +49,7 @@ def install_hosted_happ(ctx, happ_id, max_fuel_before_invoice, max_time_before_i
 @cli.command(help='Pass a url to be registered for EC happ bundle in HHA')
 @click.argument('url')
 @click.pass_context
-def register_happ(ctx, happ_id):
+def register_happ(ctx, url):
     print(request(ctx, 'POST', '/register_happ',  data=json.dumps({'url': url })))
 
 if __name__ == '__main__':
