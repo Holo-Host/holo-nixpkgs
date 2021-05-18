@@ -18,7 +18,6 @@ let
     inherit cargoSha256;
 
     cargoBuildFlags = [
-      "--no-default-features"
       "--manifest-path=crates/${crate}/Cargo.toml"
     ];
 
