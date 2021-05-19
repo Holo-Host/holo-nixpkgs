@@ -5,6 +5,7 @@ with lib;
 let
   cfg = config.services.holo-envoy;
   holochain-home = config.services.holochain.working-directory;
+  holochain-environment-path = config.services.holochain.config.environment_path;
 in
 
 {
@@ -12,7 +13,7 @@ in
     enable = mkEnableOption "Holo Envoy";
 
     dbPath = mkOption {
-      default = "/var/lib/holochain-rsm/databases_lmdb4";
+      default = holochain-environment-path;
     };
 
     package = mkOption {
