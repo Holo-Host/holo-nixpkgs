@@ -11,6 +11,10 @@ in
   options.services.holo-envoy = {
     enable = mkEnableOption "Holo Envoy";
 
+    dbPath = mkOption {
+      default = "/var/lib/holochain-rsm/databases_lmdb4";
+    };
+
     package = mkOption {
       default = pkgs.holo-envoy;
       type = types.package;
@@ -22,6 +26,7 @@ in
       after = [ "network.target" "lair-keystore.service" ];
       requires = [ "lair-keystore.service" ];
       wantedBy = [ "multi-user.target" ];
+      environment.HOLOCHAIN_DATABASE_DIRECTORY = cfg.dbPath;
 
       preStart = ''
         mkdir -p ${holochain-home}/lair-shim
