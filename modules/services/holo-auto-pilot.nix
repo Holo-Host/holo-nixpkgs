@@ -54,9 +54,7 @@ in
 
     users.users.holo-auto-pilot = {
       isSystemUser = true;
-      home = "${cfg.working-directory}";
-      # ensures directory is owned by user
-      createHome = true;
+      createHome = false;
     };
 
     users.groups.holo-auto-pilot = {};
