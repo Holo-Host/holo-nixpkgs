@@ -30,17 +30,13 @@ in
 
   config = mkIf (cfg.enable) {
     systemd.services.holo-auto-pilot = {
-      after = [ "network.target" "holochain.service" "hpos-holochain-api.service" "configure-holochain.service" ];
-      requisite = [ "holochain.service" "hpos-holochain-api.service" "configure-holochain.service" ];
+      after = [ "network.target" "configure-holochain.service" ];
+      requisite = [ "configure-holochain.service" ];
       wantedBy = [ "multi-user.target" ];
 
       environment.RUST_LOG = "holo_auto_pilot=debug";
       environment.PUBKEY_PATH = "${cfg.working-directory}/agent_key.pub";
       path = with pkgs; [ unzip ];
-
-      preStart = ''
-        sleep 2 # wait for configure-holochain to build config files
-      '';
 
       serviceConfig = {
         User = "holo-auto-pilot";
@@ -54,9 +50,7 @@ in
 
     users.users.holo-auto-pilot = {
       isSystemUser = true;
-      home = "${cfg.working-directory}";
-      # ensures directory is owned by user
-      createHome = true;
+      createHome = false;
     };
 
     users.groups.holo-auto-pilot = {};
