@@ -30,8 +30,8 @@ in
 
   config = mkIf (cfg.enable) {
     systemd.services.holo-auto-pilot = {
-      after = [ "network.target" "holochain.service" "hpos-holochain-api.service" "configure-holochain.service" ];
-      requisite = [ "holochain.service" "hpos-holochain-api.service" "configure-holochain.service" ];
+      after = [ "network.target" "configure-holochain.service" ];
+      requisite = [ "configure-holochain.service" ];
       wantedBy = [ "multi-user.target" ];
 
       environment.RUST_LOG = "holo_auto_pilot=debug";
