@@ -3,9 +3,7 @@ This profile is specifically set up for building HoloportOS installation images 
 
 # HoloPort Nano SD Image
 
-On an Aarch64 machine (hydra-minion-1.holo.host), run `nix-shell` 
-
-run: nix-build '<nixpkgs/nixos>' -A config.system.build.sdImage -I nixos-config=./profiles/installers/holoport-nano/default.nix.
+On an Aarch64 machine (hydra-minion-1.holo.host), run: nix-build '<nixpkgs/nixos>' -A config.system.build.sdImage -I nixos-config=./profiles/installers/holoport-nano/default.nix.
 
 Download image and burn it to a microSD card with sudo dd if=result/sd-image/*.img of=/dev/sdX (see lsblk on Linux and diskutil list on macOS for the exact device name). Note it may be a .zst that you have to unpack using unzstd before burning.
 
