@@ -38,10 +38,6 @@ in
       environment.PUBKEY_PATH = "${cfg.working-directory}/agent_key.pub";
       path = with pkgs; [ unzip ];
 
-      preStart = ''
-        sleep 2 # wait for configure-holochain to build config files
-      '';
-
       serviceConfig = {
         User = "holo-auto-pilot";
         Group = "holo-auto-pilot";
