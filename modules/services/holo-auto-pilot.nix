@@ -10,14 +10,6 @@ in
   options.services.holo-auto-pilot = {
     enable = mkEnableOption "holo-auto-pilot";
 
-    install-list = mkOption {
-      type = types.attrs;
-    };
-
-    membrane-proofs = mkOption {
-      type = types.attrs;
-    };
-
     package = mkOption {
       default = pkgs.holo-auto-pilot;
       type = types.package;
@@ -44,9 +36,19 @@ in
         ExecStart = "${cfg.package}/bin/holo-auto-pilot ${cfg.working-directory}/config.yaml ${cfg.working-directory}/membrane-proofs.yaml";
         RemainAfterExit = true;
         StateDirectory = "holo-auto-pilot";
-        Type = "oneshot"; # This should be updated to run every 5 mins
-      };
-    };
+        Type = "oneshot";
+       };
+
+       systemd.timers.holo-auto-pilot = {
+         enable = true;
+         wantedBy = [ "multi-user.target" ];
+         timerConfig = {
+           OnUnitActiveSec = "5min"; # run every 5 min
+           OnBootSec = "2min"; # first run 2 min after boot
+           Unit = "holo-auto-pilot.service";
+         };
+       };
+     };
 
     users.users.holo-auto-pilot = {
       isSystemUser = true;

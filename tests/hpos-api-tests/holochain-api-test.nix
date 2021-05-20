@@ -8,18 +8,25 @@
 
     machine.wait_for_unit("configure-holochain.service")
     machine.wait_for_open_port("42233")
-    
+
     happs = machine.succeed("hc-state -d").strip()
     print(happs)
+
+    machine.wait_for_unit("holo-auto-pilot.service")
+
+    happsCheck = machine.succeed("hc-state -d").strip()
+    print(happsCheck)
+
+
     """
     list_of_happs = machine.succeed(
         "hpos-holochain-client --url=http://localhost/holochain-api/ hosted-happs 1 DAY"
     ).strip()
+    print("List of happs=>>>>>>>>>>>>>>>> ", list_of_happs)
     assert (
         "'name': 'Elemental Chat'" in list_of_happs
     ), "Failed to Get the list of hosted happs from hha"
-    print(list_of_happs)
-    
+
     # The following tests only pass in a non sandbox environment
     happ_id = list_of_happs[9:62]
     print("Happ ID to install: ", happ_id)
