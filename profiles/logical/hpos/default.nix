@@ -223,7 +223,7 @@ in
     };
   };
 
-  systemd.globalEnvironment.DEV_UID_OVERRIDE = "0000";
+  systemd.globalEnvironment.DEV_UID_OVERRIDE = "develop";
 
   services.configure-holochain = lib.mkDefault {
     enable = true;
@@ -232,7 +232,7 @@ in
       core_happs = [
        {
          app_id = "core-app";
-         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha12/core-app.0_1_0_alpha12.happ";
+         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha14/core-app.0_1_0_alpha14.happ";
        }
        {
          app_id = "servicelogger";
