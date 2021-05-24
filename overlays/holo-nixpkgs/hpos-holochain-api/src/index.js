@@ -60,7 +60,7 @@ const registerECHapp = async url => {
   const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
   const APP_ID = await getAppIds()
   const ecHappBundle = {
-    hosted_url: "https://chat.holo.host",
+    hosted_url: "https://elemental-chat.holo.host",
     bundle_url: url,
     happ_alias: "chat",
     ui_src_url: "fake-path",
