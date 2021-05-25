@@ -44,25 +44,45 @@ const main = async () => {
     url: happ.happ_bundle.hosted_url,
     id: happ.happ_id
   }))
+ 
+  await upload(happList, 'happ_list')
+  console.log('happ list updated')
 
-  return happList
+  for (const happ of happList) {
+    const hostArray = await appWebsocket.callZome({
+      cell_id: cellId,
+      zome_name: 'hha',
+      fn_name: 'get_hosts',
+      provenance: agentKey,
+      payload: { id: happ.id }
+    })
+
+    const hostList = hostArray.map(host_id => ({
+      id: host_id,
+      preferences: ''
+    }))
+
+    await upload(hostList, `hosts_for_${happ.id}`) // We want 1 database per happ because later we'll have the various host preferences in it too
+    console.log(`hosts updated for ${happ.id}`)
+  }
 }
 
-const upload = async(happList) => {
+
+
+const upload = async(data, collection_name) => {
   await client.connect()
   const db = client.db(dbName)
-  const collection = db.collection('happ_list')
+  const collection = db.collection(collection_name)
 
   let collection_list = await db.listCollections().toArray();
-  if (collection_list.some(e => e.name === 'happ_list')) {
+  if (collection_list.some(e => e.name === collection_name)) {
     await collection.drop()
   }
-  await collection.insertMany(happList)
+  await collection.insertMany(data)
   await client.close()
 }
 
 main()
-  .then(happList => upload(happList))
   .then(()=> process.exit())
   .catch(e => {
       console.error(e.message)
