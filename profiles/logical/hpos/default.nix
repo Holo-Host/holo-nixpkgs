@@ -281,4 +281,6 @@ in
   users.users.holo.isNormalUser = true;
 
   users.users.root.hashedPassword = "*";
+
+  programs.wireshark.enable = true;
 }
