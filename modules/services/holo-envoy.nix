@@ -5,11 +5,16 @@ with lib;
 let
   cfg = config.services.holo-envoy;
   holochain-home = config.services.holochain.working-directory;
+  holochain-environment-path = config.services.holochain.config.environment_path;
 in
 
 {
   options.services.holo-envoy = {
     enable = mkEnableOption "Holo Envoy";
+
+    dbPath = mkOption {
+      default = holochain-environment-path;
+    };
 
     package = mkOption {
       default = pkgs.holo-envoy;
@@ -22,6 +27,7 @@ in
       after = [ "network.target" "lair-keystore.service" ];
       requires = [ "lair-keystore.service" ];
       wantedBy = [ "multi-user.target" ];
+      environment.HOLOCHAIN_DATABASE_DIRECTORY = cfg.dbPath;
 
       preStart = ''
         mkdir -p ${holochain-home}/lair-shim

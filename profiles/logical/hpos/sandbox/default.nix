@@ -29,7 +29,7 @@ in
     enable = true;
     working-directory = holochainWorkingDir;
     config = {
-      environment_path = "${holochainWorkingDir}/databases";
+      environment_path = "${holochainWorkingDir}/databases_lmdb4";
       keystore_path = "${holochainWorkingDir}/lair-shim";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
@@ -59,8 +59,8 @@ in
         {
           app_id = "core-app"; # not used, just for clarity here
           bundle_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha12/core-app.0_1_0_alpha12.happ";
-            sha256 = "0i1m8sxhkvdrkk34s9404hp6ghswlmw6s58wy11ijvy7yv1hwx9b"; # To get sha run `nix-prefetch-url URL`
+            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha15/core-app.0_1_0_alpha15.happ";
+            sha256 = "04xpky74sp282wg2d01v2sr1pvz48yn6g91viraypglcl8q7zmmm"; # To get sha run `nix-prefetch-url URL`
           };
         }
         {
