@@ -19,6 +19,11 @@ in
       type = types.package;
     };
 
+    hc-lmdb-size = mkOption {
+      default = "1073741824"; # 1G by default
+      type = types.str;
+    };
+
     working-directory = mkOption {
       type = types.path;
     };
@@ -41,7 +46,7 @@ in
       wantedBy = [ "multi-user.target" ];
 
       # environment.RUST_LOG = "debug";
-      environment.HC_LMDB_SIZE = "1073741824";  # 1G instead of default 100M
+      environment.HC_LMDB_SIZE = cfg.hc-lmdb-size;
 
       preStart = ''
         ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.config} > $STATE_DIRECTORY/holochain-config.yaml
