@@ -26,7 +26,7 @@ let
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
 
-  kitsuneAddress = "kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/45.55.107.33/p/5788/--";
+  kitsuneAddress = "kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/159.89.55.170/p/5788/--";
 in
 
 {
@@ -181,6 +181,7 @@ in
 
   services.holochain = lib.mkDefault {
     enable = true;
+    restart-interval = "00/2:30"; # every 2 hours at 30 past
     working-directory = holochainWorkingDir;
     config = {
       environment_path = "${holochainWorkingDir}/databases_lmdb4";

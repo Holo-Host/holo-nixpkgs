@@ -27,6 +27,14 @@ in
     working-directory = mkOption {
       type = types.path;
     };
+
+    restart-interval = mkOption {
+      description = ''
+        Update interval in systemd.time(7) units.
+      '';
+      example = "1 h";
+      type = types.str;
+    };
   };
 
   config = mkIf (cfg.enable) {
@@ -55,6 +63,16 @@ in
         Type = "notify";
         NotifyAccess = "exec";
       };
+    };
+
+    systemd.services.holochain-restarter = {
+      serviceConfig.Type = "oneshot";
+
+      script = ''
+        ${pkgs.systemd}/bin/systemctl try-restart holochain.service
+      '';
+
+      startAt = cfg.restart-interval;
     };
 
     users.users.holochain-rsm = {
