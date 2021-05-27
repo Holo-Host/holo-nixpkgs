@@ -59,8 +59,8 @@ in
         {
           app_id = "core-app"; # not used, just for clarity here
           bundle_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha15/core-app.0_1_0_alpha15.happ";
-            sha256 = "04xpky74sp282wg2d01v2sr1pvz48yn6g91viraypglcl8q7zmmm"; # To get sha run `nix-prefetch-url URL`
+            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha16/core-app.0_1_0_alpha16.happ";
+            sha256 = "1rzs844chmnfj11sjlyl20kb35jknidvsc3x6v10wbqw972khbcd"; # To get sha run `nix-prefetch-url URL`
           };
         }
         {
@@ -75,8 +75,8 @@ in
         {
           app_id = "elemental-chat";  # not used, just for clarity here
           bundle_path =  builtins.fetchurl {
-            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha11/elemental-chat.0_2_0_alpha11.happ";
-            sha256 = "10bjw1rgzzynmhxx16j5kzdbc2srvkq68dsgfx9dmqdi8yy93y22";
+            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha10/elemental-chat.0_2_0_alpha10.happ";
+            sha256 = "1zy4masavhh9n7islrfs719cypkrk1y9fgbl0k78kpkjapzb798a";
           };
           ui_path = builtins.fetchurl {
             url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha34/elemental-chat-for-dna-0_2_0_alpha11-develop.zip";
