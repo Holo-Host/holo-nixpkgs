@@ -38,16 +38,16 @@ in
         StateDirectory = "holo-auto-installer";
         Type = "oneshot";
        };
+      };
 
-#       systemd.timers.holo-auto-installer = {
-#         enable = true;
-#         wantedBy = [ "multi-user.target" ];
-#         timerConfig = {
-#           OnUnitActiveSec = "5min"; # run every 5 min
-#           OnBootSec = "2min"; # first run 2 min after boot
-#           Unit = "holo-auto-installer.service";
-#         };
-#       };
+      systemd.timers.holo-auto-installer = {
+        enable = true;
+        wantedBy = [ "multi-user.target" ];
+        timerConfig = {
+          OnUnitActiveSec = "5min"; # run every 5 min
+          OnBootSec = "2min"; # first run 2 min after boot
+          Unit = "holo-auto-installer.service";
+        };
      };
 
     users.users.holo-auto-installer = {
