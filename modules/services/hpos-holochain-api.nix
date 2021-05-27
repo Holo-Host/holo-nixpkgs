@@ -21,6 +21,8 @@ in
       after = [ "network.target" "nginx.service" ];
       wantedBy = [ "multi-user.target" ];
 
+      path = [ pkgs.hpos-config ];
+
       serviceConfig = {
         ExecStart = "${cfg.package}/bin/hpos-holochain-api";
         User = "hc-api";
@@ -29,7 +31,7 @@ in
         Restart = "always";
       };
     };
-
+    
     systemd.tmpfiles.rules = [
       "d /run/hpos-holochain-api 0770 hc-api apis - -"
     ];

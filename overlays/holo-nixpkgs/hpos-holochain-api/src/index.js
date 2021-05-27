@@ -75,6 +75,17 @@ const registerECHapp = async url => {
   return happ
 }
 
+const enableHapp = async happ_id => {
+  const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
+  const APP_ID = await getAppIds()
+  const enableBundle = {
+    happ_id: happ_id,
+    holoport_id: 'TBD'
+  }
+  let happ =  await callZome(appWs, APP_ID.HHA, 'hha', 'register_happ', ecHappBundle)
+  return happ
+}
+
 
 app.get('/hosted_happs', async (req, res) => {
   const usageTimeInterval = {
@@ -194,6 +205,8 @@ app.post('/install_hosted_happ', async (req, res) => {
       } else {
         const serviceloggerPref = parsePreferences(preferences, happBundleDetails.provider_pubkey)
         console.log('Parsed Preferences: ', serviceloggerPref)
+
+        await enableHapp(happBundleDetails.happ_id)
         await installHostedHapp(happBundleDetails.happ_id, happBundleDetails.happ_bundle.bundle_url, hostPubKey, serviceloggerPref, data.membrane_proofs)
       }
 
