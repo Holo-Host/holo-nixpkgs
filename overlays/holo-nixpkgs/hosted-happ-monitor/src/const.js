@@ -21,7 +21,7 @@ const getAppIds = async () => {
       SL: config[1].app_name
     }
     else return {
-      HHA: getId('core-apps'),
+      HHA: getId('core-app'),
       SL: getId('servicelogger')
     }
   } catch (e) {
