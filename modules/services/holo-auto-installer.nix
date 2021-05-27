@@ -26,7 +26,7 @@ in
       requisite = [ "configure-holochain.service" ];
       wantedBy = [ "multi-user.target" ];
 
-      environment.RUST_LOG = "holo_auto_pilot=debug";
+      environment.RUST_LOG = "holo_auto_installer=debug";
       environment.PUBKEY_PATH = "${cfg.working-directory}/agent_key.pub";
       path = with pkgs; [ unzip ];
 
