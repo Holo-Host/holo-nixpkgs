@@ -34,7 +34,6 @@ in
         User = "holo-auto-installer";
         Group = "holo-auto-installer";
         ExecStart = "${cfg.package}/bin/holo-auto-installer ${cfg.working-directory}/config.yaml ${cfg.working-directory}/membrane-proofs.yaml";
-        RemainAfterExit = true;
         StateDirectory = "holo-auto-installer";
         Type = "oneshot";
        };
