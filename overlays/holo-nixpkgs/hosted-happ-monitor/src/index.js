@@ -28,12 +28,11 @@ const main = async () => {
     throw new Error(`Couldn't find Holo Hosting App with id ${appId}`)
   }
 
-  const cellId = appInfo.cell_data[0][0]
-
-  const agentKey = cellId[1]
+  const [{ cell_id }] = appInfo.cell_data
+  const [_dnaHash, agentKey] = cell_id
 
   const happs = await appWebsocket.callZome({
-    cell_id: cellId,
+    cell_id: cell_id,
     zome_name: 'hha',
     fn_name: 'get_happs',
     provenance: agentKey,
@@ -44,13 +43,18 @@ const main = async () => {
     url: happ.happ_bundle.hosted_url,
     id: happ.happ_id
   }))
- 
+  
+  if (happList.length === 0) {
+    console.log("no happs published")
+    return
+  }
+
   await upload(happList, 'happ_list')
   console.log('happ list updated')
 
   for (const happ of happList) {
     const hostArray = await appWebsocket.callZome({
-      cell_id: cellId,
+      cell_id: cell_id,
       zome_name: 'hha',
       fn_name: 'get_hosts',
       provenance: agentKey,
