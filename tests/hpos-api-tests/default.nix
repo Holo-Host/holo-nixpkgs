@@ -23,7 +23,6 @@ makeTest {
         "hpos-config-gen-cli --email test\@holo.host --password : --seed-from ${./seed.txt} > /etc/hpos/config.json"
     )
 
-    ${admin-api-test}
 
     ${holochain-api-test}
 
