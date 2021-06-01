@@ -66,7 +66,7 @@ in
         {
           app_id = "servicelogger";  # not used, just for clarity here
           bundle_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/0.1.0-alpha8/servicelogger.0_1_0-alpha8.happ";
+            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/0_1_0-alpha8/servicelogger.0_1_0_alpha8.happ";
             sha256 = "1i09fnhzxikxh11jxb75vaiyixpxgd8wqzh4lv70jsaf5cg3063s"; # To get sha run `nix-prefetch-url URL`
           };
         }

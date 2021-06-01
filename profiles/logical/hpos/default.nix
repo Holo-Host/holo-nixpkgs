@@ -241,7 +241,7 @@ in
        }
        {
          app_id = "servicelogger";
-         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/0.1.0-alpha8/servicelogger.0_1_0-alpha8.happ";
+         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/0_1_0-alpha8/servicelogger.0_1_0_alpha8.happ";
        }
       ];
       self_hosted_happs = [
