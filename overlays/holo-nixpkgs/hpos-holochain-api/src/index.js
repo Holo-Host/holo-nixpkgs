@@ -78,11 +78,21 @@ const registerECHapp = async url => {
 const enableHapp = async happ_id => {
   const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
   const APP_ID = await getAppIds()
+
+  const util = require('util');
+  const exec = util.promisify(require('child_process').exec);
+
+  
+  async function getHoloportId() {
+    const { stdout, stderr } = await exec('hpos-config-into-base36-id < /run/hpos-init/hpos-config.json');
+    return stdout
+  }
+
   const enableBundle = {
     happ_id: happ_id,
-    holoport_id: 'TBD'
+    holoport_id: await getHoloportId()
   }
-  let happ =  await callZome(appWs, APP_ID.HHA, 'hha', 'register_happ', ecHappBundle)
+  let happ =  await callZome(appWs, APP_ID.HHA, 'hha', 'enable_happ', enableBundle)
   return happ
 }
 
