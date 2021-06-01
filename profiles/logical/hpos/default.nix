@@ -241,12 +241,12 @@ in
        }
        {
          app_id = "servicelogger";
-         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/0_1_0-alpha8/servicelogger.0_1_0_alpha8.happ";
+         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/0_1_0_alpha8/servicelogger.0_1_0_alpha8.happ";
        }
       ];
       self_hosted_happs = [
         {
-          bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha13/elemental-chat.0_2_0_alpha13.happ";
+          bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0.alpha13/elemental-chat.0_2_0_alpha13.happ";
           ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha34/elemental-chat-for-dna-0_2_0_alpha11-0000.zip";
         }
       ];
