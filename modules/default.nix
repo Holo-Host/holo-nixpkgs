@@ -34,16 +34,7 @@ with lib;
     ./system/holo-nixpkgs/auto-upgrade.nix
     ./system/holo-nixpkgs/usb-reset.nix
     ./system/holo-nixpkgs/install.nix
+    ./system/holo-network.nix
     ./system/hpos.nix
   ];
-
-  options.system.holoNetwork = mkOption {
-    default = "mainnet";
-    type = types.str;
-    description = ''
-      Holo network that system is participating in.
-      Can be mainnet, devnet or other custom network as long as
-      its settings are defined in holo-networks.nix.
-    '';
-  };
 }
