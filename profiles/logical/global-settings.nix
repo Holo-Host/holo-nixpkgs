@@ -1,3 +1,5 @@
+{ config, ... }:
+
 let
   holoNetworks = import ./holo-networks.nix;
 
@@ -6,5 +8,5 @@ let
 in
 
 {
-  holoNetwork = select holoNetworks system.holoNetwork;
+  holoNetwork = select holoNetworks config.system.holoNetwork;
 }
