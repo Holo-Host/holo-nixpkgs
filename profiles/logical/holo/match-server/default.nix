@@ -2,7 +2,7 @@
 
 with pkgs;
 
-let 
+let
   matchServiceApiSocket = "unix:/run/match-service-api.sock";
 
   matchServerCredentialsDir = "/var/lib/match-server-credentials";
@@ -10,6 +10,8 @@ let
   holochainWorkingDir = "/var/lib/holochain-rsm";
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
+
+  settings = import ../../global-settings.nix;
 in
 
 {
@@ -39,7 +41,7 @@ in
         }
       ];
       network = {
-        bootstrap_service = "https://bootstrap.holo.host";
+        bootstrap_service = settings.holoNetwork.bootstrapUrl;
         transport_pool = [{
           type = "proxy";
           sub_transport = {
@@ -104,7 +106,7 @@ in
         "/" = {
           proxyPass = "http://${matchServiceApiSocket}";
         };
-        
+
         "/api/v1/ws/" = {
           proxyPass = "http://127.0.0.1:42233";
           proxyWebsockets = true;

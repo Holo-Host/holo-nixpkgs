@@ -2,10 +2,13 @@
 
 with pkgs;
 
+let
+  settings = import ../../global-settings.nix;
+in
+
 {
   imports = [
     ../.
-    ../../zerotier.nix
   ];
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
@@ -16,8 +19,7 @@ with pkgs;
     enable = true;
 
     # https://dnscrypt.info/stamps/
-    settings.static.holo-router-registry.stamp =
-      "sdns://AgcAAAAAAAAADTEwNC4xNy4yNDEuNDUAGXJvdXRlci1yZWdpc3RyeS5ob2xvLmhvc3QNL3YxL2Rucy1xdWVyeQ";
+    settings.static.holo-router-registry.stamp = settings.holoNetwork.routerRegistry.stamp;
   };
 
   services.holo-router-gateway.enable = true;
@@ -29,6 +31,11 @@ with pkgs;
         return 301 https://$host$request_uri;
       '';
     };
+  };
+
+  services.zerotierone = {
+    enable = lib.mkDefault true;
+    joinNetworks = [ settings.holoNetwork.zerotierNetworkID ];
   };
 
   boot.cleanTmpDir = true;

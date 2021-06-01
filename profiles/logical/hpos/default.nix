@@ -26,7 +26,7 @@ let
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
 
-  kitsuneAddress = "kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/45.55.107.33/p/5788/--";
+  settings = import ../global-settings.nix;
 in
 
 {
@@ -34,7 +34,6 @@ in
     ../.
     ../binary-cache.nix
     ../self-aware.nix
-    ../zerotier.nix
   ];
 
   boot.loader.grub.splashImage = ./splash.png;
@@ -66,7 +65,10 @@ in
 
   services.holo-envoy.enable = lib.mkDefault true;
 
-  services.holo-router-agent.enable = lib.mkDefault true;
+  services.holo-router-agent = {
+    enable = lib.mkDefault true;
+    registryUrl = settings.holoNetwork.routerRegistry.url;
+  };
 
   services.hp-admin-crypto-server.enable = true;
 
@@ -80,7 +82,7 @@ in
 
   services.mingetty.autologinUser = "root";
 
-  services.hpos-led-manager.kitsuneAddress = kitsuneAddress;
+  services.hpos-led-manager.kitsuneAddress = settings.holoNetwork.proxy.kitsuneAddress;
 
   services.nginx = {
     enable = true;
@@ -195,7 +197,7 @@ in
         }
       ];
       network = {
-        bootstrap_service = "https://bootstrap-staging.holo.host";
+        bootstrap_service = settings.holoNetwork.bootstrapUrl;
         network_type = "quic_bootstrap";
         transport_pool = [{
           type = "proxy";
@@ -204,7 +206,7 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = kitsuneAddress;
+            proxy_url = settings.holoNetwork.proxy.kitsuneAddress;
           };
         }];
         tuning_params = {
@@ -254,6 +256,11 @@ in
         }
       ];
     };
+  };
+
+  services.zerotierone = {
+    enable = lib.mkDefault true;
+    joinNetworks = [ settings.holoNetwork.zerotierNetworkID ];
   };
 
   system.holo-nixpkgs.autoUpgrade = {

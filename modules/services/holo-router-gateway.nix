@@ -19,7 +19,7 @@ in
   config = mkIf cfg.enable {
     systemd.services.holo-router-gateway = {
       after = [ "network.target" ];
-      path = [ config.services.holo-router-gateway.package ];
+      path = [ cfg.package ];
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
