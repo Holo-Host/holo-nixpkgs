@@ -225,6 +225,11 @@ in
 
   systemd.globalEnvironment.DEV_UID_OVERRIDE = "develop";
 
+  services.holo-auto-installer = lib.mkDefault {
+    enable = true;
+    working-directory = configureHolochainWorkingDir;
+  };
+
   services.configure-holochain = lib.mkDefault {
     enable = true;
     working-directory = configureHolochainWorkingDir;

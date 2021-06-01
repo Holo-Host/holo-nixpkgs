@@ -97,4 +97,9 @@ in
 
   services.lair-keystore.enable = true;
 
+  services.holo-auto-installer = lib.mkDefault {
+    enable = true;
+    working-directory = configureHolochainWorkingDir;
+  };
+  
 }
