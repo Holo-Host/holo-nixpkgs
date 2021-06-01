@@ -1,5 +1,7 @@
 { lib, ... }:
 
+with lib;
+
 {
   disabledModules = [
     "system/boot/loader/generic-extlinux-compatible"
@@ -35,7 +37,7 @@
     ./system/hpos.nix
   ];
 
-  options.system.holoNetwork = lib.mkOption {
+  options.system.holoNetwork = mkOption {
     default = "mainnet";
     type = types.str;
     description = ''
