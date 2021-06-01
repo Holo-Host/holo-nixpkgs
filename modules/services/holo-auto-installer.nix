@@ -26,7 +26,7 @@ in
       requisite = [ "configure-holochain.service" ];
       wantedBy = [ "multi-user.target" ];
 
-      environment.RUST_LOG = "holo_auto_pilot=debug";
+      environment.RUST_LOG = "holo_auto_installer=debug";
       environment.PUBKEY_PATH = "${cfg.working-directory}/agent_key.pub";
       path = with pkgs; [ unzip ];
 
@@ -34,20 +34,19 @@ in
         User = "holo-auto-installer";
         Group = "holo-auto-installer";
         ExecStart = "${cfg.package}/bin/holo-auto-installer ${cfg.working-directory}/config.yaml ${cfg.working-directory}/membrane-proofs.yaml";
-        RemainAfterExit = true;
         StateDirectory = "holo-auto-installer";
         Type = "oneshot";
        };
+      };
 
-#       systemd.timers.holo-auto-installer = {
-#         enable = true;
-#         wantedBy = [ "multi-user.target" ];
-#         timerConfig = {
-#           OnUnitActiveSec = "5min"; # run every 5 min
-#           OnBootSec = "2min"; # first run 2 min after boot
-#           Unit = "holo-auto-installer.service";
-#         };
-#       };
+      systemd.timers.holo-auto-installer = {
+        enable = true;
+        wantedBy = [ "multi-user.target" ];
+        timerConfig = {
+          OnUnitActiveSec = "5min"; # run every 5 min
+          OnBootSec = "2min"; # first run 2 min after boot
+          Unit = "holo-auto-installer.service";
+        };
      };
 
     users.users.holo-auto-installer = {
