@@ -19,7 +19,7 @@
 
   devnet = {
     zerotierNetworkID = "93afae5963c547f1";
-    hposDomain = "holohost.net";
+    hposDomain = "holohost.dev";
     routerRegistry = {
       stamp = "sdns://AgcAAAAAAAAADTEwNC4xNy4yNDEuNDUAIGRldm5ldC1yb3V0ZXItcmVnaXN0cnkuaG9sby5ob3N0DS92MS9kbnMtcXVlcnk";
       url = "https://devnet-router-registry.holo.host";

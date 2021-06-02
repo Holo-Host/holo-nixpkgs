@@ -37,4 +37,7 @@ with lib;
     ./system/holo-network.nix
     ./system/hpos.nix
   ];
+
+  # Legacy option required by factory setting in configuration.nix on HoloPorts
+  options.system.holoportos.network = lib.mkOption {};
 }

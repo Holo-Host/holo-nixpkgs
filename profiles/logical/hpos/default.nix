@@ -3,15 +3,17 @@
 with pkgs;
 
 let
+  settings = import ../global-settings.nix { inherit config; };
+
   holo-router-acme = writeShellScriptBin "holo-router-acme" ''
     base36_id=$(${hpos-config}/bin/hpos-config-into-base36-id < "$HPOS_CONFIG_PATH")
-    until $(${curl}/bin/curl --fail --head --insecure --max-time 10 --output /dev/null --silent "https://$base36_id.holohost.net"); do
+    until $(${curl}/bin/curl --fail --head --insecure --max-time 10 --output /dev/null --silent "https://$base36_id.${settings.holoNetwork.hposDomain}"); do
       sleep 5
     done
     exec ${simp_le}/bin/simp_le \
       --default_root ${config.security.acme.certs.default.webroot} \
       --valid_min ${toString (config.security.acme.validMinDays * 24 * 60 * 60)} \
-      -d "$base36_id.holohost.net" \
+      -d "$base36_id.${settings.holoNetwork.hposDomain}" \
       -f fullchain.pem \
       -f full.pem \
       -f chain.pem \
@@ -25,8 +27,6 @@ let
   holochainWorkingDir = "/var/lib/holochain-rsm";
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
-
-  settings = import ../global-settings.nix { inherit config; };
 in
 
 {
