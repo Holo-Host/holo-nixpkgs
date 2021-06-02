@@ -11,7 +11,7 @@ let
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
 
-  settings = import ../../global-settings.nix { inherit config; };;
+  settings = import ../../global-settings.nix { inherit config; };
 in
 
 {
