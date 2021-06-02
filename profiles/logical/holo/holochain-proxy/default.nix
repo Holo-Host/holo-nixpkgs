@@ -1,5 +1,5 @@
 let
-  settings = import ../../global-settings.nix;
+  settings = import ../../global-settings.nix { inherit config; };;
 in
 
 {
