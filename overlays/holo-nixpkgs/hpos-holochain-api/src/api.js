@@ -54,6 +54,7 @@ const installHostedHapp = async (
         'base64'
       )}`
     )
+    return true
   } catch (e) {
     console.log(`Failed to install happ bundle ${happId} with error: `, e)
     throw new Error(
