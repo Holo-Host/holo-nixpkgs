@@ -1,32 +1,17 @@
-{ stdenv,  nodejs, npmToNix, fetchFromGitHub }:
+{ stdenv, gitignoreSource, fetchFromGitHub, mkYarnPackage }:
 
 {
-  lair-shim-cli = stdenv.mkDerivation rec {
+  lair-shim-cli = mkYarnPackage rec {
     name = "lair-shim-cli";
 
     src = fetchFromGitHub {
       owner = "Holo-Host";
       repo = "lair-shim";
-      rev = "25db2b720f76af9b4c7d74bfecc9c51bcaa0707d";
-      sha256 = "0948w4gfivabbq6gch2zrlf2ingc90szalvv0xgz0j5sa1nh6pmc";
+      rev = "180d3c35b738571f953eb39bdbc0205d237d9e40";
+      sha256 = "0igq9pv7w6laxb4qf9riwz5p655ardnzk607a9m4px5x8igcj323";
     };
 
-    buildInputs = [ nodejs ];
-
-    preConfigure = ''
-      cp -r ${npmToNix { src = "${src}/"; }} node_modules
-      chmod -R +w node_modules
-      chmod +x node_modules/.bin/webpack
-      patchShebangs node_modules
-    '';
-
-    buildPhase = ''
-    '';
-
-    installPhase = ''
-    '';
-
-    doCheck = false;
-    meta.platforms = stdenv.lib.platforms.linux;
+    packageJSON = "${src}/package.json";
+    yarnLock = "${src}/yarn.lock";
   };
 }
