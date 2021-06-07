@@ -273,17 +273,20 @@ rec {
       "x86_64-pc-windows-gnu"
       "x86_64-unknown-linux-musl"
     ];
+    extensions = [
+      "rust-src"
+    ];
 
     rustNightly = (rustChannelOf {
       channel = "nightly";
       date = "2019-11-16";
       sha256 = "17l8mll020zc0c629cypl5hhga4hns1nrafr7a62bhsp4hg9vswd";
-    }).rust.override { inherit targets; };
+    }).rust.override { inherit targets extensions; };
 
     rust_1_52_0 = (rustChannelOf {
       channel = "1.52.0";
       sha256 = "0qzaq3hsxh7skxjix4d4k38rv0cxwwnvi32arg08p11cxvpsmikx";
-    }).rust.override { inherit targets; };
+    }).rust.override { inherit targets extensions; };
 
     rustStable = rust_1_52_0;
   in {
