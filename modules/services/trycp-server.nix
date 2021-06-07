@@ -14,6 +14,11 @@ in
       default = pkgs.tryorama;
       type = types.package;
     };
+
+    flags = mkOption {
+      default = "";
+      type = types.str;
+    }
   };
 
   config = mkIf cfg.enable {
@@ -24,7 +29,7 @@ in
 
       path = [ pkgs.holochain pkgs.lair-keystore ];
 
-      serviceConfig.ExecStart = "${cfg.package}/bin/trycp_server -ls 100";
+      serviceConfig.ExecStart = "${cfg.package}/bin/trycp_server ${cfg.flags}";
     };
   };
 }
