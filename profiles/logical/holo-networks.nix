@@ -1,6 +1,7 @@
 {
   # Default network, must be defined
   mainnet = {
+    networkName = "mainNet";
     zerotierNetworkID = "93afae5963c547f1";
     hposDomain = "holohost.net";
     routerRegistry = {
@@ -18,6 +19,7 @@
   };
 
   devnet = {
+    networkName = "devNet";
     zerotierNetworkID = "93afae5963c547f1";
     hposDomain = "holohost.dev";
     routerRegistry = {
