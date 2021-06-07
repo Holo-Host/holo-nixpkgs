@@ -27,7 +27,7 @@ in
 
       environment.RUST_LOG = "info";
 
-      path = [ pkgs.holochain pkgs.lair-keystore ];
+      path = [ pkgs.holochain pkgs.lair-keystore pkgs.lair-shim ];
 
       serviceConfig.ExecStart = "${cfg.package}/bin/trycp_server ${cfg.flags}";
     };
