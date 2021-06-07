@@ -13,5 +13,10 @@
 
     packageJSON = "${src}/package.json";
     yarnLock = "${src}/yarn.lock";
-  };
+  
+    buildPhase = ''
+      ls 
+      cp -r ./deps/lair-shim/src $out
+    '';
+  };    
 }
