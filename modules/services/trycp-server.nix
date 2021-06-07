@@ -18,7 +18,7 @@ in
     flags = mkOption {
       default = "";
       type = types.str;
-    }
+    };
   };
 
   config = mkIf cfg.enable {
