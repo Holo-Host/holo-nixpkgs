@@ -7,8 +7,8 @@
     src = fetchFromGitHub {
       owner = "Holo-Host";
       repo = "lair-shim";
-      rev = "4033a2871762d94ca240a9c07049d2ef0ac17f25";
-      sha256 = "1987ywwbjxqrh6s8qwg1mcdyq32j2fxl4629ramh2jk27ds0hpq0";
+      rev = "25db2b720f76af9b4c7d74bfecc9c51bcaa0707d";
+      sha256 = "0948w4gfivabbq6gch2zrlf2ingc90szalvv0xgz0j5sa1nh6pmc";
     };
 
     buildInputs = [ nodejs ];
@@ -24,7 +24,6 @@
     '';
 
     installPhase = ''
-      cp -r dist/ $out
     '';
 
     doCheck = false;
