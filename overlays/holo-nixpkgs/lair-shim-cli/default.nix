@@ -15,8 +15,7 @@
     yarnLock = "${src}/yarn.lock";
   
     buildPhase = ''
-      ls 
-      cp -r ./deps/lair-shim/src $out
+      cp -r ./deps/lair-shim $out/
     '';
   };    
 }
