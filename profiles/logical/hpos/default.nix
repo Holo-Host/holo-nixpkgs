@@ -10,7 +10,7 @@ let
     until $(${curl}/bin/curl --fail --head --insecure --max-time 10 --output /dev/null --silent "https://$base36_id.${settings.holoNetwork.hposDomain}"); do
       sleep 5
     done
-    exec ${simp_le}/bin/simp_le \
+    ${simp_le}/bin/simp_le \
       --default_root ${config.security.acme.certs.default.webroot} \
       --valid_min ${toString (config.security.acme.validMinDays * 24 * 60 * 60)} \
       -d "$base36_id.${settings.holoNetwork.hposDomain}" \
@@ -22,6 +22,13 @@ let
       -f account_key.json \
       -f account_reg.json \
       -v
+    exitcode=$?
+
+    if [[ $exitcode == 0 || $exitcode == 1 ]]; then
+      exit 0
+    fi
+
+    exit $exitcode
   '';
 
   holochainWorkingDir = "/var/lib/holochain-rsm";
