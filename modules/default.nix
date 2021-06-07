@@ -28,6 +28,7 @@
     ./services/lair-keystore.nix
     ./services/configure-holochain.nix
     ./services/match-service-api.nix
+    ./services/trancher.nix
     ./services/zt-collector.nix
     ./services/trycp-server.nix
     ./system/holo-nixpkgs/auto-upgrade.nix

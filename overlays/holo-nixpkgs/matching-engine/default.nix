@@ -9,8 +9,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
       owner = "Holo-Host";
       repo = "matching-engine";
-      rev = "05022268f6135c3589c4e5951d85204ceef5f2c1";
-      sha256 = "0dkg0pgh9nf35xwap680a4yws247jrjsn9i36w2qqdff3909bzzm";
+      rev = "a5e0e4327cef89e307d98dce1a8dda977707a90c";
+      sha256 = "1yql972rdfspc1a3nisq1wzsnl3xwpv99bn7fmppnx950mrfmln1";
       private = true;
     };
 
@@ -26,6 +26,9 @@ stdenv.mkDerivation rec {
 
     makeWrapper ${python3}/bin/python3 $out/bin/${name}-collector \
       --add-flags $out/collector/poll_script.py
+
+    makeWrapper ${python3}/bin/python3 $out/bin/${name}-trancher \
+      --add-flags $out/collector/tranch_script.py
     
     makeWrapper ${python3}/bin/python3 $out/bin/${name}-updater \
       --add-flags $out/updater/upload_script.py

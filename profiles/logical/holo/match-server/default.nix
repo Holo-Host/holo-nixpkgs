@@ -94,6 +94,11 @@ in
     credentialsDir = matchServerCredentialsDir;
   };
 
+  services.trancher = {
+    enable = true;
+    credentialsDir = matchServerCredentialsDir;
+  };
+
   services.zt-collector = {
     enable = true;
     credentialsDir = matchServerCredentialsDir;
