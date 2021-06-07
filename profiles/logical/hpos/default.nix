@@ -5,13 +5,15 @@ with pkgs;
 let
   settings = import ../global-settings.nix { inherit config; };
 
+  acmeCfg = config.security.acme.certs."${settings.holoNetwork.networkName}";
+
   holo-router-acme = writeShellScriptBin "holo-router-acme" ''
     base36_id=$(${hpos-config}/bin/hpos-config-into-base36-id < "$HPOS_CONFIG_PATH")
     until $(${curl}/bin/curl --fail --head --insecure --max-time 10 --output /dev/null --silent "https://$base36_id.${settings.holoNetwork.hposDomain}"); do
       sleep 5
     done
     ${simp_le}/bin/simp_le \
-      --default_root ${config.security.acme.certs.default.webroot} \
+      --default_root ${acmeCfg.webroot} \
       --valid_min ${toString (config.security.acme.validMinDays * 24 * 60 * 60)} \
       -d "$base36_id.${settings.holoNetwork.hposDomain}" \
       -f fullchain.pem \
@@ -83,7 +85,10 @@ in
 
   services.hpos-holochain-api.enable = true;
 
-  services.hpos-init.enable = lib.mkDefault true;
+  services.hpos-init = {
+    enable = lib.mkDefault true;
+    networkName = settings.holoNetwork.networkName;
+  };
 
   services.lair-keystore.enable = true;
 
@@ -94,7 +99,7 @@ in
   services.nginx = {
     enable = true;
 
-    virtualHosts.default = {
+    virtualHosts."${settings.holoNetwork.networkName}" = {
       enableACME = true;
       onlySSL = true;
       locations = {
@@ -280,11 +285,12 @@ in
     filename = "hpos-reset";
   };
 
-  systemd.services.acme-default.serviceConfig.ExecStart =
-    lib.mkForce "${holo-router-acme}/bin/holo-router-acme";
-
-  systemd.services.acme-default.serviceConfig.WorkingDirectory =
-    lib.mkForce "${config.security.acme.certs.default.directory}";
+  systemd.services."acme-${settings.holoNetwork.networkName}" = {
+    serviceConfig = {
+      ExecStart = lib.mkForce "${holo-router-acme}/bin/holo-router-acme";
+      WorkingDirectory = lib.mkForce "${acmeCfg.directory}";
+    };
+  };
 
   system.stateVersion = "20.09";
 
