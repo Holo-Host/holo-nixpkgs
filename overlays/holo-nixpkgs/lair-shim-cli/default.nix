@@ -7,8 +7,8 @@
     src = fetchFromGitHub {
       owner = "Holo-Host";
       repo = "lair-shim";
-      rev = "0d518aa2cc84e5213cfd383b79621d3d94b68fde";
-      sha256 = "1yfxdxni8p9fkky23h8nm08qwvax0rlz1969ww7cyqv0sq3zdim7";
+      rev = "cf0054e8c85a6b3f8c141aa76a463c341707914e";
+      sha256 = "1rx76dkl878canwxx0q10hccp677knfr7d1zgvsrvm3y6inkn4p3";
     };
 
     buildInputs = [ nodejs ];
