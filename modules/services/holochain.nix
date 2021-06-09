@@ -56,6 +56,10 @@ in
         NotifyAccess = "exec";
         LimitNOFILE = 524288;
       };
+
+      postStart = ''
+        echo "ulimit -Sn"
+      ''
     };
 
     users.users.holochain-rsm = {
