@@ -121,11 +121,15 @@ rec {
 
   extlinux-conf-builder = callPackage ./extlinux-conf-builder {};
 
+  inherit (callPackage ./hc-state-node {}) hc-state-node;
   hc-state = writeShellScriptBin "hc-state" ''
     ${nodejs}/bin/node ${hc-state-node}/main.js "$@"
   '';
 
-  inherit (callPackage ./hc-state-node {}) hc-state-node;
+  inherit (callPackage ./lair-shim-cli {}) lair-shim-cli;
+  lair-shim = writeShellScriptBin "lair-shim" ''
+    ${nodejs}/bin/node ${lair-shim-cli}/src/index.js "$@"
+  '';
 
   holo-cli = callPackage ./holo-cli {};
 

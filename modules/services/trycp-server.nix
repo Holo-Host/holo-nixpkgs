@@ -14,6 +14,11 @@ in
       default = pkgs.tryorama;
       type = types.package;
     };
+
+    flags = mkOption {
+      default = "";
+      type = types.str;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -22,9 +27,9 @@ in
 
       environment.RUST_LOG = "info";
 
-      path = [ pkgs.holochain pkgs.lair-keystore ];
+      path = [ pkgs.holochain pkgs.lair-keystore pkgs.lair-shim ];
 
-      serviceConfig.ExecStart = "${cfg.package}/bin/trycp_server -r 9100-9400";
+      serviceConfig.ExecStart = "${cfg.package}/bin/trycp_server ${cfg.flags}";
     };
   };
 }
