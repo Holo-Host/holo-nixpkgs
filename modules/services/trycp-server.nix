@@ -33,7 +33,7 @@ in
       serviceConfig.LimitNOFILE = 524288;
 
       postStart = ''
-        echo "ulimit -Sn"
+        ulimit -Sn
       '';
     };
     

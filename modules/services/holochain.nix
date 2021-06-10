@@ -58,7 +58,7 @@ in
       };
 
       postStart = ''
-        echo "ulimit -Sn"
+        ulimit -Sn
       '';
     };
 
