@@ -6,7 +6,7 @@ let
   networkName = config.system.holoNetwork;
 
   select = attrs: key:
-    if attrs ? key then attrs.${key} else attrs.mainnet;
+    if attrs ? ${key} then attrs.${key} else attrs.mainnet;
 in
 
 {
