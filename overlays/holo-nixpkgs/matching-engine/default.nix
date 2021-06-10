@@ -9,8 +9,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
       owner = "Holo-Host";
       repo = "matching-engine";
-      rev = "a5e0e4327cef89e307d98dce1a8dda977707a90c";
-      sha256 = "1yql972rdfspc1a3nisq1wzsnl3xwpv99bn7fmppnx950mrfmln1";
+      rev = "3cde2104037bff13d2f69f4e6a68d89b77843da4";
+      sha256 = "0gl9ir5rc8az8acxwmzkpzglkbh7zhrm2ivfhngnv332k78d0vp6";
       private = true;
     };
 
@@ -30,8 +30,8 @@ stdenv.mkDerivation rec {
     makeWrapper ${python3}/bin/python3 $out/bin/${name}-trancher \
       --add-flags $out/trancher/tranch_script.py
     
-    makeWrapper ${python3}/bin/python3 $out/bin/${name}-updater \
-      --add-flags $out/updater/upload_script.py
+    makeWrapper ${python3}/bin/python3 $out/bin/${name}-uploader \
+      --add-flags $out/uploader/upload_script.py
   '';
 
   meta.platforms = platforms.linux;

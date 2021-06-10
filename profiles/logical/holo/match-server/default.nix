@@ -19,7 +19,7 @@ in
     ../.
   ];
 
-  environment.systemPackages = [ hc-state git hpos-update-cli holochain hc kitsune-p2p-proxy ];
+  environment.systemPackages = [ hc-state git hpos-update-cli hpos-holochain-client holochain hc kitsune-p2p-proxy ];
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
@@ -148,4 +148,6 @@ in
   users.groups.apis = {};
 
   users.users.nginx.extraGroups = [ "apis" ];
+
+  services.hpos-holochain-api.enable = true; # Temporary
 }

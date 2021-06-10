@@ -26,7 +26,7 @@ in
       startAt = "*:5/15";
 
       serviceConfig = {
-        ExecStart = "${pkgs.matching-engine}/bin/matching-engine-updater ${cfg.credentialsDir}/config.json";
+        ExecStart = "${pkgs.matching-engine}/bin/matching-engine-uploader ${cfg.credentialsDir}/config.json";
         Type = "oneshot";
         User = "root";
       };
