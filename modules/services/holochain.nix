@@ -59,7 +59,7 @@ in
 
       postStart = ''
         echo "ulimit -Sn"
-      ''
+      '';
     };
 
     users.users.holochain-rsm = {
