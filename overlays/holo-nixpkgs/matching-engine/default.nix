@@ -28,7 +28,7 @@ stdenv.mkDerivation rec {
       --add-flags $out/collector/poll_script.py
 
     makeWrapper ${python3}/bin/python3 $out/bin/${name}-trancher \
-      --add-flags $out/collector/tranch_script.py
+      --add-flags $out/trancher/tranch_script.py
     
     makeWrapper ${python3}/bin/python3 $out/bin/${name}-updater \
       --add-flags $out/updater/upload_script.py
