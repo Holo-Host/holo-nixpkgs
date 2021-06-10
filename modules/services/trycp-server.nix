@@ -31,9 +31,11 @@ in
 
       serviceConfig.ExecStart = "${cfg.package}/bin/trycp_server ${cfg.flags}";
       serviceConfig.LimitNOFILE = 524288;
-    };
-    postStart = ''
+
+      postStart = ''
         echo "ulimit -Sn"
       '';
+    };
+    
   };
 }
