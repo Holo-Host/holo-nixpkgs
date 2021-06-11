@@ -22,7 +22,10 @@ in
     settings.static.holo-router-registry.stamp = settings.holoNetwork.routerRegistry.stamp;
   };
 
-  services.holo-router-gateway.enable = true;
+  services.holo-router-gateway = {
+    enable = true;
+    hposDomain = settings.holoNetwork.hposDomain;
+  };
 
   services.nginx = {
     enable = true;
