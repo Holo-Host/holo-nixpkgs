@@ -132,6 +132,10 @@ in
       };
       serverName = "network-statistics.holo.host";
     };
+
+    virtualHosts.localhost = {
+        locations."/holochain-api/".proxyPass = "http://unix:/run/hpos-holochain-api/hpos-holochain-api.sock:/";
+      };
   };
 
 #  security.acme = {
