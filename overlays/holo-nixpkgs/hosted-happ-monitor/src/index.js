@@ -66,8 +66,13 @@ const main = async () => {
       preferences: ''
     }))
 
-    await upload(hostList, `hosts_for_${happ.id}`) // We want 1 database per happ because later we'll have the various host preferences in it too
-    console.log(`hosts updated for ${happ.id}`)
+    if (hostList.length === 0) {
+      console.log(`There are ${hostList.length} hosts for ${happ.id}`)
+      await upload(hostList, `hosts_for_${happ.id}`) // We want 1 database per happ because later we'll have the various host preferences in it too
+      console.log(`Host KV updated for ${happ.id}`)
+    } else {
+      console.log('no hosts found')
+    }
   }
 }
 
