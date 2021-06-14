@@ -14,6 +14,7 @@ with lib;
     ./services/aorura-emu.nix
     ./services/automount.nix
     ./services/holo-auth-client.nix
+    ./services/holo-auto-installer.nix
     ./services/holo-router-agent.nix
     ./services/holo-router-gateway.nix
     ./services/holochain.nix

@@ -51,7 +51,7 @@ in
   # REVIEW: `true` breaks gtk+ builds (cairo dependency)
   environment.noXlibs = false;
 
-  environment.systemPackages = with holochainAllBinariesWithDeps.hpos; [ git hc-state hpos-admin-client hpos-holochain-client hpos-reset hpos-update-cli holochain hc kitsune-p2p-proxy ];
+  environment.systemPackages = with holochainAllBinariesWithDeps.hpos; [ git hc-state lair-shim hpos-admin-client hpos-holochain-client hpos-reset hpos-update-cli holochain hc kitsune-p2p-proxy ];
 
   networking.firewall.allowedTCPPorts = [ 443 9000 ];
 
@@ -238,6 +238,11 @@ in
   };
 
   systemd.globalEnvironment.DEV_UID_OVERRIDE = "develop";
+
+  services.holo-auto-installer = lib.mkDefault {
+    enable = true;
+    working-directory = configureHolochainWorkingDir;
+  };
 
   services.configure-holochain = lib.mkDefault {
     enable = true;
