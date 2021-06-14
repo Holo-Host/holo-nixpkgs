@@ -2,7 +2,7 @@
 
 with pkgs;
 
-let 
+let
   matchServiceApiSocket = "unix:/run/match-service-api.sock";
 
   matchServerCredentialsDir = "/var/lib/match-server-credentials";
@@ -11,7 +11,7 @@ let
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
 
-  kitsuneAddress = "kitsune-proxy://f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA/kitsune-quic/h/45.55.107.33/p/5788/--";
+  settings = import ../../global-settings.nix { inherit config; };
 in
 
 {
@@ -43,8 +43,7 @@ in
         }
       ];
       network = {
-        bootstrap_service = "https://bootstrap-staging.holo.host";
-        network_type = "quic_bootstrap";
+        bootstrap_service = settings.holoNetwork.bootstrapUrl;
         transport_pool = [{
           type = "proxy";
           sub_transport = {
@@ -119,7 +118,7 @@ in
         "/" = {
           proxyPass = "http://${matchServiceApiSocket}";
         };
-        
+
         "/api/v1/ws/" = {
           proxyPass = "http://127.0.0.1:42233";
           proxyWebsockets = true;

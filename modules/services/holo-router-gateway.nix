@@ -14,13 +14,19 @@ in
       default = pkgs.holo-router;
       type = types.package;
     };
+
+    hposDomain = mkOption {
+      type = types.str;
+    };
   };
 
   config = mkIf cfg.enable {
     systemd.services.holo-router-gateway = {
       after = [ "network.target" ];
-      path = [ config.services.holo-router-gateway.package ];
+      path = [ cfg.package ];
       wantedBy = [ "multi-user.target" ];
+
+      environment.HOLOPORT_DOMAIN = cfg.hposDomain;
 
       serviceConfig = {
         ExecStart = "${cfg.package}/bin/holo-router-gateway";
