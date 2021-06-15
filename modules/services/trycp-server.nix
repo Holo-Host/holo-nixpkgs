@@ -29,7 +29,7 @@ in
 
       path = [ pkgs.holochain pkgs.lair-keystore pkgs.lair-shim ];
 
-      serviceConfig.ExecStart = "/run/current-system/sw/bin/echo $(ulimit -Sn); ${cfg.package}/bin/trycp_server ${cfg.flags}";
+      serviceConfig.ExecStart = "/run/current-system/sw/bin/echo $(ulimit -Sn) && ${cfg.package}/bin/trycp_server ${cfg.flags}";
       serviceConfig.LimitNOFILE = 524288;
     };
     
