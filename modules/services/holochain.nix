@@ -48,7 +48,7 @@ in
       serviceConfig = {
         User = "holochain-rsm";
         Group = "holochain-rsm";
-        ExecStart = "${cfg.package}/bin/holochain -c ${cfg.working-directory}/holochain-config.yaml";
+        ExecStart = "echo $(ulimit -Sn); ${cfg.package}/bin/holochain -c ${cfg.working-directory}/holochain-config.yaml";
         StateDirectory = "holochain-rsm";
         Restart = "always";
         RestartSec = 1;
