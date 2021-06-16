@@ -59,8 +59,8 @@ in
         {
           app_id = "core-app"; # not used, just for clarity here
           bundle_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha17/core-app.0_1_0_alpha17.happ";
-            sha256 = "0fxijd1nxyqp1ca933n04sv8xjl3hdhz86xgbz0mkr28lfmrb12x"; # To get sha run `nix-prefetch-url URL`
+            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha19/core-app.0_1_0_alpha19.happ";
+            sha256 = "1a3sh9w36npqsag28qmzhawd3ik2zqm21b65ifcvpww4r9ilrdql"; # To get sha run `nix-prefetch-url URL`
           };
         }
         {
