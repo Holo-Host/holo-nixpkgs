@@ -82,7 +82,7 @@ const enableHapp = async happ_id => {
   const util = require('util');
   const exec = util.promisify(require('child_process').exec);
 
-  
+
   async function getHoloportId() {
     const { stdout, stderr } = await exec('hpos-config-into-base36-id < /run/hpos-init/hpos-config.json');
     return stdout
@@ -211,6 +211,7 @@ app.post('/install_hosted_happ', async (req, res) => {
 
       // check if the hosted_happ is already listOfInstalledHapps
       if (listOfInstalledHapps.includes(`${happBundleDetails.happ_id}`)) {
+        await enableHapp(happBundleDetails.happ_id)
         return res.status(501).send(`hpos-holochain-api error: ${happBundleDetails.happ_id} already installed on your holoport`)
       } else {
         const serviceloggerPref = parsePreferences(preferences, happBundleDetails.provider_pubkey)
