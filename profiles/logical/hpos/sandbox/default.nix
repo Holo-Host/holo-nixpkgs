@@ -59,15 +59,15 @@ in
         {
           app_id = "core-app"; # not used, just for clarity here
           bundle_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha16/core-app.0_1_0_alpha16.happ";
-            sha256 = "1rzs844chmnfj11sjlyl20kb35jknidvsc3x6v10wbqw972khbcd"; # To get sha run `nix-prefetch-url URL`
+            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha18/core-app.0_1_0_alpha18.happ";
+            sha256 = "09sag44jwfhgqb3gvwcnqz2hins3krcq669cizzsb8bjvx99qn8c"; # To get sha run `nix-prefetch-url URL`
           };
         }
         {
           app_id = "servicelogger";  # not used, just for clarity here
           bundle_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha7/servicelogger.0_1_0-alpha7.happ";
-            sha256 = "1h9yjrrk13h965ycww5r6y4drqcxw2g3p7a4f8dfszqkjyx0pwm7"; # To get sha run `nix-prefetch-url URL`
+            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/0_1_0_alpha8/servicelogger.0_1_0_alpha8.happ";
+            sha256 = "1i09fnhzxikxh11jxb75vaiyixpxgd8wqzh4lv70jsaf5cg3063s"; # To get sha run `nix-prefetch-url URL`
           };
         }
       ];
@@ -75,8 +75,8 @@ in
         {
           app_id = "elemental-chat";  # not used, just for clarity here
           bundle_path =  builtins.fetchurl {
-            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha11/elemental-chat.0_2_0_alpha11.happ";
-            sha256 = "10bjw1rgzzynmhxx16j5kzdbc2srvkq68dsgfx9dmqdi8yy93y22";
+            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0.alpha13/elemental-chat.0_2_0_alpha13.happ";
+            sha256 = "1y4i5922mjasf2qj0n6srfby1cpkid64a2r8kscfjwzgpr3k11ky";
           };
           ui_path = builtins.fetchurl {
             url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha34/elemental-chat-for-dna-0_2_0_alpha11-develop.zip";
@@ -97,4 +97,9 @@ in
 
   services.lair-keystore.enable = true;
 
+  services.holo-auto-installer = lib.mkDefault {
+    enable = true;
+    working-directory = configureHolochainWorkingDir;
+  };
+  
 }

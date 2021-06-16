@@ -24,6 +24,18 @@ test('holochain-api endpoint ', async () => {
   const listOfHappsResponse = await request(app).get(pathWithTimeInterval('/hosted_happs', usageTimeInterval))
   expect(listOfHappsResponse.status).toBe(200)
   const listOfHapps = JSON.parse(listOfHappsResponse.text)
+  expect(listOfHapps.length).toBe(0)
+
+  const res1 = await request(app)
+    .post('/register_happ')
+    .send({ url: "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha7/elemental-chat.0_2_0_alpha7.happ" })
+  expect(res1.status).toBe(200)
+
+  await delay(10000)
+
+  listOfHappsResponse = await request(app).get(pathWithTimeInterval('/hosted_happs', usageTimeInterval))
+  expect(listOfHappsResponse.status).toBe(200)
+  listOfHapps = JSON.parse(listOfHappsResponse.text)
   expect(listOfHapps[0].name).toBe(HAPP_NAME)
   expect(listOfHapps[0].enabled).toBe(false)
   expect(listOfHapps[0].error.message).toBeTruthy()

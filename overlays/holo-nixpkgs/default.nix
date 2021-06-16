@@ -111,17 +111,25 @@ rec {
     wormhole-relay = holo.buildProfile "wormhole-relay";
   };
 
+  holo-auto-installer = callPackage ./holo-auto-installer {
+    inherit (rust.packages.stable) rustPlatform;
+  };
+
   configure-holochain = callPackage ./configure-holochain {
     inherit (rust.packages.stable) rustPlatform;
   };
 
   extlinux-conf-builder = callPackage ./extlinux-conf-builder {};
 
+  inherit (callPackage ./hc-state-node {}) hc-state-node;
   hc-state = writeShellScriptBin "hc-state" ''
     ${nodejs}/bin/node ${hc-state-node}/main.js "$@"
   '';
 
-  inherit (callPackage ./hc-state-node {}) hc-state-node;
+  inherit (callPackage ./lair-shim-cli {}) lair-shim-cli;
+  lair-shim = writeShellScriptBin "lair-shim" ''
+    ${nodejs}/bin/node ${lair-shim-cli}/src/index.js "$@"
+  '';
 
   holo-cli = callPackage ./holo-cli {};
 
@@ -273,8 +281,8 @@ rec {
     }).rust.override { inherit targets; };
 
     rustStable = (rustChannelOf {
-      channel = "1.48.0";
-      sha256 = "0b56h3gh577wv143ayp46fv832rlk8yrvm7zw1dfiivifsn7wfzg";
+      channel = "1.52.0";
+      sha256 = "0qzaq3hsxh7skxjix4d4k38rv0cxwwnvi32arg08p11cxvpsmikx";
     }).rust.override { inherit targets; };
   in {
     packages = previous.rust.packages // {

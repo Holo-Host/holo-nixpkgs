@@ -1,5 +1,7 @@
 { lib, ... }:
 
+with lib;
+
 {
   disabledModules = [
     "system/boot/loader/generic-extlinux-compatible"
@@ -12,6 +14,7 @@
     ./services/aorura-emu.nix
     ./services/automount.nix
     ./services/holo-auth-client.nix
+    ./services/holo-auto-installer.nix
     ./services/holo-router-agent.nix
     ./services/holo-router-gateway.nix
     ./services/holochain.nix
@@ -32,9 +35,10 @@
     ./system/holo-nixpkgs/auto-upgrade.nix
     ./system/holo-nixpkgs/usb-reset.nix
     ./system/holo-nixpkgs/install.nix
+    ./system/holo-network.nix
     ./system/hpos.nix
   ];
 
-  # Compat shim, to be removed along with /profiles/targets:
+  # Legacy option required by factory setting in configuration.nix on HoloPorts
   options.system.holoportos.network = lib.mkOption {};
 }
