@@ -19,6 +19,11 @@ in
       type = types.package;
     };
 
+    hc-lmdb-size = mkOption {
+      default = "1073741824"; # 1G by default
+      type = types.str;
+    };
+
     working-directory = mkOption {
       type = types.path;
     };
@@ -28,15 +33,16 @@ in
     environment.systemPackages = [ cfg.package ];
 
     systemd.services.holochain = {
-      after = [ "network.target" "lair-keystore.service" ];
-      requires = [ "lair-keystore.service" ];
+      after = [ "network.target" "holo-envoy.service" ];
+      requires = [ "holo-envoy.service" ];
       wantedBy = [ "multi-user.target" ];
 
-      #environment.RUST_LOG = "debug";
+      environment.RUST_LOG = "info,kitsune_p2p=error";
+      environment.HC_LMDB_SIZE = cfg.hc-lmdb-size;
 
       preStart = ''
         ${pkgs.envsubst}/bin/envsubst < ${pkgs.writeJSON cfg.config} > $STATE_DIRECTORY/holochain-config.yaml
-        sleep .1 # wait for keystore socket to be ready
+        sleep .5 # wait for keystore socket to be ready
       '';
 
       serviceConfig = {
@@ -44,6 +50,10 @@ in
         Group = "holochain-rsm";
         ExecStart = "${cfg.package}/bin/holochain -c ${cfg.working-directory}/holochain-config.yaml";
         StateDirectory = "holochain-rsm";
+        Restart = "always";
+        RestartSec = 1;
+        Type = "notify";
+        NotifyAccess = "exec";
       };
     };
 

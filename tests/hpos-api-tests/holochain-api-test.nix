@@ -3,23 +3,29 @@
     machine.wait_for_unit("holochain.service")
     machine.wait_for_open_port("4444")
 
-    machine.wait_for_unit("configure-holochain.service")
-    machine.wait_for_open_port("42233")
-
     machine.wait_for_unit("hpos-holochain-api.service")
     machine.wait_for_file("/run/hpos-holochain-api/hpos-holochain-api.sock")
+
+    machine.wait_for_unit("configure-holochain.service")
+    machine.wait_for_open_port("42233")
 
     happs = machine.succeed("hc-state -d").strip()
     print(happs)
 
+    """
+    machine.wait_for_unit("holo-auto-installer.service")
+    happsCheck = machine.succeed("hc-state -d").strip()
+    print(happsCheck)
     list_of_happs = machine.succeed(
-        "hpos-holochain-client --url=http://localhost/hpos-holochain-api/ hosted-happs"
+        "hpos-holochain-client --url=http://localhost/holochain-api/ hosted-happs 1 DAY"
     ).strip()
+
+    print(list_of_happs)
+
     assert (
         "'name': 'Elemental Chat'" in list_of_happs
     ), "Failed to Get the list of hosted happs from hha"
-    print(list_of_happs)
-    """
+
     # The following tests only pass in a non sandbox environment
     happ_id = list_of_happs[9:62]
     print("Happ ID to install: ", happ_id)
@@ -32,7 +38,7 @@
     }
     print("With preferences: ", preferences)
     installed_status = machine.succeed(
-        f"hpos-holochain-client --url=http://localhost/hpos-holochain-api/ install-hosted-happ {happ_id} 10 [86400,0] 0.5 1 0.5"
+        f"hpos-holochain-client --url=http://localhost/holochain-api/ install-hosted-happ {happ_id} 10 [86400,0] 0.5 1 0.5"
     ).strip()
     print("Installed status: ", installed_status)
     assert "200" in installed_status, "Failed to call /install_hosted_happ"
@@ -55,7 +61,7 @@
 /*
 
     installed_status = machine.succeed(
-        "hpos-holochain-client --url=http://localhost/hpos-holochain-api/ install-hosted-happ holohashinput"
+        "hpos-holochain-client --url=http://localhost/holochain-api/ install-hosted-happ holohashinput"
     ).strip()
 
     print("INSTALLED STATUS: ", installed_status)

@@ -1,6 +1,7 @@
 # Holo Nixpkgs
 
-Modules, packages and profiles that drive Holo, Holochain, and HoloPortOS.
+
+Modules, packages and profiles that drive Holo hosting, Holochain, and HoloPortOS.
 
 ## Test suite
 
@@ -30,7 +31,7 @@ To add a new test:
 
 <details>
 <summary>default.nix template</summary>
-  
+
 ```nix
 { makeTest, lib, hpos, /* additional packages */ ... }:
 
@@ -54,7 +55,7 @@ makeTest {
 
   testScript = ''
     start_all()
-    
+
     # Your test script goes here
     # For syntax, consult NixOS manual on writing tests and other tests in /tests directory, e.g.
     # machine.succeed("command-to-test --foo bar")
@@ -63,7 +64,7 @@ makeTest {
   meta.platforms = [ "x86_64-linux" ];
 }
 ```
-  
+
 </details>
 
 2. Add a new attribute to the bottom-most block in [`/tests/default.nix`](/tests/default.nix), e.g.
@@ -93,17 +94,16 @@ On NixOS, add the following to `/etc/nixos/configuration.nix` and rebuild:
 
   nix.binaryCachePublicKeys = [
     "cache.holo.host-1:lNXIXtJgS9Iuw4Cu6X0HINLu9sTfcjEntnrgwMQIMcE="
+    "cache.holo.host-2:ZJCkX3AUYZ8soxTLfTb60g+F3MkWD7hkH9y8CgqwhDQ="
   ];
 }
 ```
 
-Otherwise, add `https://cache.holo.host/` to `substituters` and
-`cache.holo.host-1:lNXIXtJgS9Iuw4Cu6X0HINLu9sTfcjEntnrgwMQIMcE=` to
-`trusted-public-keys` in Nix config file:
+Otherwise, add or adjust the following configuration settings to the Nix config file:
 
 ```
-substituters = https://cache.holo.host/ https://cache.nixos.org/
-trusted-public-keys = cache.holo.host-1:lNXIXtJgS9Iuw4Cu6X0HINLu9sTfcjEntnrgwMQIMcE= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+extra-substituters = https://cache.holo.host/
+trusted-public-keys = cache.holo.host-1:lNXIXtJgS9Iuw4Cu6X0HINLu9sTfcjEntnrgwMQIMcE= cache.holo.host-2:ZJCkX3AUYZ8soxTLfTb60g+F3MkWD7hkH9y8CgqwhDQ= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
 ```
 
 For single-user installs (`nix-shell -p nix-info --run nix-info` prints

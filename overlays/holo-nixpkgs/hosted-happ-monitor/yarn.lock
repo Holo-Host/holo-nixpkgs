@@ -7,21 +7,21 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.2.tgz#8f03a22a04de437254e8ce8cc84ba39689288752"
   integrity sha512-HyYEUDeIj5rRQU2Hk5HTB2uHsbRQpF70nvMhVzi+VJR0X+xNEhjPui4/kBf3VeH/wqD28PT4sVOm8qqLjBrSZg==
 
-"@holochain/conductor-api@0.0.1-dev.12":
-  version "0.0.1-dev.12"
-  resolved "https://registry.yarnpkg.com/@holochain/conductor-api/-/conductor-api-0.0.1-dev.12.tgz#3d0eec754ed80a262cc6b0d3790f5f827bee3a80"
-  integrity sha512-vr06vEFnoYvoJ9zgNaANU/DE04633OK3cXWAdzOGfpZMoeIXXniY/bJx9kgXXJiA+LW5hSCAFDJEBaOV59j2eg==
+"@holochain/conductor-api@0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@holochain/conductor-api/-/conductor-api-0.0.3.tgz#68c0b279e9786b7bbd137d3a9349caef820957b9"
+  integrity sha512-wok/uiyGoX4m59wMhT3VX2Ma6bXBfZwp8F8iqTb/XiHz0UpROOCrUELXnmN9Ee1sYnmJcTLYRhRTCZ73WRgkdA==
   dependencies:
-    "@msgpack/msgpack" "^2.1.0"
+    "@msgpack/msgpack" "2.4.0"
     "@types/ws" "^7.2.4"
     isomorphic-ws "^4.0.1"
     nanoid "^3.1.9"
     ws "^7.3.0"
 
-"@msgpack/msgpack@^2.1.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@msgpack/msgpack/-/msgpack-2.3.0.tgz#a9043b920837b2dd63482e7bf6b8345813e9816b"
-  integrity sha512-xxRejzNpiVQ2lzxMG/yo2ocfZSk+cKo2THq54AimaubMucg66DpQm9Yj7ESMr/l2EqDkmF2Dx4r0F/cbsitAaw==
+"@msgpack/msgpack@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@msgpack/msgpack/-/msgpack-2.4.0.tgz#789c69301388a6a44a47ce654014ecd1703c8fcc"
+  integrity sha512-5qzv53J43V8GaYsaETs29Q0Ehw9Dog6SG18MASZRQDuZYXtA5T7pymGE2S40NL0X8sjl8+TybmRa5O8d45V7MQ==
 
 "@types/eslint-scope@^3.7.0":
   version "3.7.0"

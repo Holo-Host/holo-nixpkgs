@@ -17,7 +17,7 @@ in
 
   services.hpos-init.enable = false;
 
-  services.holo-envoy.enable = false;
+  services.holo-envoy.enable = true;
 
   services.zerotierone.enable = false;
 
@@ -29,8 +29,8 @@ in
     enable = true;
     working-directory = holochainWorkingDir;
     config = {
-      environment_path = "${holochainWorkingDir}/databases";
-      keystore_path = "${holochainWorkingDir}/lair-keystore";
+      environment_path = "${holochainWorkingDir}/databases_lmdb4";
+      keystore_path = "${holochainWorkingDir}/lair-shim";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
         {
@@ -41,51 +41,65 @@ in
         }
       ];
       network = {
+        network_type = "quic_bootstrap";
         transport_pool = [{
+          network_type = "quic_bootstrap";
           type = "mem";
         }];
       };
     };
   };
 
+  # overwrites configuration from ../default.nix because bundle_path is local
   services.configure-holochain = {
     enable = true;
     working-directory = configureHolochainWorkingDir;
     install-list = {
       core_happs = [
         {
-          app_id = "core-happs";
-          uuid = "0001";
-          version = "alpha0";
-          /* dna_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha6/holo-hosting-app.dna.gz"; */
-          dna_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/v0.0.1-alpha6/holo-hosting-app.dna.gz";
-            sha256 = "0z94sg70xi0p3sybi6w1i7rbrnj8pv60m91ybizma0wc5jwmlnq3"; # To get sha run `nix-prefetch-url URL`
+          app_id = "core-app"; # not used, just for clarity here
+          bundle_path = builtins.fetchurl {
+            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha16/core-app.0_1_0_alpha16.happ";
+            sha256 = "1rzs844chmnfj11sjlyl20kb35jknidvsc3x6v10wbqw972khbcd"; # To get sha run `nix-prefetch-url URL`
           };
         }
         {
-          app_id = "servicelogger";
-          uuid = "0001";
-          version = "alpha0";
-          /* dna_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha4/servicelogger.dna.gz"; */
-          dna_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.0.1-alpha4/servicelogger.dna.gz";
-            sha256 = "11w0a1fmm4js9i298ahzmwswv7sza2n0rv9nshl76nl0zi37bdi0"; # To get sha run `nix-prefetch-url URL`
+          app_id = "servicelogger";  # not used, just for clarity here
+          bundle_path = builtins.fetchurl {
+            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha7/servicelogger.0_1_0-alpha7.happ";
+            sha256 = "1h9yjrrk13h965ycww5r6y4drqcxw2g3p7a4f8dfszqkjyx0pwm7"; # To get sha run `nix-prefetch-url URL`
           };
         }
       ];
       self_hosted_happs = [
-        /* {
-          app_id = "elemental-chat";
-          uuid = "0666";
-          version = "alpha14";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha20/elemental-chat.zip";
-          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha14/elemental-chat.dna.gz";
-          } */
+        {
+          app_id = "elemental-chat";  # not used, just for clarity here
+          bundle_path =  builtins.fetchurl {
+            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha10/elemental-chat.0_2_0_alpha10.happ";
+            sha256 = "1zy4masavhh9n7islrfs719cypkrk1y9fgbl0k78kpkjapzb798a";
+          };
+          ui_path = builtins.fetchurl {
+            url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha34/elemental-chat-for-dna-0_2_0_alpha11-develop.zip";
+            sha256 = "0532izzbhlg0gaziz9sdd2w47v6rsw27gxldgn0k6015vpl7xrhd";  # To get sha run `nix-prefetch-url URL`
+          };
+        }
+      ];
+    };
+    membrane-proofs = {
+      payload = [
+        {
+          cell_nick = "elemental-chat";
+          proof = "AA==";
+        }
       ];
     };
   };
 
   services.lair-keystore.enable = true;
 
+  services.holo-auto-installer = lib.mkDefault {
+    enable = true;
+    working-directory = configureHolochainWorkingDir;
+  };
+  
 }

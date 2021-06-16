@@ -15,9 +15,18 @@ def request(ctx, method, path, **kwargs):
     return requests.request(method, ctx.obj['url'] + path, **kwargs)
 
 @cli.command(help='Get info on happs currently hosted')
+@click.argument('amount')
+@click.argument('duration_unit')
 @click.pass_context
-def hosted_happs(ctx):
-    print(request(ctx, 'GET', '/hosted_happs').json())
+def hosted_happs(ctx, amount, duration_unit):
+    print(request(ctx, 'GET', f"/hosted_happs?duration_unit={duration_unit}&amount={amount}").text)
+
+@cli.command(help='Get info for the host-console-ui dashboard')
+@click.argument('amount')
+@click.argument('duration_unit')
+@click.pass_context
+def dashboard(ctx, amount, duration_unit):
+    print(request(ctx, 'GET', f"/dashboard?duration_unit={duration_unit}&amount={amount}").text)
 
 @cli.command(help='Pass a happ_id to be installed as a hosted happ')
 @click.argument('happ_id')
@@ -36,6 +45,12 @@ def install_hosted_happ(ctx, happ_id, max_fuel_before_invoice, max_time_before_i
         "price_bandwidth": price_bandwidth,
     }
     print(request(ctx, 'POST', '/install_hosted_happ',  data=json.dumps({'happ_id': happ_id, 'preferences': preferences })))
+
+@cli.command(help='Pass a url to be registered for EC happ bundle in HHA')
+@click.argument('url')
+@click.pass_context
+def register_happ(ctx, url):
+    print(request(ctx, 'POST', '/register_happ',  data=json.dumps({'url': url })))
 
 if __name__ == '__main__':
     cli(obj={})

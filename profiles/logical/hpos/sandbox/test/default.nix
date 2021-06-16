@@ -26,15 +26,14 @@ in
     enable = true;
     virtualHosts.localhost.locations = {
       "/hpos-admin-api/".proxyPass = "http://unix:/run/hpos-admin-api/hpos-admin-api.sock:/";
-      "/hpos-holochain-api/".proxyPass = "http://unix:/run/hpos-holochain-api/hpos-holochain-api.sock:/";
+      "/holochain-api/".proxyPass = "http://unix:/run/hpos-holochain-api/hpos-holochain-api.sock:/";
     };
   };
 
   systemd.globalEnvironment.HPOS_CONFIG_PATH = hposConfigPath;
+  services.holochain.hc-lmdb-size = "104857600"; # default 1G breaks VM
 
   users.users.nginx.extraGroups = [ "apis" ];
 
   virtualisation.memorySize = 3072;
 }
-
- 

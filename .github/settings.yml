@@ -39,7 +39,9 @@ branches:
       restrictions:
         users:
           - peeech
-          - Br1ght0ne
+          - alastairong
+          - zippy
+          - JettTech
         teams: []
   - name: master
     protection:
@@ -58,7 +60,9 @@ branches:
       restrictions:
         users:
           - peeech
-          - Br1ght0ne
+          - alastairong
+          - zippy
+          - JettTech
         teams: []
   - name: hydra
     protection:
@@ -77,5 +81,7 @@ branches:
       restrictions:
         users:
           - peeech
-          - Br1ght0ne
+          - alastairong
+          - zippy
+          - JettTech
         teams: []

@@ -3,15 +3,19 @@
 with pkgs;
 
 let
+  settings = import ../global-settings.nix { inherit config; };
+
+  acmeCfg = config.security.acme.certs."${settings.holoNetwork.networkName}";
+
   holo-router-acme = writeShellScriptBin "holo-router-acme" ''
     base36_id=$(${hpos-config}/bin/hpos-config-into-base36-id < "$HPOS_CONFIG_PATH")
-    until $(${curl}/bin/curl --fail --head --insecure --max-time 10 --output /dev/null --silent "https://$base36_id.holohost.net"); do
+    until $(${curl}/bin/curl --fail --head --insecure --max-time 10 --output /dev/null --silent "https://$base36_id.${settings.holoNetwork.hposDomain}"); do
       sleep 5
     done
-    exec ${simp_le}/bin/simp_le \
-      --default_root ${config.security.acme.certs.default.webroot} \
+    ${simp_le}/bin/simp_le \
+      --default_root ${acmeCfg.webroot} \
       --valid_min ${toString (config.security.acme.validMinDays * 24 * 60 * 60)} \
-      -d "$base36_id.holohost.net" \
+      -d "$base36_id.${settings.holoNetwork.hposDomain}" \
       -f fullchain.pem \
       -f full.pem \
       -f chain.pem \
@@ -20,6 +24,13 @@ let
       -f account_key.json \
       -f account_reg.json \
       -v
+    exitcode=$?
+
+    if [[ $exitcode == 0 || $exitcode == 1 ]]; then
+      exit 0
+    fi
+
+    exit $exitcode
   '';
 
   holochainWorkingDir = "/var/lib/holochain-rsm";
@@ -32,7 +43,6 @@ in
     ../.
     ../binary-cache.nix
     ../self-aware.nix
-    ../zerotier.nix
   ];
 
   boot.loader.grub.splashImage = ./splash.png;
@@ -41,7 +51,7 @@ in
   # REVIEW: `true` breaks gtk+ builds (cairo dependency)
   environment.noXlibs = false;
 
-  environment.systemPackages = [ hc-state hpos-reset hpos-admin-client hpos-update-cli git ];
+  environment.systemPackages = with holochainAllBinariesWithDeps.hpos; [ git hc-state lair-shim hpos-admin-client hpos-holochain-client hpos-reset hpos-update-cli holochain hc kitsune-p2p-proxy ];
 
   networking.firewall.allowedTCPPorts = [ 443 9000 ];
 
@@ -64,7 +74,10 @@ in
 
   services.holo-envoy.enable = lib.mkDefault true;
 
-  services.holo-router-agent.enable = lib.mkDefault true;
+  services.holo-router-agent = {
+    enable = lib.mkDefault true;
+    registryUrl = settings.holoNetwork.routerRegistry.url;
+  };
 
   services.hp-admin-crypto-server.enable = true;
 
@@ -72,21 +85,29 @@ in
 
   services.hpos-holochain-api.enable = true;
 
-  services.hpos-init.enable = lib.mkDefault true;
+  services.hpos-init = {
+    enable = lib.mkDefault true;
+    networkName = settings.holoNetwork.networkName;
+  };
 
   services.lair-keystore.enable = true;
 
   services.mingetty.autologinUser = "root";
 
+  services.hpos-led-manager.kitsuneAddress = settings.holoNetwork.proxy.kitsuneAddress;
+
   services.nginx = {
     enable = true;
 
-    virtualHosts.default = {
+    virtualHosts."${settings.holoNetwork.networkName}" = {
       enableACME = true;
       onlySSL = true;
       locations = {
         "/" = {
-          alias = "${pkgs.hp-admin-ui}/";
+          alias = "${pkgs.host-console-ui}/";
+          tryFiles = ''
+             $uri $uri/ /index.html
+           '';
           extraConfig = ''
             limit_req zone=zone1 burst=30;
           '';
@@ -154,13 +175,14 @@ in
 
          "/trycp/" = {
           proxyPass = "http://127.0.0.1:9000";
-          proxyWebsockets = true; 
+          proxyWebsockets = true;
         };
       };
     };
 
     virtualHosts.localhost = {
         locations."/".proxyPass = "http://unix:/run/hpos-admin-api/hpos-admin-api.sock:/";
+        locations."/holochain-api/".proxyPass = "http://unix:/run/hpos-holochain-api/hpos-holochain-api.sock:/";
       };
 
     appendHttpConfig = ''
@@ -175,8 +197,8 @@ in
     enable = true;
     working-directory = holochainWorkingDir;
     config = {
-      environment_path = "${holochainWorkingDir}/databases";
-      keystore_path = "${holochainWorkingDir}/lair-keystore";
+      environment_path = "${holochainWorkingDir}/databases_lmdb4";
+      keystore_path = "${holochainWorkingDir}/lair-shim";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
         {
@@ -187,7 +209,8 @@ in
         }
       ];
       network = {
-        bootstrap_service = "https://bootstrap.holo.host";
+        bootstrap_service = settings.holoNetwork.bootstrapUrl;
+        network_type = "quic_bootstrap";
         transport_pool = [{
           type = "proxy";
           sub_transport = {
@@ -195,33 +218,71 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = "kitsune-proxy://nFCWLsuRC0X31UMv8cJxioL-lBRFQ74UQAsb8qL4XyM/kitsune-quic/h/proxy.holochain.org/p/5775/--";
+            proxy_url = settings.holoNetwork.proxy.kitsuneAddress;
           };
         }];
+        tuning_params = {
+          gossip_loop_iteration_delay_ms = 1000; # Default was 10
+          default_notify_remote_agent_count = 5;
+          default_notify_timeout_ms = 1000;
+          default_rpc_single_timeout_ms = 20000;
+          default_rpc_multi_remote_agent_count = 2;
+          default_rpc_multi_timeout_ms = 2000;
+          agent_info_expires_after_ms = 1000 * 60 * 30; #// Default was 20 minutes
+          tls_in_mem_session_storage = 512;
+          proxy_keepalive_ms = 1000 * 60 * 2;
+          proxy_to_expire_ms = 1000 * 60 * 5;
+        };
       };
     };
+  };
+
+  systemd.globalEnvironment.DEV_UID_OVERRIDE = "develop";
+
+  services.holo-auto-installer = lib.mkDefault {
+    enable = true;
+    working-directory = configureHolochainWorkingDir;
   };
 
   services.configure-holochain = lib.mkDefault {
     enable = true;
     working-directory = configureHolochainWorkingDir;
     install-list = {
-      core_happs = [];
+      core_happs = [
+       {
+         app_id = "core-app";
+         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha16/core-app.0_1_0_alpha16.happ";
+       }
+       {
+         app_id = "servicelogger";
+         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/v0.1.0-alpha7/servicelogger.0_1_0-alpha7.happ";
+       }
+      ];
       self_hosted_happs = [
         {
-          app_id = "elemental-chat";
-          uuid = "0001";
-          version = "alpha14";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha20/elemental-chat.zip";
-          dna_url = "https://github.com/holochain/elemental-chat/releases/download/v0.0.1-alpha14/elemental-chat.dna.gz"; # this version mismatch is on purpose for hash alteration
+          bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha11/elemental-chat.0_2_0_alpha11.happ";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha34/elemental-chat-for-dna-0_2_0_alpha11-develop.zip";
+        }
+      ];
+    };
+    membrane-proofs = {
+      payload = [
+        {
+          cell_nick = "elemental-chat";
+          proof = "AA==";  #read-only membrane proof
         }
       ];
     };
   };
 
+  services.zerotierone = {
+    enable = lib.mkDefault true;
+    joinNetworks = [ settings.holoNetwork.zerotierNetworkID ];
+  };
+
   system.holo-nixpkgs.autoUpgrade = {
     enable = lib.mkDefault true;
-    dates = "*:0/10";
+    interval = "10min";
   };
 
   system.holo-nixpkgs.usbReset = {
@@ -229,11 +290,12 @@ in
     filename = "hpos-reset";
   };
 
-  systemd.services.acme-default.serviceConfig.ExecStart =
-    lib.mkForce "${holo-router-acme}/bin/holo-router-acme";
-
-  systemd.services.acme-default.serviceConfig.WorkingDirectory =
-    lib.mkForce "${config.security.acme.certs.default.directory}";
+  systemd.services."acme-${settings.holoNetwork.networkName}" = {
+    serviceConfig = {
+      ExecStart = lib.mkForce "${holo-router-acme}/bin/holo-router-acme";
+      WorkingDirectory = lib.mkForce "${acmeCfg.directory}";
+    };
+  };
 
   system.stateVersion = "20.09";
 
