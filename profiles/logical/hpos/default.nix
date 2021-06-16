@@ -184,7 +184,7 @@ in
     restart-interval = "00/2:30"; # every 2 hours at 30 past
     working-directory = holochainWorkingDir;
     config = {
-      environment_path = "${holochainWorkingDir}/databases_lmdb4";
+      environment_path = "${holochainWorkingDir}/databases_lmdb5";
       keystore_path = "${holochainWorkingDir}/lair-shim";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
