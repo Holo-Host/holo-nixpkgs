@@ -18,7 +18,7 @@ echo 'Running holo-cli:' $1
 
 case $1 in
     list-hosted-happs | l)
-        hpos-holochain-client --url=http://localhost/holochain-api/ hosted-happs 1 DAY
+        hpos-holochain-client --url=http://localhost/holochain-api/ hosted-happs 1 DAY | jq .
     ;;
     help | h)
         help
