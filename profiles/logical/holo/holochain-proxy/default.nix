@@ -1,3 +1,7 @@
+let
+  settings = import ../../global-settings.nix { inherit config; };
+in
+
 {
   imports = [ ../. ];
 
@@ -5,9 +9,9 @@
 
   services.holochain-proxy = {
     enable = true;
-    cert-file = "proxy.cert";
+    cert-file = settings.holoNetwork.proxy.certFile;
     working-directory = "/var/lib/holochain-proxy";
-    port = 5788;
+    port = settings.holoNetwork.proxy.port;
   };
 
   services.openssh.enable = true;
