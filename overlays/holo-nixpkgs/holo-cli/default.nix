@@ -1,4 +1,4 @@
-{ stdenv, makeWrapper, gitignoreSource, jq, perl, git }:
+{ stdenv, makeWrapper, gitignoreSource, jq, pkgs }:
 
 with stdenv.lib;
 
