@@ -79,8 +79,8 @@ in
             sha256 = "19j3kj5jsna4j732qmwjnwdvd2bcnihx4gs1yaqh8zrmm3r5rb0y";
           };
           ui_path = builtins.fetchurl {
-            url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha7-develop.zip";
-            sha256 = "1yd8rqfywwhd212mmc056x8kwc7nrmqssqzyzqp3iyg961iqjrfy";  # To get sha run `nix-prefetch-url URL`
+            url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha34/elemental-chat-for-dna-0_2_0_alpha7-dee67988-b8e3-4e83-aab8-47310b46321b.zip";
+            sha256 = "0dbl2lshrkb8z80303rbg5w0bsacc0gk71d73yf78i8pl2pd1qhg";  # To get sha run `nix-prefetch-url URL`
           };
         }
       ];
