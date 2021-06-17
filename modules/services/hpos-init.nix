@@ -18,6 +18,10 @@ in
       default = pkgs.hpos-init;
       type = types.package;
     };
+
+    networkName = mkOption {
+      type = types.str;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -36,7 +40,7 @@ in
       };
     };
 
-    systemd.services.acme-default = {
+    systemd.services."acme-${cfg.networkName}" = {
       after = [ "hpos-init.service" ];
       requires = [ "hpos-init.service" ];
       environment.HPOS_CONFIG_PATH = cfg.configPath;
