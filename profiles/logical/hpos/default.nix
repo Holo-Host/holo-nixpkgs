@@ -224,7 +224,8 @@ in
     };
   };
 
-  systemd.globalEnvironment.DEV_UID_OVERRIDE = "0001";
+  # TIP: to produce the below id, use this free online uid generator located at: https://www.guidgenerator.com/online-guid-generator.aspx
+  systemd.globalEnvironment.DEV_UID_OVERRIDE = "dee67988-b8e3-4e83-aab8-47310b46321b";
 
   services.configure-holochain = lib.mkDefault {
     enable = true;
