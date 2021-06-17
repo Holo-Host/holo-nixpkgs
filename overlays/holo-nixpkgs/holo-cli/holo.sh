@@ -5,7 +5,7 @@ set -e
 
 help () {
   echo "usage: holo <OPTIONS>"
-  echo "  list-hosted-happs | l: List all the hosted happs registerd on HHA"
+  echo "  list-hosted-happs | l: List all the hosted happs registered on HHA"
   echo "  help | h: display all usage options"
   exit 0
 }
