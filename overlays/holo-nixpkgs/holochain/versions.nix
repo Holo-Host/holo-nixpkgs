@@ -1,8 +1,8 @@
 {
   hpos = {
-    rev = "3360ddf19961994f2b5f7da0ac5a69a0bd5d57b2";
-    sha256 = "1mx50fcqsgnl89567prfgy3calqw2f8gq9092nrs1byi5gfypkp1";
-    cargoSha256 = "1gv2zhslraxiq8v5644mxb2d1sl0md6i79rsjppcf0gi7n6pd6zi";
+    rev = "aea53ff822919b310f378bf2448e2bce14ac7ad2";
+    sha256 = "1y8pnl902ww3ncimkrsc07p38jzlk1ywrkg55xsj9a8h0w18v64h";
+    cargoSha256 = "0kafaxv10vlnp6bxyv3y57m58hy40qn12j9mc0p8mhznah994iha";
     bins = {
       holochain = "holochain";
       hc = "hc";
