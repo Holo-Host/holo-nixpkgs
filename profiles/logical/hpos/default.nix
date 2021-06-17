@@ -184,7 +184,7 @@ in
     restart-interval = "00/2:30"; # every 2 hours at 30 past
     working-directory = holochainWorkingDir;
     config = {
-      environment_path = "${holochainWorkingDir}/databases_lmdb4";
+      environment_path = "${holochainWorkingDir}/databases_lmdb10";
       keystore_path = "${holochainWorkingDir}/lair-shim";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
@@ -224,7 +224,8 @@ in
     };
   };
 
-  systemd.globalEnvironment.DEV_UID_OVERRIDE = "0000";
+  # TIP: to produce the below id, use this free online uid generator located at: https://www.guidgenerator.com/online-guid-generator.aspx
+  systemd.globalEnvironment.DEV_UID_OVERRIDE = "dee67988-b8e3-4e83-aab8-47310b46321b";
 
   services.configure-holochain = lib.mkDefault {
     enable = true;
@@ -243,7 +244,7 @@ in
       self_hosted_happs = [
         {
           bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha7/elemental-chat.0_2_0_alpha7.happ";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha7-0000.zip";
+          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha33/elemental-chat-for-dna-0_2_0_alpha7-dee67988-b8e3-4e83-aab8-47310b46321b.zip";
         }
       ];
     };
