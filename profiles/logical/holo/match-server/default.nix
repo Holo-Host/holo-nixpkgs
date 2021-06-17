@@ -51,7 +51,7 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = settings.holoNetwork.proxy.kitsuneAddress;;
+            proxy_url = settings.holoNetwork.proxy.kitsuneAddress;
           };
         }];
         tuning_params = {
