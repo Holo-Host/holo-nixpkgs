@@ -58,7 +58,7 @@
     """
   '';
 }
-/*
+/* 
 
     installed_status = machine.succeed(
         "hpos-holochain-client --url=http://localhost/holochain-api/ install-hosted-happ holohashinput"
