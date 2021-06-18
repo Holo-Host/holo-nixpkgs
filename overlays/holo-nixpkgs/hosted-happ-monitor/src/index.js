@@ -19,6 +19,9 @@ const url = `mongodb+srv://${username}:${password}@cluster0.hjwna.mongodb.net/${
 const client = new MongoClient(url)
 
 const main = async () => {
+  await client.connect()
+  const db = client.db(dbName)
+
   const appIds = await getAppIds()
   const appId = appIds.HHA
   const appWebsocket = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
@@ -49,7 +52,7 @@ const main = async () => {
     return
   }
 
-  await upload(happList, 'happ_list')
+  await upload(db, happList, 'happ_list')
   console.log('happ list updated')
 
   for (const happ of happList) {
@@ -70,7 +73,7 @@ const main = async () => {
       console.log('no hosts found')
     } else {
       console.log(`There are ${hostList.length} hosts for ${happ.id}`)
-      await upload(hostList, `hosts_for_${happ.id}`) // We want 1 database per happ because later we'll have the various host preferences in it too
+      await upload(db, hostList, `hosts_for_${happ.id}`) // We want 1 database per happ because later we'll have the various host preferences in it too
       console.log(`Host KV updated for ${happ.id}`)
     }
   }
@@ -78,9 +81,7 @@ const main = async () => {
 
 
 
-const upload = async(data, collection_name) => {
-  await client.connect()
-  const db = client.db(dbName)
+const upload = async(db, data, collection_name) => {
   const collection = db.collection(collection_name)
 
   let collection_list = await db.listCollections().toArray();
