@@ -249,7 +249,7 @@ in
     };
   };
 
-  systemd.globalEnvironment.DEV_UID_OVERRIDE = "develop";
+  systemd.globalEnvironment.DEV_UID_OVERRIDE = "11a75163-7a2f-4d53-af9a-1fc9abc39c27";
 
   services.holo-auto-installer = lib.mkDefault {
     enable = true;
