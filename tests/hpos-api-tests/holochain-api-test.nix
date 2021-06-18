@@ -9,12 +9,12 @@
     machine.wait_for_unit("configure-holochain.service")
     machine.wait_for_open_port("42233")
 
-    happs = machine.succeed("hc-state -d").strip()
+    happs = machine.succeed("hc-state d").strip()
     print(happs)
 
     """
     machine.wait_for_unit("holo-auto-installer.service")
-    happsCheck = machine.succeed("hc-state -d").strip()
+    happsCheck = machine.succeed("hc-state d").strip()
     print(happsCheck)
     list_of_happs = machine.succeed(
         "hpos-holochain-client --url=http://localhost/holochain-api/ hosted-happs 1 DAY"
@@ -43,10 +43,10 @@
     print("Installed status: ", installed_status)
     assert "200" in installed_status, "Failed to call /install_hosted_happ"
 
-    happs = machine.succeed("hc-state -d").strip()
+    happs = machine.succeed("hc-state d").strip()
     print(happs)
 
-    happsName = machine.succeed("hc-state -a").strip()
+    happsName = machine.succeed("hc-state a").strip()
     print(happsName)
 
     # check if happ with happId is installed
