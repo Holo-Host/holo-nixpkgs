@@ -65,7 +65,7 @@ const main = async () => {
     })
 
     const hostList = hostArray.map(host_id => ({
-      id: host_id,
+      id: host_id.replace(/(\r\n|\n|\r)/gm, ""),
       preferences: ''
     }))
 
