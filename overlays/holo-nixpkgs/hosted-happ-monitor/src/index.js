@@ -77,6 +77,7 @@ const main = async () => {
       console.log(`Host KV updated for ${happ.id}`)
     }
   }
+  await client.close()
 }
 
 
@@ -89,7 +90,6 @@ const upload = async(db, data, collection_name) => {
     await collection.drop()
   }
   await collection.insertMany(data)
-  await client.close()
 }
 
 main()
