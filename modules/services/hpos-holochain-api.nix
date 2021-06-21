@@ -37,6 +37,7 @@ in
 
     users.users.hc-api = {
       isSystemUser = true;
+      home = "${cfg.working-directory}";
       group = "apis";
     };
   };

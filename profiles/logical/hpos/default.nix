@@ -95,7 +95,10 @@ in
 
   services.hpos-admin-api.enable = true;
 
-  services.hpos-holochain-api.enable = true;
+  services.hpos-holochain-api = lib.mkDefault {
+    enable = true;
+    working-directory = configureHolochainWorkingDir;
+  };
 
   services.hpos-init = {
     enable = lib.mkDefault true;
@@ -133,7 +136,7 @@ in
         };
 
         "/hosted/" = {
-          alias = "/var/lib/holo-auto-installer/hosted-uis/";
+          alias = "${configureHolochainWorkingDir}/hosted-uis/";
           extraConfig = ''
             limit_req zone=zone1 burst=30;
           '';
