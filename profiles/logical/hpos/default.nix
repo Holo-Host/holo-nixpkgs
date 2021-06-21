@@ -132,6 +132,13 @@ in
           '';
         };
 
+        "/hosted/" = {
+          alias = "/var/lib/holo-auto-installer/hosted-uis/";
+          extraConfig = ''
+            limit_req zone=zone1 burst=30;
+          '';
+        };
+
         "~ ^/admin(?:/.*)?$" = {
             extraConfig = ''
               rewrite ^/admin.*$ / last;
