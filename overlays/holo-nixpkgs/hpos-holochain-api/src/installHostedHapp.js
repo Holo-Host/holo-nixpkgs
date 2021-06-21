@@ -117,6 +117,7 @@ const installServicelogger = async (adminWebsocket, happId, preferences) => {
     preferences
   )
 }
+
 module.exports = {
   installHostedHapp,
   installServicelogger,

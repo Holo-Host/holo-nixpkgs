@@ -1,5 +1,5 @@
 const { HAPP_PORT, getAppIds } = require('./const')
-const { AdminWebsocket} = require('@holochain/conductor-api')
+const { AppWebsocket} = require('@holochain/conductor-api')
 const { callZome } = require('./api')
 
 const DEFAULT_UI = 'https://github.com/zo-el/holo-404/releases/download/v0.0.1/holo-404.zip';

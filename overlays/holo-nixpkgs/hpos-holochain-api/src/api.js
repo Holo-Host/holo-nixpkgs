@@ -1,5 +1,4 @@
 const { HAPP_PORT } = require('./const')
-const { AdminWebsocket } = require('@holochain/conductor-api')
 
 const createAgent = async adminWebsocket => {
   try {

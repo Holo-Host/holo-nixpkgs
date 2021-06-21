@@ -12,6 +12,7 @@ const DEV_UID_OVERRIDE = process.env.DEV_UID_OVERRIDE
 const CONFIGURE_HC = process.env.NODE_ENV === 'test' ? './tests/config.yaml' : '/var/lib/configure-holochain/config.yaml'
 const READ_ONLY_PUBKEY = '/var/lib/configure-holochain/agent_key.pub'
 const UI_STORE_FOLDER = '/var/lib/configure-holochain/uis/holo/'
+
 const getReadOnlyPubKey = async () => {
   try {
     const key = await fs.readFileSync(READ_ONLY_PUBKEY, 'base64')
