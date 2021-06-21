@@ -7,6 +7,7 @@ yargs(hideBin(process.argv))
 const { UNIX_SOCKET, HAPP_PORT, ADMIN_PORT } = require('./const')
 const { callZome, createAgent, listInstalledApps } = require('./api')
 const { installHostedHapp, installHostedUI } = require('./installHostedHapp')
+const { registerECHapp } = require('./registerECHapp')
 const { parsePreferences, isUsageTimeInterval } = require('./utils')
 const { getAppIds, getReadOnlyPubKey } = require('./const')
 const { AdminWebsocket, AppWebsocket } = require('@holochain/conductor-api')
@@ -60,26 +61,6 @@ const getPresentedHapps = async usageTimeInterval => {
   }
   return presentedHapps
 }
-
-const registerECHapp = async url => {
-  const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
-  const APP_ID = await getAppIds()
-  const ecHappBundle = {
-    hosted_url: "https://elemental-chat.holo.host",
-    bundle_url: url,
-    happ_alias: "chat",
-    ui_src_url: "fake-path",
-    name: "Elemental Chat",
-    dnas: [{
-      hash: "fake-hash",
-      src_url: "fake-path",
-      nick: "elemental-chat",
-    }]
-  }
-  let happ =  await callZome(appWs, APP_ID.HHA, 'hha', 'register_happ', ecHappBundle)
-  return happ
-}
-
 
 app.get('/hosted_happs', async (req, res) => {
   const usageTimeInterval = {
@@ -221,9 +202,9 @@ app.post('/register_happ', async (req, res) => {
   const data = await new Promise(resolve => req.on('data', (body) => {
     resolve(JSON.parse(body.toString()))
   }))
-  if (data.url) {
+  if (data.bundleUrl) {
     try {
-      const happ = await registerECHapp(data.url)
+      const happ = await registerECHapp(data.bundleUrl, data.uiUrl)
       res.status(200).send(happ)
     } catch (e) {
       return res.status(501).send(`hpos-holochain-api error: ${e}`)
