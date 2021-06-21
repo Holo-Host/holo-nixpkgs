@@ -14,7 +14,7 @@ repository:
 collaborators: []
 
 teams:
-  - name: central
+  - name: holo-hosting
     permission: push
   - name: happy
     permission: push
@@ -37,12 +37,9 @@ branches:
           - Hydra
       enforce_admins: false
       restrictions:
-        users:
-          - peeech
-          - alastairong
-          - zippy
-          - JettTech
-        teams: []
+        users: []
+        teams:
+          - holo-hosting
   - name: master
     protection:
       required_pull_request_reviews:
