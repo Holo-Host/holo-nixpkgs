@@ -54,6 +54,7 @@ in
         RestartSec = 1;
         Type = "notify";
         NotifyAccess = "exec";
+        LimitNOFILE = 524288;
       };
     };
 

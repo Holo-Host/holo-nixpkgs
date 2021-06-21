@@ -26,6 +26,7 @@ in
       path = [ pkgs.holochain pkgs.lair-keystore ];
 
       serviceConfig.ExecStart = "${cfg.package}/bin/trycp_server";
+      serviceConfig.LimitNOFILE = 524288;
     };
   };
 }
