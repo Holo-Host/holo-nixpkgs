@@ -1,6 +1,7 @@
 const { ADMIN_PORT, HAPP_PORT, DEV_UID_OVERRIDE, getAppIds } = require('./const')
 const { AdminWebsocket, AppWebsocket } = require('@holochain/conductor-api')
 const { downloadFile, unzipFile } = require('./utils')
+const { callZome } = require('./api')
 const msgpack = require('@msgpack/msgpack')
 const util = require('util')
 
