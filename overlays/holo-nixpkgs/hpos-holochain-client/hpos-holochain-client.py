@@ -47,10 +47,11 @@ def install_hosted_happ(ctx, happ_id, max_fuel_before_invoice, max_time_before_i
     print(request(ctx, 'POST', '/install_hosted_happ',  data=json.dumps({'happ_id': happ_id, 'preferences': preferences })))
 
 @cli.command(help='Pass a url to be registered for EC happ bundle in HHA')
-@click.argument('url')
+@click.argument('bundle_url')
+@click.option('--ui_url', help='Hosted happ UI url')
 @click.pass_context
-def register_happ(ctx, url):
-    print(request(ctx, 'POST', '/register_happ',  data=json.dumps({'url': url })))
+def register_happ(ctx, bundle_url, ui_url):
+    print(request(ctx, 'POST', '/register_happ',  data=json.dumps({'bundleUrl': bundle_url, 'uiUrl': ui_url })))
 
 if __name__ == '__main__':
     cli(obj={})
