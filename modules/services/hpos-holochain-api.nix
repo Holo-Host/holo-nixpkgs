@@ -14,7 +14,7 @@ in
       default = pkgs.hpos-holochain-api;
       type = types.package;
     };
-    
+
     working-directory = mkOption {
       default = "";
     };
@@ -42,6 +42,8 @@ in
     users.users.hc-api = {
       isSystemUser = true;
       home = "${cfg.working-directory}";
+      # ensures directory is owned by user
+      createHome = true;
       group = "apis";
     };
   };
