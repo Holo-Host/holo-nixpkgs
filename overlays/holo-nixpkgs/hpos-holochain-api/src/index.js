@@ -24,25 +24,31 @@ const getPresentedHapps = async usageTimeInterval => {
       cpu: 0
     }
     let appStats, enabled
+    let happDetails = null
     try {
       appStats = await callZome(appWs, `${happs[i].happ_id}::servicelogger`, 'service', 'get_stats', usageTimeInterval)
       enabled = true
       const { source_chain_count: sourceChains, bandwidth, cpu, disk_usage: storage } = appStats
       usage.cpu = cpu
       usage.bandwidth = bandwidth
-
-      presentedHapps.push({
+      // Create happ details with enabled true and servicelogger deatils
+      happDetails = {
         id: happs[i].happ_id,
         name: happs[i].happ_bundle.name,
+        bundleUrl: happs[i].happ_bundle.bundle_url,
+        hostedUrl: happs[i].happ_bundle.hosted_url,
         enabled,
         sourceChains,
         usage,
         storage
-      })
+      }
     } catch (e) {
-      const happServiceloggerError = {
+      // Creat happ deatils with enabled false and and error for servicelogger
+      happDetails = {
         id: happs[i].happ_id,
         name: happs[i].happ_bundle.name,
+        bundleUrl: happs[i].happ_bundle.bundle_url,
+        hostedUrl: happs[i].happ_bundle.hosted_url,
         enabled: false,
         error: {
           source: `${happs[i].happ_id}::servicelogger`,
@@ -50,8 +56,8 @@ const getPresentedHapps = async usageTimeInterval => {
           stack: e.stack
         }
       }
-      presentedHapps.push(happServiceloggerError)
     }
+    presentedHapps.push(happDetails)
   }
   return presentedHapps
 }

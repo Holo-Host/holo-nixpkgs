@@ -131,7 +131,7 @@ rec {
     ${nodejs}/bin/node ${lair-shim-cli}/src/index.js "$@"
   '';
 
-  holo-cli = callPackage ./holo-cli {};
+  inherit (callPackage ./holo-cli {}) holo-cli;
 
   holo-envoy = callPackage ./holo-envoy {
     inherit (rust.packages.stable) rustPlatform;
