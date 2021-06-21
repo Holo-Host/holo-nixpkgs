@@ -8,6 +8,8 @@ let
   holochainWorkingDir = "/var/lib/holochain-rsm";
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
+
+  settings = import ../../global-settings.nix { inherit config; };
 in
 
 {
@@ -21,13 +23,11 @@ in
 
   services.lair-keystore.enable = true;
 
-  services.joining-code-factory.enable = true;
-
-  services.holochain = {
+  services.holochain = lib.mkDefault {
     enable = true;
     working-directory = holochainWorkingDir;
     config = {
-      environment_path = "${holochainWorkingDir}/databases";
+      environment_path = "${holochainWorkingDir}/databases_lmdb4";
       keystore_path = "${holochainWorkingDir}/lair-keystore";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
@@ -39,7 +39,7 @@ in
         }
       ];
       network = {
-        bootstrap_service = "https://bootstrap.holo.host";
+        bootstrap_service = settings.holoNetwork.bootstrapUrl;
         transport_pool = [{
           type = "proxy";
           sub_transport = {
@@ -47,9 +47,13 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = "kitsune-proxy://nFCWLsuRC0X31UMv8cJxioL-lBRFQ74UQAsb8qL4XyM/kitsune-quic/h/proxy.holochain.org/p/5775/--";
+            proxy_url = settings.holoNetwork.proxy.kitsuneAddress;
           };
         }];
+        tuning_params = {
+          gossip_loop_iteration_delay_ms = 1000; # Default was 10
+          agent_info_expires_after_ms = 1000 * 60 * 30; #// Default was 20 minutes
+        };
       };
     };
   };
@@ -67,6 +71,8 @@ in
         }];
     };
   };
+
+  services.joining-code-factory.enable = true;
 
 #  security.acme = {
 #    acceptTerms = true;
