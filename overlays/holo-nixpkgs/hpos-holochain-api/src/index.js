@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const fs = require('fs')
 const express = require('express')
 const app = express()
@@ -7,7 +5,8 @@ const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 yargs(hideBin(process.argv))
 const { UNIX_SOCKET, HAPP_PORT, ADMIN_PORT } = require('./const')
-const { callZome, createAgent, listInstalledApps, installHostedHapp } = require('./api')
+const { callZome, createAgent, listInstalledApps } = require('./api')
+const { installHostedHapp, installHostedUI } = require('./installHostedHapp')
 const { parsePreferences, isUsageTimeInterval } = require('./utils')
 const { getAppIds, getReadOnlyPubKey } = require('./const')
 const { AdminWebsocket, AppWebsocket } = require('@holochain/conductor-api')
@@ -201,6 +200,7 @@ app.post('/install_hosted_happ', async (req, res) => {
         const serviceloggerPref = parsePreferences(preferences, happBundleDetails.provider_pubkey)
         console.log('Parsed Preferences: ', serviceloggerPref)
         await installHostedHapp(happBundleDetails.happ_id, happBundleDetails.happ_bundle.bundle_url, hostPubKey, serviceloggerPref, data.membrane_proofs)
+        await installHostedUI(happBundleDetails.happ_id, happBundleDetails.happ_bundle.ui_src_url)
       }
 
       // Note: Do not need to install UI's for hosted happ

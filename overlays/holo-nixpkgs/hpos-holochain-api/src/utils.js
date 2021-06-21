@@ -1,6 +1,19 @@
 const tmp = require('tmp')
 const request = require('request')
 const fs = require('fs')
+const { exec, execSync } = require("child_process");
+const { UI_STORE_FOLDER } = require("./const");
+
+const unzipFile = async (happId, sourcePath) => {
+  let dirPath = `${UI_STORE_FOLDER}/${happId}`;
+  exec(`mkdir -p ${dirPath}`);
+  execSync(`unzip ${sourcePath} -d ${dirPath}`, (error, stdout, stderr) => {
+    if (error) {
+        console.log(`failed to spawn unzip command: ${error.message}`);
+        return;
+    }
+  });
+}
 
 // Download from url to tmp file
 // return tmp file path
@@ -69,5 +82,6 @@ module.exports = {
   parsePreferences,
   formatBytesByUnit,
   downloadFile,
+  unzipFile,
   isUsageTimeInterval
 }
