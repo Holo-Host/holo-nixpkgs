@@ -5,13 +5,25 @@ const { exec, execSync } = require("child_process");
 const { UI_STORE_FOLDER } = require("./const");
 
 const unzipFile = async (happId, sourcePath) => {
+  console.log("unzipping file for happ_id: ", happId);
   let dirPath = `${UI_STORE_FOLDER}/${happId}`;
-  exec(`mkdir -p ${dirPath}`);
-  execSync(`unzip ${sourcePath} -d ${dirPath}`, (error, stdout, stderr) => {
-    if (error) {
-        console.log(`failed to spawn unzip command: ${error.message}`);
+  await execSync(`mkdir -p ${dirPath}`, (err, stdout, stderr) => {
+    if (err) {
+        console.log(`failed to spawn unzip command: ${err.message}`);
         return;
     }
+    console.log("stdout: ", stdout);
+    console.log("stderr: ", stderr);
+    console.log("Created dir_path for happ: ", dirPath);
+  });
+  await execSync(`unzip ${sourcePath} -d ${dirPath}`, (err, stdout, stderr) => {
+    if (err) {
+        console.log(`failed to spawn unzip command: ${err.message}`);
+        return;
+    }
+    console.log("stdout: ", stdout);
+    console.log("stderr: ", stderr);
+    console.log("unzipped!!!");
   });
 }
 
