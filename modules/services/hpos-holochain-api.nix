@@ -14,6 +14,10 @@ in
       default = pkgs.hpos-holochain-api;
       type = types.package;
     };
+    
+    working-directory = mkOption {
+      default = "";
+    };
   };
 
   config = mkIf cfg.enable {
