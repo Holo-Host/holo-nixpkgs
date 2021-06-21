@@ -20,7 +20,7 @@ in
     systemd.services.hpos-holochain-api = {
       after = [ "network.target" "nginx.service" ];
       wantedBy = [ "multi-user.target" ];
-      path = [ unzip ];
+      path = with pkgs; [ unzip ];
 
       serviceConfig = {
         ExecStart = "${cfg.package}/bin/hpos-holochain-api";
