@@ -36,7 +36,8 @@ in
     };
 
     systemd.tmpfiles.rules = [
-      "d /run/hpos-holochain-api 0770 hc-api apis - -"
+      "d /run/hpos-holochain-api             0770 hc-api apis - -"
+      "d ${cfg.working-directory}/hosted-uis 0755 hc-api apis - -"
     ];
 
     users.users.hc-api = {
