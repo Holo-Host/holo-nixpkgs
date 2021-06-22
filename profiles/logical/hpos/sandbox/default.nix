@@ -76,8 +76,8 @@ in
         {
           app_id = "elemental-chat";  # not used, just for clarity here
           bundle_path =  builtins.fetchurl {
-            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0.alpha13/elemental-chat.0_2_0_alpha13.happ";
-            sha256 = "1y4i5922mjasf2qj0n6srfby1cpkid64a2r8kscfjwzgpr3k11ky";
+            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha15/elemental-chat.0_2_0_alpha15.happ";
+            sha256 = "1wrr2v7mx7d2m247mbvrmhz344kz6bfc01pqa138a0pi1mja0fzk";
           };
           ui_path = builtins.fetchurl {
             url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha34/elemental-chat-for-dna-0_2_0_alpha11-develop.zip";
