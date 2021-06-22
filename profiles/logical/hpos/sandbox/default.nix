@@ -59,16 +59,16 @@ in
         {
           app_id = "core-app"; # not used, just for clarity here
           bundle_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha20/core-app.0_1_0_alpha20.happ";
-            sha256 = "1rlkaq83kc158nll126zjl80yrac5pif82vzcjybpjy4791a5s1x"; # To get sha run `nix-prefetch-url URL`
+            url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha21/core-app.0_1_0_alpha21.happ";
+            sha256 = "0wgvp9np48a05nidwdb7piv2qqp0nwkbk8g84jg4w1qwn2ig6jk2"; # To get sha run `nix-prefetch-url URL`
 
           };
         }
         {
           app_id = "servicelogger";  # not used, just for clarity here
           bundle_path = builtins.fetchurl {
-            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/0_1_0_alpha8/servicelogger.0_1_0_alpha8.happ";
-            sha256 = "1i09fnhzxikxh11jxb75vaiyixpxgd8wqzh4lv70jsaf5cg3063s"; # To get sha run `nix-prefetch-url URL`
+            url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/0_1_0_alpha9/servicelogger.0_1_0_alpha9.happ";
+            sha256 = "05g08c1afqina7v0147py4p3nrvmhdnxll36p926h7riqz9fvxgz"; # To get sha run `nix-prefetch-url URL`
           };
         }
       ];
@@ -76,8 +76,8 @@ in
         {
           app_id = "elemental-chat";  # not used, just for clarity here
           bundle_path =  builtins.fetchurl {
-            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0.alpha13/elemental-chat.0_2_0_alpha13.happ";
-            sha256 = "1y4i5922mjasf2qj0n6srfby1cpkid64a2r8kscfjwzgpr3k11ky";
+            url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha15/elemental-chat.0_2_0_alpha15.happ";
+            sha256 = "1wrr2v7mx7d2m247mbvrmhz344kz6bfc01pqa138a0pi1mja0fzk";
           };
           ui_path = builtins.fetchurl {
             url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha34/elemental-chat-for-dna-0_2_0_alpha11-develop.zip";

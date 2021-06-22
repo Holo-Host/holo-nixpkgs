@@ -235,15 +235,7 @@ in
         }];
         tuning_params = {
           gossip_loop_iteration_delay_ms = 1000; # Default was 10
-          default_notify_remote_agent_count = 5;
-          default_notify_timeout_ms = 1000;
-          default_rpc_single_timeout_ms = 20000;
-          default_rpc_multi_remote_agent_count = 2;
-          default_rpc_multi_timeout_ms = 2000;
           agent_info_expires_after_ms = 1000 * 60 * 30; #// Default was 20 minutes
-          tls_in_mem_session_storage = 512;
-          proxy_keepalive_ms = 1000 * 60 * 2;
-          proxy_to_expire_ms = 1000 * 60 * 5;
         };
       };
     };
@@ -263,19 +255,14 @@ in
       core_happs = [
        {
          app_id = "core-app";
-         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha20/core-app.0_1_0_alpha20.happ";
+         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha21/core-app.0_1_0_alpha21.happ";
        }
        {
          app_id = "servicelogger";
-         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/0_1_0_alpha8/servicelogger.0_1_0_alpha8.happ";
+         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/0_1_0_alpha9/servicelogger.0_1_0_alpha9.happ";
        }
       ];
-      self_hosted_happs = [
-        {
-          bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0.alpha13/elemental-chat.0_2_0_alpha13.happ";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha34/elemental-chat-for-dna-0_2_0_alpha11-develop.zip";
-        }
-      ];
+      self_hosted_happs = [];
     };
     membrane-proofs = {
       payload = [
