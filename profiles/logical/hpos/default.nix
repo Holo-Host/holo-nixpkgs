@@ -138,7 +138,7 @@ in
         };
 
         "/hosted/" = {
-          alias = "${configureHolochainWorkingDir}/hosted-uis/";
+          alias = "${hostedUisDir}/";
           extraConfig = ''
             limit_req zone=zone1 burst=30;
           '';
