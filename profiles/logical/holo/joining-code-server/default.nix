@@ -70,6 +70,14 @@ in
           dna_url = "https://drive.google.com/u/1/uc?id=1HJTYk5leGBQvpqKEHkrNi1ils4Z9_tPw&export=download";
         }];
     };
+    membrane-proofs = {
+      payload = [
+        {
+          cell_nick = "jcf";
+          proof = "AA==";  #read-only membrane proof
+        }
+      ];
+    };
   };
 
   services.joining-code-factory = {
