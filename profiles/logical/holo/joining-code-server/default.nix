@@ -72,7 +72,13 @@ in
     };
   };
 
-  services.joining-code-factory.enable = true;
+  services.joining-code-factory = {
+    enable = true;
+    credentialsDir = "/var/lib/credentials";
+    happName = "elemental%20chat";
+    appId = "joining-code-factory:alpha1";
+    dnaNick = "jcf";
+  };
 
 #  security.acme = {
 #    acceptTerms = true;
