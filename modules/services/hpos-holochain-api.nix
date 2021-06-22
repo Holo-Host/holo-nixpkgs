@@ -15,7 +15,7 @@ in
       type = types.package;
     };
 
-    working-directory = mkOption {
+    hosted-uis-directory = mkOption {
       default = "";
     };
   };
@@ -33,10 +33,13 @@ in
         UMask = "0002";
         Restart = "always";
       };
+
+      environment.HOSTED_UIS_DIR = cfg.hosted-uis-directory;
     };
 
     systemd.tmpfiles.rules = [
       "d /run/hpos-holochain-api 0770 hc-api apis - -"
+      "d ${cfg.hosted-uis-directory} 0755 hc-api apis - -"
     ];
 
     users.users.hc-api = {
