@@ -183,8 +183,8 @@ app.post('/install_hosted_happ', async (req, res) => {
         const serviceloggerPref = parsePreferences(preferences, happBundleDetails.provider_pubkey)
         console.log('Parsed Preferences: ', serviceloggerPref)
         await installHostedHapp(happBundleDetails.happ_id, happBundleDetails.happ_bundle.bundle_url, hostPubKey, serviceloggerPref, data.membrane_proofs)
-        await installHostedUI(happBundleDetails.happ_id, happBundleDetails.happ_bundle.ui_src_url)
       }
+      await installHostedUI(happBundleDetails.happ_id, happBundleDetails.happ_bundle.ui_src_url)
 
       // Note: Do not need to install UI's for hosted happ
       return res.status(200).send(`Successfully installed happ_id: ${happId}`)

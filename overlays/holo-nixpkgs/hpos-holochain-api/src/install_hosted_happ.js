@@ -4,15 +4,23 @@ const { downloadFile, unzipFile } = require('./utils')
 const { callZome } = require('./api')
 const msgpack = require('@msgpack/msgpack')
 const util = require('util')
+const { UI_STORE_FOLDER } = require("./const");
 
 const installHostedUI = async (
   happId,
   uiSrcUrl
 ) => {
-  console.log(`Downloading happ_id: ${happId} UI URL: ${uiSrcUrl}`)
-  const uiPath = await downloadFile(uiSrcUrl)
-  await unzipFile(happId, uiPath)
-  console.log(`Installed UI for happ_id: ${happId}`)
+  let dirPath = `${UI_STORE_FOLDER}/${happId}`;
+  fs.exists(path.join(dirPath), exists => {
+    if exists {
+      console.log(`Downloading happ_id: ${happId} UI URL: ${uiSrcUrl}`)
+      const uiPath = await downloadFile(uiSrcUrl)
+      await unzipFile(happId, uiPath)
+      console.log(`Installed UI for happ_id: ${happId}`)
+    } else {
+      console.log(`Hosted UI for happ_id: ${happId} already installed`)
+    }
+  });
 }
 
 // NOTE: this code assumes a single DNA per hApp.  This will need to be updated when the hApp bundle
