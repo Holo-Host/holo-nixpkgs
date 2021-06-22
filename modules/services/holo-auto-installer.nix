@@ -32,9 +32,8 @@ in
 
       serviceConfig = {
         User = "holo-auto-installer";
-        Group = "holo-auto-installer";
+        Group = "apis";
         ExecStart = "${cfg.package}/bin/holo-auto-installer ${cfg.working-directory}/config.yaml ${cfg.working-directory}/membrane-proofs.yaml";
-        StateDirectory = "holo-auto-installer";
         Type = "oneshot";
        };
       };
@@ -51,9 +50,8 @@ in
 
     users.users.holo-auto-installer = {
       isSystemUser = true;
+      group = "apis";
       createHome = false;
     };
-
-    users.groups.holo-auto-installer = {};
   };
 }

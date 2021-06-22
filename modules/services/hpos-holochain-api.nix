@@ -45,6 +45,7 @@ in
     users.users.hc-api = {
       isSystemUser = true;
       group = "apis";
+      createHome = false;
     };
   };
 }
