@@ -57,7 +57,7 @@ in
 
     users.users.configure-holochain = {
       isSystemUser = true;
-      Group = "apis";
+      group = "apis";
       home = "${cfg.working-directory}";
       # ensures directory is owned by user
       createHome = true;
