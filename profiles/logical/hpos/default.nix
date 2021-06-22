@@ -271,16 +271,16 @@ in
        }
       ];
       self_hosted_happs = [
-        {
-          bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0.alpha13/elemental-chat.0_2_0_alpha13.happ";
-          ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha34/elemental-chat-for-dna-0_2_0_alpha11-develop.zip";
-        }
+        # {
+        #   bundle_url = "https://github.com/holochain/elemental-chat/releases/download/v0.2.0.alpha13/elemental-chat.0_2_0_alpha13.happ";
+        #   ui_url = "https://github.com/holochain/elemental-chat-ui/releases/download/v0.0.1-alpha34/elemental-chat-for-dna-0_2_0_alpha11-develop.zip";
+        # }
       ];
     };
     membrane-proofs = {
       payload = [
         {
-          cell_nick = "elemental-chat";
+          cell_nick = "holofuel";
           proof = "AA==";  #read-only membrane proof
         }
       ];
