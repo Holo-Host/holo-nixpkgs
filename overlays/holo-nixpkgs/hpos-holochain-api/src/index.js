@@ -81,7 +81,6 @@ const registerECHapp = async url => {
   return happ
 }
 
-
 app.get('/hosted_happs', async (req, res) => {
   const usageTimeInterval = {
     duration_unit: req.query.duration_unit,

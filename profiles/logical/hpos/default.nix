@@ -280,7 +280,7 @@ in
     membrane-proofs = {
       payload = [
         {
-          cell_nick = "holofuel";
+          cell_nick = "transactor";
           proof = "AA==";  #read-only membrane proof
         }
       ];
