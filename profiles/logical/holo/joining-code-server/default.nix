@@ -17,7 +17,7 @@ in
     ../.
   ];
 
-  environment.systemPackages = [ hc-state git ];
+  environment.systemPackages = [ hc-state git hpos-update-cli holochain hc kitsune-p2p-proxy ];
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
