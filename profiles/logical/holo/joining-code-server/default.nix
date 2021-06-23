@@ -26,7 +26,7 @@ in
     working-directory = holochainWorkingDir;
     config = {
       environment_path = "${holochainWorkingDir}/databases_lmdb4";
-      keystore_path = "${holochainWorkingDir}/lair-shim";
+      keystore_path = "${holochainWorkingDir}/lair-keystore";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
         {
