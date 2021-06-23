@@ -35,6 +35,8 @@ let
 
   holochainWorkingDir = "/var/lib/holochain-rsm";
 
+  hostedUisDir = "/var/lib/hosted-uis";
+
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
 in
 
@@ -97,7 +99,7 @@ in
 
   services.hpos-holochain-api = lib.mkDefault {
     enable = true;
-    working-directory = configureHolochainWorkingDir;
+    hosted-uis-directory = hostedUisDir;
   };
 
   services.hpos-init = {
@@ -136,7 +138,7 @@ in
         };
 
         "/hosted/" = {
-          alias = "${configureHolochainWorkingDir}/hosted-uis/";
+          alias = "${hostedUisDir}/";
           extraConfig = ''
             limit_req zone=zone1 burst=30;
           '';

@@ -47,7 +47,7 @@ in
 
       serviceConfig = {
         User = "configure-holochain";
-        Group = "configure-holochain";
+        Group = "apis";
         ExecStart = "${cfg.package}/bin/configure-holochain ${cfg.working-directory}/config.yaml ${cfg.working-directory}/membrane-proofs.yaml";
         RemainAfterExit = true;
         StateDirectory = "configure-holochain";
@@ -57,6 +57,7 @@ in
 
     users.users.configure-holochain = {
       isSystemUser = true;
+      group = "apis";
       home = "${cfg.working-directory}";
       # ensures directory is owned by user
       createHome = true;
@@ -64,9 +65,6 @@ in
 
     systemd.tmpfiles.rules = [
       "d ${cfg.working-directory}/uis 0755 configure-holochain apis - -"
-      "d ${cfg.working-directory}/hosted-uis 0775 configure-holochain apis - -"
     ];
-
-    users.groups.configure-holochain = {};
   };
 }
