@@ -281,7 +281,7 @@ in
       payload = [
         {
           cell_nick = "elemental-chat";
-          proof = "AA==";   #read-only membrane proof
+          proof = "AA==";  #read-only membrane proof
         }
       ];
     };
