@@ -8,9 +8,9 @@
       stamp = "sdns://AgcAAAAAAAAADTEwNC4xNy4yNDEuNDUAGXJvdXRlci1yZWdpc3RyeS5ob2xvLmhvc3QNL3YxL2Rucy1xdWVyeQ";
       url = "https://router-registry.holo.host";
     };
-    bootstrapUrl = "https://bootstrap.holo.host";
+    bootstrapUrl = "https://devnet-bootstrap.holo.host";
     proxy = rec {
-      ipAddress = "45.55.107.33";
+      ipAddress = "167.172.0.245";
       port = "5788";
       pubKey = "f3gH2VMkJ4qvZJOXx0ccL_Zo5n-s_CnBjSzAsEHHDCA";
       certFile = "proxy.cert";
