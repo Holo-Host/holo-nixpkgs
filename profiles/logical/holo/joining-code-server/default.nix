@@ -19,8 +19,6 @@ in
 
   environment.systemPackages = [ hc-state git hpos-update-cli holochain hc kitsune-p2p-proxy ];
 
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
-
   services.lair-keystore.enable = true;
 
   services.holochain = lib.mkDefault {
@@ -28,7 +26,7 @@ in
     working-directory = holochainWorkingDir;
     config = {
       environment_path = "${holochainWorkingDir}/databases_lmdb4";
-      keystore_path = "${holochainWorkingDir}/lair-keystore";
+      keystore_path = "${holochainWorkingDir}/lair-shim";
       use_dangerous_test_keystore = false;
       admin_interfaces = [
         {
@@ -40,6 +38,7 @@ in
       ];
       network = {
         bootstrap_service = settings.holoNetwork.bootstrapUrl;
+        network_type = "quic_bootstrap";
         transport_pool = [{
           type = "proxy";
           sub_transport = {
@@ -100,6 +99,4 @@ in
   # };
 
   users.groups.apis = {};
-
-  users.users.nginx.extraGroups = [ "apis" ];
 }
