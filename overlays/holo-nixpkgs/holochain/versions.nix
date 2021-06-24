@@ -11,9 +11,9 @@
   };
 
   develop = {
-    rev = "ef8aebc854e7ba12ddd951eb45030c6cb9b6264b";
-    sha256 = "0i6yfb9f7i7bmkba6mxrz834pbdjzh73gdz0caxvgz8l4n6b5a9w";
-    cargoSha256 = "00ysiichy8f3qqnkvwpq67rn5yl1z43kxhpgja8kb19kjpx4z7wl";
+    rev = "8c43645b5addfd3636624156d56bfa73c1afe355";
+    sha256 = "061i7b59pgwf5n4ma6cypg08v50n60z1b2yan3cgwdzmm95na2cm";
+    cargoSha256 = "0fs0va4w3vabbdba6pdwfkfyh271ngri0kpv7amgkljfmszxdw1c";
     bins = {
       holochain = "holochain";
       hc = "hc";
@@ -22,12 +22,12 @@
   };
 
   main = {
-    rev = "a4461535c77f653f36cb3a7bb0dfda84e92ed1be";
-    sha256 = "1kgxyfrwmga27mqywhivn0xdi6br90bavqvnd4kbrfyzbzmf8fcr";
-    cargoSha256 = "1ix8ihlizjsmx8xaaxknbl0wkyck3kc98spipx5alav8ln4wf46s";
+    rev = "holochain-0.0.101";
+    sha256 = "061i7b59pgwf5n4ma6cypg08v50n60z1b2yan3cgwdzmm95na2cm";
+    cargoSha256 = "0fs0va4w3vabbdba6pdwfkfyh271ngri0kpv7amgkljfmszxdw1c";
     bins = {
       holochain = "holochain";
-      dna-util = "dna_util";
+      hc = "hc";
       kitsune-p2p-proxy = "kitsune_p2p/proxy";
     };
   };

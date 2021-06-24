@@ -170,7 +170,7 @@ rec {
 
   # expose all versions to make hydra build them
   holochain_main = holochainAllBinariesWithDeps.main.holochain;
-  dna-util_main = holochainAllBinariesWithDeps.main.dna-util;
+  hc_main = holochainAllBinariesWithDeps.main.hc;
   lair-keystore_main = holochainAllBinariesWithDeps.main.lair-keystore;
   kitsune-p2p-proxy_main = holochainAllBinariesWithDeps.main.kitsune-p2p-proxy;
   holochain_develop = holochainAllBinariesWithDeps.develop.holochain;
