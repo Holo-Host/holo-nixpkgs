@@ -175,16 +175,17 @@ app.post('/install_hosted_happ', async (req, res) => {
 
       // Generate new agent in a test environment else read the location in hpos
       const hostPubKey = process.env.NODE_ENV === 'test' ? await createAgent(adminWs) : await getReadOnlyPubKey()
-
+      // Since the happ_id is going be to received from the host url it needs to be lowercase
+      let happ_id = happBundleDetails.happ_id.toLowerCase();
       // check if the hosted_happ is already listOfInstalledHapps
-      if (listOfInstalledHapps.includes(`${happBundleDetails.happ_id}`)) {
-        return res.status(501).send(`hpos-holochain-api error: ${happBundleDetails.happ_id} already installed on your holoport`)
+      if (listOfInstalledHapps.includes(`${happ_id}`)) {
+        return res.status(501).send(`hpos-holochain-api error: ${happ_id} already installed on your holoport`)
       } else {
         const serviceloggerPref = parsePreferences(preferences, happBundleDetails.provider_pubkey)
         console.log('Parsed Preferences: ', serviceloggerPref)
-        await installHostedHapp(happBundleDetails.happ_id, happBundleDetails.happ_bundle.bundle_url, hostPubKey, serviceloggerPref, data.membrane_proofs)
+        await installHostedHapp(happ_id, happBundleDetails.happ_bundle.bundle_url, hostPubKey, serviceloggerPref, data.membrane_proofs)
       }
-      await installHostedUI(happBundleDetails.happ_id, happBundleDetails.happ_bundle.ui_src_url)
+      await installHostedUI(happ_id, happBundleDetails.happ_bundle.ui_src_url)
 
       // Note: Do not need to install UI's for hosted happ
       return res.status(200).send(`Successfully installed happ_id: ${happId}`)
