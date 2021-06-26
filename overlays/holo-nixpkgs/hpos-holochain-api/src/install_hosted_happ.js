@@ -13,7 +13,7 @@ const installHostedUI = async (
 ) => {
   console.log(`Installing UI for happ_id: ${happId}`)
   let dirPath = `${UI_STORE_FOLDER}/${happId}`;
-  if (fs.existsSync(dirPath)) {
+  if (!fs.existsSync(dirPath)) {
     console.log(`Downloading happ_id: ${happId} UI URL: ${uiSrcUrl}`)
     const uiPath = await downloadFile(uiSrcUrl)
     await unzipFile(happId, uiPath)

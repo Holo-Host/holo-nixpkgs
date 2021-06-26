@@ -10,15 +10,6 @@ const unzipFile = async (happId, sourcePath) => {
   let dirPath = `${UI_STORE_FOLDER}/${happId}`;
   fs.mkdirSync(path.join(dirPath), true);
   console.log("Created dir_path for happ: ", dirPath);
-  // await execSync(`mkdir -p ${dirPath}`, (err, stdout, stderr) => {
-  //   if (err) {
-  //       console.log(`failed to spawn unzip command: ${err.message}`);
-  //       return;
-  //   }
-  //   console.log("stdout: ", stdout);
-  //   console.log("stderr: ", stderr);
-  //   console.log("Created dir_path for happ: ", dirPath);
-  // });
   await execSync(`unzip ${sourcePath} -d ${dirPath}`, (err, stdout, stderr) => {
     if (err) {
         console.log(`failed to spawn unzip command: ${err.message}`);
