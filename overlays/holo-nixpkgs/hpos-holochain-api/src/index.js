@@ -27,7 +27,7 @@ const getPresentedHapps = async usageTimeInterval => {
     }
     let appStats, enabled
     let happDetails = null
-    let happ_id = happs[i].happ_id.toLowerCase()
+    let happ_id = happs[i].happ_id
     try {
       appStats = await callZome(appWs, `${happ_id}::servicelogger`, 'service', 'get_stats', usageTimeInterval)
       enabled = true
@@ -176,8 +176,7 @@ app.post('/install_hosted_happ', async (req, res) => {
 
       // Generate new agent in a test environment else read the location in hpos
       const hostPubKey = process.env.NODE_ENV === 'test' ? await createAgent(adminWs) : await getReadOnlyPubKey()
-      // Since the happ_id is going be to received from the host url it needs to be lowercase
-      let happ_id = happBundleDetails.happ_id.toLowerCase();
+      let happ_id = happBundleDetails.happ_id;
       // check if the hosted_happ is already listOfInstalledHapps
       if (!listOfInstalledHapps.includes(`${happ_id}`)) {
         const serviceloggerPref = parsePreferences(preferences, happBundleDetails.provider_pubkey)
