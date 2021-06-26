@@ -144,7 +144,7 @@ rec {
   );
 
   holochainMeta = callPackage ./holochain {
-    inherit (rust.packages.stable) rustPlatform;
+    inherit (rust.packages.v1_53_0) rustPlatform;
   };
 
   inherit (holochainMeta)
@@ -288,6 +288,11 @@ rec {
       sha256 = "0qzaq3hsxh7skxjix4d4k38rv0cxwwnvi32arg08p11cxvpsmikx";
     }).rust.override { inherit targets extensions; };
 
+    rust_1_53_0 = (rustChannelOf {
+      channel = "1.53.0";
+      sha256 = "1p4vxwv28v7qmrblnvp6qv8dgcrj8ka5c7dw2g2cr3vis7xhflaa";
+    }).rust.override { inherit targets extensions; };
+
     rustStable = rust_1_52_0;
   in {
     packages = previous.rust.packages // {
@@ -307,6 +312,15 @@ rec {
         };
 
         inherit (final.rust.packages.stable.rustPlatform) rust;
+      };
+
+      v1_53_0 = {
+        rustPlatform = final.makeRustPlatform {
+          rustc = rust_1_53_0;
+          cargo = rust_1_53_0;
+        };
+
+        inherit (final.rust.packages.v1_53_0.rustPlatform) rust;
       };
     };
   });
