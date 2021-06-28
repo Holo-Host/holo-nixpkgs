@@ -66,7 +66,7 @@ in
           app_id = "joining-code-factory";
           uuid = "0001";
           version = "alpha1";
-          dna_url = "https://drive.google.com/file/d/1bHVdurDkDqJ2BcCQGF8vnkzT_pNfUBOJ/view?usp=sharing";
+          dna_url = "https://drive.google.com/u/1/uc?id=1bHVdurDkDqJ2BcCQGF8vnkzT_pNfUBOJ&export=download";
         }];
     };
     membrane-proofs = {
