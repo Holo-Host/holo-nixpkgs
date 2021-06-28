@@ -66,7 +66,7 @@ in
           app_id = "joining-code-factory";
           uuid = "0001";
           version = "alpha1";
-          dna_url = "https://drive.google.com/u/1/uc?id=1bHVdurDkDqJ2BcCQGF8vnkzT_pNfUBOJ&export=download";
+          bundle_url =  "https://s3.wasabisys.com/holo/joining-code-factory.happ";
         }];
     };
     membrane-proofs = {
