@@ -81,6 +81,27 @@ const registerECHapp = async url => {
   return happ
 }
 
+const enableHapp = async happ_id => {
+  const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
+  const APP_ID = await getAppIds()
+
+  const util = require('util');
+  const exec = util.promisify(require('child_process').exec);
+
+
+  async function getHoloportId() {
+    const { stdout, stderr } = await exec('hpos-config-into-base36-id < /run/hpos-init/hpos-config.json');
+    return stdout
+  }
+
+  const enableBundle = {
+    happ_id: happ_id,
+    holoport_id: await getHoloportId()
+  }
+  let happ =  await callZome(appWs, APP_ID.HHA, 'hha', 'enable_happ', enableBundle)
+  return happ
+}
+
 
 app.get('/hosted_happs', async (req, res) => {
   const usageTimeInterval = {
@@ -196,11 +217,14 @@ app.post('/install_hosted_happ', async (req, res) => {
 
       // check if the hosted_happ is already listOfInstalledHapps
       if (listOfInstalledHapps.includes(`${happBundleDetails.happ_id}`)) {
+        await enableHapp(happBundleDetails.happ_id)
         return res.status(501).send(`hpos-holochain-api error: ${happBundleDetails.happ_id} already installed on your holoport`)
       } else {
         const serviceloggerPref = parsePreferences(preferences, happBundleDetails.provider_pubkey)
         console.log('Parsed Preferences: ', serviceloggerPref)
+
         await installHostedHapp(happBundleDetails.happ_id, happBundleDetails.happ_bundle.bundle_url, hostPubKey, serviceloggerPref, data.membrane_proofs)
+        await enableHapp(happBundleDetails.happ_id)
       }
 
       // Note: Do not need to install UI's for hosted happ
