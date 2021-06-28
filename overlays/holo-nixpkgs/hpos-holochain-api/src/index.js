@@ -27,15 +27,16 @@ const getPresentedHapps = async usageTimeInterval => {
     }
     let appStats, enabled
     let happDetails = null
+    let happ_id = happs[i].happ_id
     try {
-      appStats = await callZome(appWs, `${happs[i].happ_id}::servicelogger`, 'service', 'get_stats', usageTimeInterval)
+      appStats = await callZome(appWs, `${happ_id}::servicelogger`, 'service', 'get_stats', usageTimeInterval)
       enabled = true
       const { source_chain_count: sourceChains, bandwidth, cpu, disk_usage: storage } = appStats
       usage.cpu = cpu
       usage.bandwidth = bandwidth
       // Create happ details with enabled true and servicelogger deatils
       happDetails = {
-        id: happs[i].happ_id,
+        id: happ_id,
         name: happs[i].happ_bundle.name,
         bundleUrl: happs[i].happ_bundle.bundle_url,
         hostedUrl: happs[i].happ_bundle.hosted_url,
@@ -47,13 +48,13 @@ const getPresentedHapps = async usageTimeInterval => {
     } catch (e) {
       // Creat happ deatils with enabled false and and error for servicelogger
       happDetails = {
-        id: happs[i].happ_id,
+        id: happ_id,
         name: happs[i].happ_bundle.name,
         bundleUrl: happs[i].happ_bundle.bundle_url,
         hostedUrl: happs[i].happ_bundle.hosted_url,
         enabled: false,
         error: {
-          source: `${happs[i].happ_id}::servicelogger`,
+          source: `${happ_id}::servicelogger`,
           message: e.message,
           stack: e.stack
         }
@@ -175,20 +176,17 @@ app.post('/install_hosted_happ', async (req, res) => {
 
       // Generate new agent in a test environment else read the location in hpos
       const hostPubKey = process.env.NODE_ENV === 'test' ? await createAgent(adminWs) : await getReadOnlyPubKey()
-      // Since the happ_id is going be to received from the host url it needs to be lowercase
-      let happ_id = happBundleDetails.happ_id.toLowerCase();
+      let happ_id = happBundleDetails.happ_id;
       // check if the hosted_happ is already listOfInstalledHapps
-      if (listOfInstalledHapps.includes(`${happ_id}`)) {
-        return res.status(501).send(`hpos-holochain-api error: ${happ_id} already installed on your holoport`)
-      } else {
+      if (!listOfInstalledHapps.includes(`${happ_id}`)) {
         const serviceloggerPref = parsePreferences(preferences, happBundleDetails.provider_pubkey)
         console.log('Parsed Preferences: ', serviceloggerPref)
         await installHostedHapp(happ_id, happBundleDetails.happ_bundle.bundle_url, hostPubKey, serviceloggerPref, data.membrane_proofs)
-        await installHostedUI(happ_id, happBundleDetails.happ_bundle.ui_src_url)
       }
+      await installHostedUI(happ_id, happBundleDetails.happ_bundle.ui_src_url)
 
-      // Note: Do not need to install UI's for hosted happ
-      return res.status(200).send(`Successfully installed happ_id: ${happId}`)
+      console.log(`Completed hosted-happ install sequence for happ_id: ${happId}`)
+      return res.status(200).send(`Completed hosted-happ install sequence for happ_id: ${happId}`)
     } catch (e) {
       return res.status(501).send(`hpos-holochain-api error: Failed to install hosted Happ with error - ${e}`)
     }

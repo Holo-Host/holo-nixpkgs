@@ -2,6 +2,8 @@ const { ADMIN_PORT, HAPP_PORT, DEV_UID_OVERRIDE, getAppIds } = require('./const'
 const { AdminWebsocket, AppWebsocket } = require('@holochain/conductor-api')
 const { downloadFile, unzipFile } = require('./utils')
 const { callZome } = require('./api')
+const { UI_STORE_FOLDER } = require("./const");
+const fs = require('fs')
 const msgpack = require('@msgpack/msgpack')
 const util = require('util')
 
@@ -9,10 +11,16 @@ const installHostedUI = async (
   happId,
   uiSrcUrl
 ) => {
-  console.log(`Downloading happ_id: ${happId} UI URL: ${uiSrcUrl}`)
-  const uiPath = await downloadFile(uiSrcUrl)
-  await unzipFile(happId, uiPath)
-  console.log(`Installed UI for happ_id: ${happId}`)
+  console.log(`Installing UI for happ_id: ${happId}`)
+  let dirPath = `${UI_STORE_FOLDER}/${happId}`;
+  if (!fs.existsSync(dirPath)) {
+    console.log(`Downloading happ_id: ${happId} UI URL: ${uiSrcUrl}`)
+    const uiPath = await downloadFile(uiSrcUrl)
+    await unzipFile(happId, uiPath)
+    console.log(`Installed UI for happ_id: ${happId}`)
+  } else {
+    console.log(`Hosted UI for happ_id: ${happId} already installed`)
+  }
 }
 
 // NOTE: this code assumes a single DNA per hApp.  This will need to be updated when the hApp bundle
