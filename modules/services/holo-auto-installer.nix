@@ -22,8 +22,8 @@ in
 
   config = mkIf (cfg.enable) {
     systemd.services.holo-auto-installer = {
-      after = [ "network.target" "configure-holochain.service" ];
-      requisite = [ "configure-holochain.service" ];
+      after = [ "network.target" "configure-holochain.service" "hpos-holochain-api.service" ];
+      requisite = [ "configure-holochain.service" "hpos-holochain-api.service" ];
       wantedBy = [ "multi-user.target" ];
 
       environment.RUST_LOG = "holo_auto_installer=debug";
