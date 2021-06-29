@@ -30,8 +30,8 @@ in
 
   config = mkIf (cfg.enable) {
     systemd.services.configure-holochain = {
-      after = [ "network.target" "holochain.service" "hpos-holochain-api.service" ];
-      requisite = [ "holochain.service" "hpos-holochain-api.service" ];
+      after = [ "network.target" "holochain.service" ];
+      requisite = [ "holochain.service" ];
       wantedBy = [ "multi-user.target" ];
 
       environment.RUST_LOG = "configure_holochain=debug";
