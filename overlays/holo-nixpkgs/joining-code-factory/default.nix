@@ -26,11 +26,16 @@ with stdenv.lib;
     '';
 
     installPhase = ''
-      ls -l
       mkdir $out
-      mv build/bundle.js $out
+      mkdir $out/bin
+      mkdir $out/libexec
+      mkdir $out/libexec/${name}
+      mv ./node_modules $out/libexec/${name}/node_modules
+      mv build/bundle.js $out/bin
     '';
 
     meta.platforms = platforms.linux;
   };
 }
+
+
