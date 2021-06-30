@@ -63,10 +63,8 @@ in
     install-list = {
       self_hosted_happs = [];
       core_happs = [{
-          app_id = "joining-code-factory";
-          uuid = "0001";
-          version = "alpha1";
-          dna_url = "https://s3.wasabisys.com/holo/joining-code-factory.happ";
+          app_id = "joining-code-factory:alpha1:0001";
+          bundle_url = "https://s3.wasabisys.com/holo/joining-code-factory.happ";
         }];
     };
     membrane-proofs = {
