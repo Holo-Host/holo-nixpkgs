@@ -1,31 +1,3 @@
-# { stdenv, fetchFromGitHub, mkYarnPackage }:
-
-# {
-#   joining-code-factory = mkYarnPackage rec {
-#     name = "joining-code-happ";
-#     src = fetchFromGitHub {
-#       owner = "holo-host";
-#       repo = "joining-code-happ";
-#       rev = "a96bce045d53637b3893fc1e486ac5607fa84577";
-#       sha256 = "0wx9s98h5gjb3ybc300113zvmzz0y03f5sb7vpp6pqbwy5hk57ac";
-#       private = true;
-#     };
-
-#     packageJSON = "${src}/service/package.json";
-#     # yarnLock = "${src}/service/yarn.lock";
-#   };
-
-#   buildPhase = ''
-#     echo "BLAH!!!!
-#   '';
-
-#   installPhase = ''
-#     mkdir $out
-#     mv build/bundle.js $out
-#   '';
-
-# }
-
 { stdenv, nodejs, npmToNix, fetchFromGitHub }:
 
 with stdenv.lib;
@@ -35,8 +7,8 @@ with stdenv.lib;
     src = fetchFromGitHub {
         owner = "holo-host";
         repo = "joining-code-happ";
-        rev = "a96bce045d53637b3893fc1e486ac5607fa84577";
-        sha256 = "0wx9s98h5gjb3ybc300113zvmzz0y03f5sb7vpp6pqbwy5hk57ac";
+        rev = "c51210b076da26e91664e25a3d289281c97a969c";
+        sha256 = "038i1dnqq6rhvzv3y52b7ryfngy52hhsxva68xx4d1jy1zphlnv7";
         private = true;
       };
 
