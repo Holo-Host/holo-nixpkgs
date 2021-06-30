@@ -3,12 +3,12 @@
 with lib;
 
 let
-  cfg = config.services.kv-uploader;
+  cfg = config.services.trancher;
 in
 
 {
-  options.services.kv-uploader = {
-    enable = mkEnableOption "KV Uploader";
+  options.services.trancher = {
+    enable = mkEnableOption "trancher";
 
     package = mkOption {
       default = pkgs.matching-engine;
@@ -21,12 +21,12 @@ in
   };
 
   config = mkIf cfg.enable {
-    systemd.services.kv-uploader = {
+    systemd.services.trancher = {
       after = [ "network.target" ];
-      startAt = "*:5/15";
+      startAt = "*:0/15";
 
       serviceConfig = {
-        ExecStart = "${pkgs.matching-engine}/bin/matching-engine-uploader ${cfg.credentialsDir}/config.json";
+        ExecStart = "${pkgs.matching-engine}/bin/matching-engine-trancher ${cfg.credentialsDir}/config.json";
         Type = "oneshot";
         User = "root";
       };
