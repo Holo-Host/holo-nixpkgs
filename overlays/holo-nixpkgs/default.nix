@@ -310,6 +310,8 @@ rec {
 
   inherit (callPackage ./hosted-happ-monitor {}) hosted-happ-monitor;
 
+  inherit (callPackage ./joining-code-factory {}) joining-code-factory;
+
   # here for testing purposes only for trycp_server installation
   tryorama = callPackage ./tryorama {
     inherit (rust.packages.stable) rustPlatform;
