@@ -17,9 +17,7 @@ in
     ../.
   ];
 
-  environment.systemPackages = [ hc-state git ];
-
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  environment.systemPackages = [ hc-state git hpos-update-cli holochain hc kitsune-p2p-proxy ];
 
   services.lair-keystore.enable = true;
 
@@ -40,6 +38,7 @@ in
       ];
       network = {
         bootstrap_service = settings.holoNetwork.bootstrapUrl;
+        network_type = "quic_bootstrap";
         transport_pool = [{
           type = "proxy";
           sub_transport = {
@@ -67,8 +66,16 @@ in
           app_id = "joining-code-factory";
           uuid = "0001";
           version = "alpha1";
-          dna_url = "https://drive.google.com/u/1/uc?id=1HJTYk5leGBQvpqKEHkrNi1ils4Z9_tPw&export=download";
+          dna_url = "https://s3.wasabisys.com/holo/joining-code-factory.happ";
         }];
+    };
+    membrane-proofs = {
+      payload = [
+        {
+          cell_nick = "jcf";
+          proof = "AA==";  #read-only membrane proof
+        }
+      ];
     };
   };
 
@@ -86,6 +93,4 @@ in
   # };
 
   users.groups.apis = {};
-
-  users.users.nginx.extraGroups = [ "apis" ];
 }

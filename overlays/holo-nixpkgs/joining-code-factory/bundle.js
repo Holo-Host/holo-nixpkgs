@@ -33,7 +33,7 @@ var https = require('https');
 var http = require('http');
 var net = require('net');
 var tls = require('tls');
-var crypto = require('crypto');
+var require$$0$3 = require('crypto');
 var Url = require('url');
 var zlib = require('zlib');
 var fs = require('fs');
@@ -54,7 +54,7 @@ var https__default = /*#__PURE__*/_interopDefaultLegacy(https);
 var http__default = /*#__PURE__*/_interopDefaultLegacy(http);
 var net__default = /*#__PURE__*/_interopDefaultLegacy(net);
 var tls__default = /*#__PURE__*/_interopDefaultLegacy(tls);
-var crypto__default = /*#__PURE__*/_interopDefaultLegacy(crypto);
+var require$$0__default = /*#__PURE__*/_interopDefaultLegacy(require$$0$3);
 var Url__default = /*#__PURE__*/_interopDefaultLegacy(Url);
 var zlib__default = /*#__PURE__*/_interopDefaultLegacy(zlib);
 var fs__default = /*#__PURE__*/_interopDefaultLegacy(fs);
@@ -62,7 +62,7 @@ var path__default = /*#__PURE__*/_interopDefaultLegacy(path$1);
 var os__default = /*#__PURE__*/_interopDefaultLegacy(os);
 var Stream__default = /*#__PURE__*/_interopDefaultLegacy(Stream);
 var assert__default = /*#__PURE__*/_interopDefaultLegacy(assert);
-var require$$0__default = /*#__PURE__*/_interopDefaultLegacy(require$$0$4);
+var require$$0__default$1 = /*#__PURE__*/_interopDefaultLegacy(require$$0$4);
 var require$$3__default = /*#__PURE__*/_interopDefaultLegacy(require$$3);
 var tty__default = /*#__PURE__*/_interopDefaultLegacy(tty);
 var buffer__default = /*#__PURE__*/_interopDefaultLegacy(buffer);
@@ -1630,7 +1630,7 @@ err[kStatusCode$1] = statusCode;
 return err;
 }
 
-const { randomFillSync } = crypto__default['default'];
+const { randomFillSync } = require$$0__default['default'];
 
 
 const { EMPTY_BUFFER: EMPTY_BUFFER$1 } = constants;
@@ -2439,7 +2439,7 @@ return configurations
 
 var extension = { format, parse };
 
-const { randomBytes, createHash } = crypto__default['default'];
+const { randomBytes, createHash } = require$$0__default['default'];
 const { URL } = Url__default['default'];
 
 
@@ -3530,7 +3530,7 @@ return duplex;
 
 var stream = createWebSocketStream;
 
-const { createHash: createHash$1 } = crypto__default['default'];
+const { createHash: createHash$1 } = require$$0__default['default'];
 const { createServer, STATUS_CODES } = http__default['default'];
 
 
@@ -4036,11 +4036,9 @@ var TEXT_ENCODER_THRESHOLD = !TEXT_ENCODING_AVAILABLE
   ? 200
   : 0;
 function utf8EncodeTEencode(str, output, outputOffset) {
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 output.set(sharedTextEncoder.encode(str), outputOffset);
 }
 function utf8EncodeTEencodeInto(str, output, outputOffset) {
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 sharedTextEncoder.encodeInto(str, output.subarray(outputOffset));
 }
 var utf8EncodeTE = (sharedTextEncoder === null || sharedTextEncoder === void 0 ? void 0 : sharedTextEncoder.encodeInto) ? utf8EncodeTEencodeInto : utf8EncodeTEencode;
@@ -4101,7 +4099,6 @@ var TEXT_DECODER_THRESHOLD = !TEXT_ENCODING_AVAILABLE
   : 0;
 function utf8DecodeTD(bytes, inputOffset, byteLength) {
 var stringBytes = bytes.subarray(inputOffset, inputOffset + byteLength);
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 return sharedTextDecoder.decode(stringBytes);
 }
 
@@ -4264,9 +4261,9 @@ ExtensionCodec.prototype.register = function (_a) {
 ExtensionCodec.prototype.tryToEncode = function (object, context) {
   // built-in extensions
   for (var i = 0; i < this.builtInEncoders.length; i++) {
-      var encoder = this.builtInEncoders[i];
-      if (encoder != null) {
-          var data = encoder(object, context);
+      var encodeExt = this.builtInEncoders[i];
+      if (encodeExt != null) {
+          var data = encodeExt(object, context);
           if (data != null) {
               var type = -1 - i;
               return new ExtData(type, data);
@@ -4275,9 +4272,9 @@ ExtensionCodec.prototype.tryToEncode = function (object, context) {
   }
   // custom extensions
   for (var i = 0; i < this.encoders.length; i++) {
-      var encoder = this.encoders[i];
-      if (encoder != null) {
-          var data = encoder(object, context);
+      var encodeExt = this.encoders[i];
+      if (encodeExt != null) {
+          var data = encodeExt(object, context);
           if (data != null) {
               var type = i;
               return new ExtData(type, data);
@@ -4291,9 +4288,9 @@ ExtensionCodec.prototype.tryToEncode = function (object, context) {
   return null;
 };
 ExtensionCodec.prototype.decode = function (data, type, context) {
-  var decoder = type < 0 ? this.builtInDecoders[-1 - type] : this.decoders[type];
-  if (decoder) {
-      return decoder(data, type, context);
+  var decodeExt = type < 0 ? this.builtInDecoders[-1 - type] : this.decoders[type];
+  if (decodeExt) {
+      return decodeExt(data, type, context);
   }
   else {
       // decode() does not fail, returns ExtData instead.
@@ -4767,9 +4764,8 @@ CachedKeyDecoder.prototype.canBeCached = function (byteLength) {
 };
 CachedKeyDecoder.prototype.get = function (bytes, inputOffset, byteLength) {
   var records = this.caches[byteLength - 1];
-  var recordsLength = records.length;
-  FIND_CHUNK: for (var i = 0; i < recordsLength; i++) {
-      var record = records[i];
+  FIND_CHUNK: for (var _i = 0, records_1 = records; _i < records_1.length; _i++) {
+      var record = records_1[_i];
       var recordBytes = record.bytes;
       for (var j = 0; j < byteLength; j++) {
           if (recordBytes[j] !== bytes[inputOffset + j]) {
@@ -4950,6 +4946,23 @@ Decoder.prototype.decode = function (buffer) {
       throw this.createExtraByteError(this.pos);
   }
   return object;
+};
+Decoder.prototype.decodeMulti = function (buffer) {
+  return __generator(this, function (_a) {
+      switch (_a.label) {
+          case 0:
+              this.reinitializeState();
+              this.setBuffer(buffer);
+              _a.label = 1;
+          case 1:
+              if (!this.hasRemaining()) return [3 /*break*/, 3];
+              return [4 /*yield*/, this.doDecodeSync()];
+          case 2:
+              _a.sent();
+              return [3 /*break*/, 1];
+          case 3: return [2 /*return*/];
+      }
+  });
 };
 Decoder.prototype.decodeAsync = function (stream) {
   var stream_1, stream_1_1;
@@ -5332,7 +5345,6 @@ Decoder.prototype.doDecodeSync = function () {
           }
           else {
               // it must be `state.type === State.MAP_VALUE` here
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               state.map[state.key] = object;
               state.readCount++;
               if (state.readCount === state.size) {
@@ -5512,14 +5524,24 @@ return Decoder;
 
 var defaultDecodeOptions = {};
 /**
-* It decodes a MessagePack-encoded buffer.
+* It decodes a single MessagePack object in a buffer.
 *
-* This is a synchronous decoding function. See other variants for asynchronous decoding: `decodeAsync()`, `decodeStream()`, `decodeArrayStream()`.
+* This is a synchronous decoding function.
+* See other variants for asynchronous decoding: {@link decodeAsync()}, {@link decodeStream()}, or {@link decodeArrayStream()}.
 */
 function decode(buffer, options) {
 if (options === void 0) { options = defaultDecodeOptions; }
 var decoder = new Decoder(options.extensionCodec, options.context, options.maxStrLength, options.maxBinLength, options.maxArrayLength, options.maxMapLength, options.maxExtLength);
 return decoder.decode(buffer);
+}
+/**
+* It decodes multiple MessagePack objects in a buffer.
+* This is corresponding to {@link decodeMultiStream()}.
+*/
+function decodeMulti(buffer, options) {
+if (options === void 0) { options = defaultDecodeOptions; }
+var decoder = new Decoder(options.extensionCodec, options.context, options.maxStrLength, options.maxBinLength, options.maxArrayLength, options.maxMapLength, options.maxExtLength);
+return decoder.decodeMulti(buffer);
 }
 
 // utility for whatwg streams
@@ -5604,7 +5626,7 @@ return __asyncGenerator$1(this, arguments, function asyncIterableFromStream_1() 
   });
 });
 }
-function ensureAsyncIterabe(streamLike) {
+function ensureAsyncIterable(streamLike) {
 if (isAsyncIterable(streamLike)) {
   return streamLike;
 }
@@ -5654,7 +5676,7 @@ if (options === void 0) { options = defaultDecodeOptions; }
 return __awaiter$1(this, void 0, void 0, function () {
   var stream, decoder;
   return __generator$2(this, function (_a) {
-      stream = ensureAsyncIterabe(streamLike);
+      stream = ensureAsyncIterable(streamLike);
       decoder = new Decoder(options.extensionCodec, options.context, options.maxStrLength, options.maxBinLength, options.maxArrayLength, options.maxMapLength, options.maxExtLength);
       return [2 /*return*/, decoder.decodeAsync(stream)];
   });
@@ -5662,15 +5684,22 @@ return __awaiter$1(this, void 0, void 0, function () {
 }
 function decodeArrayStream(streamLike, options) {
 if (options === void 0) { options = defaultDecodeOptions; }
-var stream = ensureAsyncIterabe(streamLike);
+var stream = ensureAsyncIterable(streamLike);
 var decoder = new Decoder(options.extensionCodec, options.context, options.maxStrLength, options.maxBinLength, options.maxArrayLength, options.maxMapLength, options.maxExtLength);
 return decoder.decodeArrayStream(stream);
 }
-function decodeStream(streamLike, options) {
+function decodeMultiStream(streamLike, options) {
 if (options === void 0) { options = defaultDecodeOptions; }
-var stream = ensureAsyncIterabe(streamLike);
+var stream = ensureAsyncIterable(streamLike);
 var decoder = new Decoder(options.extensionCodec, options.context, options.maxStrLength, options.maxBinLength, options.maxArrayLength, options.maxMapLength, options.maxExtLength);
 return decoder.decodeStream(stream);
+}
+/**
+* @deprecated Use {@link decodeMultiStream()} instead.
+*/
+function decodeStream(streamLike, options) {
+if (options === void 0) { options = defaultDecodeOptions; }
+return decodeMultiStream(streamLike, options);
 }
 
 // Main Functions:
@@ -5679,8 +5708,10 @@ var dist_es5_esm = /*#__PURE__*/Object.freeze({
 __proto__: null,
 encode: encode,
 decode: decode,
+decodeMulti: decodeMulti,
 decodeAsync: decodeAsync,
 decodeArrayStream: decodeArrayStream,
+decodeMultiStream: decodeMultiStream,
 decodeStream: decodeStream,
 Decoder: Decoder,
 Encoder: Encoder,
@@ -5694,114 +5725,9 @@ encodeTimestampExtension: encodeTimestampExtension,
 decodeTimestampExtension: decodeTimestampExtension
 });
 
-// This alphabet uses `A-Za-z0-9_-` symbols. The genetic algorithm helped
-// optimize the gzip compression for this alphabet.
-let urlAlphabet =
-'ModuleSymbhasOwnPr-0123456789ABCDEFGHNRVfgctiUvz_KqYTJkLxpZXIjQW';
-
-var urlAlphabet_1 = { urlAlphabet };
-
-let { urlAlphabet: urlAlphabet$1 } = urlAlphabet_1;
-
-// It is best to make fewer, larger requests to the crypto module to
-// avoid system call overhead. So, random numbers are generated in a
-// pool. The pool is a Buffer that is larger than the initial random
-// request size by this multiplier. The pool is enlarged if subsequent
-// requests exceed the maximum buffer size.
-const POOL_SIZE_MULTIPLIER = 32;
-let pool, poolOffset;
-
-let random = bytes => {
-if (!pool || pool.length < bytes) {
-pool = Buffer.allocUnsafe(bytes * POOL_SIZE_MULTIPLIER);
-crypto__default['default'].randomFillSync(pool);
-poolOffset = 0;
-} else if (poolOffset + bytes > pool.length) {
-crypto__default['default'].randomFillSync(pool);
-poolOffset = 0;
-}
-
-let res = pool.subarray(poolOffset, poolOffset + bytes);
-poolOffset += bytes;
-return res
-};
-
-let customRandom = (alphabet, size, getRandom) => {
-// First, a bitmask is necessary to generate the ID. The bitmask makes bytes
-// values closer to the alphabet size. The bitmask calculates the closest
-// `2^31 - 1` number, which exceeds the alphabet size.
-// For example, the bitmask for the alphabet size 30 is 31 (00011111).
-let mask = (2 << (31 - Math.clz32((alphabet.length - 1) | 1))) - 1;
-// Though, the bitmask solution is not perfect since the bytes exceeding
-// the alphabet size are refused. Therefore, to reliably generate the ID,
-// the random bytes redundancy has to be satisfied.
-
-// Note: every hardware random generator call is performance expensive,
-// because the system call for entropy collection takes a lot of time.
-// So, to avoid additional system calls, extra bytes are requested in advance.
-
-// Next, a step determines how many random bytes to generate.
-// The number of random bytes gets decided upon the ID size, mask,
-// alphabet size, and magic number 1.6 (using 1.6 peaks at performance
-// according to benchmarks).
-let step = Math.ceil((1.6 * mask * size) / alphabet.length);
-
-return () => {
-let id = '';
-while (true) {
-let bytes = getRandom(step);
-// A compact alternative for `for (var i = 0; i < step; i++)`.
-let i = step;
-while (i--) {
-  // Adding `|| ''` refuses a random byte that exceeds the alphabet size.
-  id += alphabet[bytes[i] & mask] || '';
-  if (id.length === size) return id
-}
-}
-}
-};
-
-let customAlphabet = (alphabet, size) => customRandom(alphabet, size, random);
-
-let nanoid = (size = 21) => {
-let bytes = random(size);
-let id = '';
-// A compact alternative for `for (var i = 0; i < step; i++)`.
-while (size--) {
-// It is incorrect to use bytes exceeding the alphabet size.
-// The following mask reduces the random byte in the 0-255 value
-// range to the 0-63 value range. Therefore, adding hacks, such
-// as empty string fallback or magic numbers, is unneccessary because
-// the bitmask trims bytes down to the alphabet size.
-id += urlAlphabet$1[bytes[size] & 63];
-}
-return id
-};
-
-var nanoid_1 = { nanoid, customAlphabet, customRandom, urlAlphabet: urlAlphabet$1, random };
-
-var require$$0 = /*@__PURE__*/getAugmentedNamespace(dist_es5_esm);
+var msgpack_1 = /*@__PURE__*/getAugmentedNamespace(dist_es5_esm);
 
 var client = createCommonjsModule(function (module, exports) {
-var __createBinding = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-if (k2 === undefined) k2 = k;
-Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-if (k2 === undefined) k2 = k;
-o[k2] = m[k];
-}));
-var __setModuleDefault = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
-Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-o["default"] = v;
-});
-var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
-if (mod && mod.__esModule) return mod;
-var result = {};
-if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-__setModuleDefault(result, mod);
-return result;
-};
 var __awaiter = (commonjsGlobal && commonjsGlobal.__awaiter) || function (thisArg, _arguments, P, generator) {
 function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
 return new (P || (P = Promise))(function (resolve, reject) {
@@ -5817,7 +5743,6 @@ return (mod && mod.__esModule) ? mod : { "default": mod };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WsClient = void 0;
 const isomorphic_ws_1 = __importDefault(node);
-const msgpack = __importStar(require$$0);
 
 /**
 * A Websocket client which can make requests and receive responses,
@@ -5826,27 +5751,65 @@ const msgpack = __importStar(require$$0);
 * Uses Holochain's websocket WireMessage for communication.
 */
 class WsClient {
-constructor(socket) {
+constructor(socket, signalCb) {
   this.socket = socket;
   this.pendingRequests = {};
+  this.index = 0;
   // TODO: allow adding signal handlers later
+  this.alreadyWarnedNoSignalCb = false;
+  socket.onmessage = (encodedMsg) => __awaiter(this, void 0, void 0, function* () {
+      let data = encodedMsg.data;
+      // If data is not a buffer (nodejs), it will be a blob (browser)
+      if (typeof Buffer === "undefined" || !Buffer.isBuffer(data)) {
+          data = yield data.arrayBuffer();
+      }
+      const msg = msgpack_1.decode(data);
+      if (msg.type === "Signal") {
+          if (signalCb) {
+              const decodedMessage = msgpack_1.decode(msg.data);
+              // Note: holochain currently returns signals as an array of two values: cellId and the serialized signal payload
+              // and this array is nested within the App key within the returned message.
+              const decodedCellId = decodedMessage.App[0];
+              // Note:In order to return readible content to the UI, the signal payload must also be decoded.
+              const decodedPayload = signalTransform(decodedMessage.App[1]);
+              // Return a uniform format to UI (ie: { type, data } - the same format as with callZome and appInfo...)
+              const signal = {
+                  type: msg.type,
+                  data: { cellId: decodedCellId, payload: decodedPayload },
+              };
+              signalCb(signal);
+          }
+          else {
+              if (!this.alreadyWarnedNoSignalCb)
+                  console.log(`Received signal but no signal callback was set in constructor`);
+              this.alreadyWarnedNoSignalCb = true;
+          }
+      }
+      else if (msg.type === "Response") {
+          this.handleResponse(msg);
+      }
+      else {
+          console.error(`Got unrecognized Websocket message type: ${msg.type}`);
+      }
+  });
 }
 emitSignal(data) {
-  const encodedMsg = msgpack.encode({
-      type: 'Signal',
-      data: msgpack.encode(data),
+  const encodedMsg = msgpack_1.encode({
+      type: "Signal",
+      data: msgpack_1.encode(data),
   });
   this.socket.send(encodedMsg);
 }
 request(data) {
-  const id = nanoid_1.nanoid();
-  const encodedMsg = msgpack.encode({
+  let id = this.index;
+  this.index += 1;
+  const encodedMsg = msgpack_1.encode({
       id,
-      type: 'Request',
-      data: msgpack.encode(data),
+      type: "Request",
+      data: msgpack_1.encode(data),
   });
-  const promise = new Promise((fulfill) => {
-      this.pendingRequests[id] = { fulfill };
+  const promise = new Promise((fulfill, reject) => {
+      this.pendingRequests[id] = { fulfill, reject };
   });
   if (this.socket.readyState === this.socket.OPEN) {
       this.socket.send(encodedMsg);
@@ -5856,12 +5819,27 @@ request(data) {
   }
   return promise;
 }
+handleResponse(msg) {
+  const id = msg.id;
+  if (this.pendingRequests[id]) {
+      // resolve response
+      if (msg.data === null || msg.data === undefined) {
+          this.pendingRequests[id].reject(new Error(`Response canceled by responder`));
+      }
+      else {
+          this.pendingRequests[id].fulfill(msgpack_1.decode(msg.data));
+      }
+  }
+  else {
+      console.error(`Got response with no matching request. id=${id}`);
+  }
+}
 close() {
   this.socket.close();
   return this.awaitClose();
 }
 awaitClose() {
-  return new Promise((resolve) => this.socket.on('close', resolve));
+  return new Promise((resolve) => this.socket.on("close", resolve));
 }
 static connect(url, signalCb) {
   return new Promise((resolve, reject) => {
@@ -5873,47 +5851,14 @@ static connect(url, signalCb) {
           reject(new Error(`could not connect to holochain conductor, please check that a conductor service is running and available at ${url}`));
       };
       socket.onopen = () => {
-          const hw = new WsClient(socket);
-          socket.onmessage = (encodedMsg) => __awaiter(this, void 0, void 0, function* () {
-              let data = encodedMsg.data;
-              // If data is not a buffer (nodejs), it will be a blob (browser)
-              if (typeof Buffer === "undefined" || !Buffer.isBuffer(data)) {
-                  data = yield data.arrayBuffer();
-              }
-              const msg = msgpack.decode(data);
-              if (signalCb && msg.type === 'Signal') {
-                  const decodedMessage = msgpack.decode(msg.data);
-                  // Note: holochain currently returns signals as an array of two values: cellId and the seralized signal payload
-                  // and this array is nested within the App key within the returned message.
-                  const decodedCellId = decodedMessage.App[0];
-                  // Note:In order to return readible content to the UI, the signal payload must also be decoded.
-                  const decodedPayload = signalTransform(decodedMessage.App[1]);
-                  // Return a uniform format to UI (ie: { type, data } - the same format as with callZome and appInfo...)
-                  const signal = { type: msg.type, data: { cellId: decodedCellId, payload: decodedPayload } };
-                  signalCb(signal);
-              }
-              else if (msg.type === 'Response') {
-                  const id = msg.id;
-                  if (hw.pendingRequests[id]) {
-                      // resolve response
-                      hw.pendingRequests[id].fulfill(msgpack.decode(msg.data));
-                  }
-                  else {
-                      console.error(`Got response with no matching request. id=${id}`);
-                  }
-              }
-              else {
-                  console.error(`Got unrecognized Websocket message type: ${msg.type}`);
-              }
-          });
-          resolve(hw);
+          resolve(new WsClient(socket, signalCb));
       };
   });
 }
 }
 exports.WsClient = WsClient;
 const signalTransform = (res) => {
-return msgpack.decode(res);
+return msgpack_1.decode(res);
 };
 
 });
@@ -6026,9 +5971,12 @@ constructor(client, defaultTimeout) {
   this.generateAgentPubKey = this._requester('generate_agent_pub_key');
   this.registerDna = this._requester('register_dna');
   this.installApp = this._requester('install_app');
+  this.installAppBundle = this._requester('install_app_bundle');
+  this.createCloneCell = this._requester('create_clone_cell');
   this.listDnas = this._requester('list_dnas');
   this.listCellIds = this._requester('list_cell_ids');
   this.listActiveApps = this._requester('list_active_apps');
+  this.listAppInterfaces = this._requester('list_app_interfaces');
   this.requestAgentInfo = this._requester('request_agent_info');
   this.addAgentInfo = this._requester('add_agent_info');
   this.client = client;
@@ -6052,25 +6000,6 @@ output: (res) => {
 });
 
 var app$1 = createCommonjsModule(function (module, exports) {
-var __createBinding = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-if (k2 === undefined) k2 = k;
-Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-if (k2 === undefined) k2 = k;
-o[k2] = m[k];
-}));
-var __setModuleDefault = (commonjsGlobal && commonjsGlobal.__setModuleDefault) || (Object.create ? (function(o, v) {
-Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-o["default"] = v;
-});
-var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
-if (mod && mod.__esModule) return mod;
-var result = {};
-if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-__setModuleDefault(result, mod);
-return result;
-};
 var __awaiter = (commonjsGlobal && commonjsGlobal.__awaiter) || function (thisArg, _arguments, P, generator) {
 function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
 return new (P || (P = Promise))(function (resolve, reject) {
@@ -6099,7 +6028,7 @@ exports.AppWebsocket = void 0;
 *        console.error('problem installing DNA:', err)
 *      })
 */
-const msgpack = __importStar(require$$0);
+
 
 
 
@@ -6121,17 +6050,16 @@ static connect(url, defaultTimeout, signalCb) {
 exports.AppWebsocket = AppWebsocket;
 const callZomeTransform = {
 input: (req) => {
-  req.payload = msgpack.encode(req.payload);
-  return req;
+  return Object.assign(Object.assign({}, req), { payload: Buffer.from(msgpack_1.encode(req.payload)) });
 },
 output: (res) => {
-  return msgpack.decode(res);
+  return msgpack_1.decode(res);
 }
 };
 
 });
 
-var require$$0$1 = /*@__PURE__*/getAugmentedNamespace(admin);
+var require$$0 = /*@__PURE__*/getAugmentedNamespace(admin);
 
 var require$$1 = /*@__PURE__*/getAugmentedNamespace(app);
 
@@ -6147,7 +6075,7 @@ var __exportStar = (commonjsGlobal && commonjsGlobal.__exportStar) || function(m
 for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require$$0$1, exports);
+__exportStar(require$$0, exports);
 __exportStar(require$$1, exports);
 __exportStar(types, exports);
 __exportStar(admin$1, exports);
@@ -6170,7 +6098,7 @@ exports.HOLO_CONDUCTOR_DEFAULT_PORT = 42233;
 exports.HC_CONFIG_PATH = exports.rootPath;
 exports.APP_ID = "joining-code-factory:alpha1:0001";
 exports.DNA_NICK = "jcf";
-exports.OPS_CONSOLE_API = "https://registration-api.holotest.net";
+exports.OPS_CONSOLE_API = "https://registration-api.holo.host";
 exports.HAPP_NAME = "Elemental%20Chat";
 });
 
@@ -7773,7 +7701,7 @@ ctor.prototype.constructor = ctor;
 
 var inherits = createCommonjsModule(function (module) {
 try {
-var util = require$$0__default['default'];
+var util = require$$0__default$1['default'];
 /* istanbul ignore next */
 if (typeof util.inherits !== 'function') throw '';
 module.exports = util.inherits;
@@ -10189,9 +10117,9 @@ rnd = null;
 
 // make sure that we do not fail because we ran out of entropy
 try {
-rnd = crypto__default['default'].randomBytes(howMany);
+rnd = require$$0__default['default'].randomBytes(howMany);
 } catch (e) {
-rnd = crypto__default['default'].pseudoRandomBytes(howMany);
+rnd = require$$0__default['default'].pseudoRandomBytes(howMany);
 }
 
 for (var i = 0; i < howMany; i++) {
@@ -16403,7 +16331,7 @@ return new Promise((resolve, reject) => {
                   const agent_key = yield agentKey(adminWebsocket);
                   console.log(JSON.stringify(agent_key));
                   console.log("Registering DNA:");
-                  const dnaHash = yield adminWebsocket.registerDna({ source: { path: path_1.default.join(config.rootPath, '../../dna', 'joining-code-factory.dna.gz') } });
+                  const dnaHash = yield adminWebsocket.registerDna({ path: path_1.default.join(config.rootPath, '../../dna', 'joining-code-factory.dna') });
                   console.log("DNA registered");
                   console.log("Installing app");
                   yield adminWebsocket.installApp({
@@ -16484,7 +16412,7 @@ return __awaiter(this, void 0, void 0, function* () {
   const { cell_data } = infoResult;
   const cell = cell_data[0]; //cell_data.find(cell => cell[1] === DNA_NICK)
   // @ts-ignore
-  const cell_id = cell[0];
+  const cell_id = cell.cell_id;
   const [_dnaHash, provenance] = cell_id;
   const zomeCallRequest = {
       cap: fakeCapSecret(),
@@ -16504,7 +16432,7 @@ return __awaiter(this, void 0, void 0, function* () {
   const { cell_data } = infoResult;
   const cell = cell_data[0]; //cell_data.find(cell => cell[1] === DNA_NICK)
   // @ts-ignore
-  const cell_id = cell[0];
+  const cell_id = cell.cell_id;
   const [_dnaHash, provenance] = cell_id;
   return provenance;
 });
@@ -21068,12 +20996,12 @@ for (var key in obj) {
 return keys;
 };
 
-var require$$0$2 = /*@__PURE__*/getAugmentedNamespace(wasm_key_manager);
+var require$$0$1 = /*@__PURE__*/getAugmentedNamespace(wasm_key_manager);
 
 const {
 KeyManager: KeyManager$1,
 deriveSeedFrom: deriveSeedFrom$1
-} = require$$0$2;
+} = require$$0$1;
 
 
 
@@ -22871,14 +22799,14 @@ addExtension: addExtension$1,
 FLOAT32_OPTIONS: FLOAT32_OPTIONS$1
 });
 
-var require$$0$3 = /*@__PURE__*/getAugmentedNamespace(pack$2);
+var require$$0$2 = /*@__PURE__*/getAugmentedNamespace(pack$2);
 
 var browser = createCommonjsModule(function (module, exports) {
-exports.Packr = require$$0$3.Packr;
+exports.Packr = require$$0$2.Packr;
 exports.Encoder = exports.Packr;
 exports.Unpackr = require$$1$1.Unpackr;
 exports.Decoder = exports.Unpackr;
-exports.addExtension = require$$0$3.addExtension;
+exports.addExtension = require$$0$2.addExtension;
 let packr = new exports.Packr({ useRecords: false });
 exports.unpack = packr.unpack;
 exports.unpackMultiple = packr.unpackMultiple;
