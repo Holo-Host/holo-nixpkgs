@@ -318,4 +318,11 @@ in
   users.users.holo.isNormalUser = true;
 
   users.users.root.hashedPassword = "*";
+
+  profiles.development = {
+    enable = true;
+    features.ssh = {
+      enable = true;
+    };
+  };
 }
