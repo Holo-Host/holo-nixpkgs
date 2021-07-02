@@ -270,6 +270,10 @@ in
           cell_nick = "elemental-chat";
           proof = "AA==";  #read-only membrane proof
         }
+        {
+          cell_nick = "elemental-chess";
+          proof = "AA==";  #read-only membrane proof
+        }
       ];
     };
   };
