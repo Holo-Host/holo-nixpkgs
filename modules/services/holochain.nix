@@ -37,7 +37,7 @@ in
       requires = [ "holo-envoy.service" ];
       wantedBy = [ "multi-user.target" ];
 
-      environment.RUST_LOG = "debug";
+      environment.RUST_LOG = "trace";
       environment.HC_LMDB_SIZE = cfg.hc-lmdb-size;
 
       preStart = ''
