@@ -9,8 +9,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
       owner = "Holo-Host";
       repo = "matching-engine";
-      rev = "169f5ef21389e896e48bce241e00bd757182dc3f";
-      sha256 = "1pp6rwhc25q848nfarg7ac6s0z6nw2zikdi9ad9757lyimi0b1cz";
+      rev = "15f0f1d0a8623260dac8f66ae8a5a051a3e969e5";
+      sha256 = "18sl51rsrycad5x7489mcgkvvvb06z407mmabhs4n6x3zd607zqy";
       private = true;
     };
 
@@ -32,6 +32,9 @@ stdenv.mkDerivation rec {
     
     makeWrapper ${python3}/bin/python3 $out/bin/${name}-uploader \
       --add-flags $out/uploader/upload_script.py
+
+    makeWrapper ${python3}/bin/python3 $out/bin/${name}-stats \
+      --add-flags $out/ops_console_stats/daily_uptime.py
   '';
 
   meta.platforms = platforms.linux;
