@@ -112,6 +112,11 @@ in
     credentialsDir = matchServerCredentialsDir;
   };
 
+  services.daily-uptime-calculator = {
+    enable = true;
+    credentialsDir = matchServerCredentialsDir;
+  };
+
   services.match-service-api = {
     enable = true;
     socket = matchServiceApiSocket;

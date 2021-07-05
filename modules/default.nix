@@ -13,6 +13,7 @@ with lib;
     ./profiles/hpos-admin-features.nix
     ./services/aorura-emu.nix
     ./services/automount.nix
+    ./services/daily-uptime-calculator.nix
     ./services/holo-auth-client.nix
     ./services/holo-auto-installer.nix
     ./services/holo-router-agent.nix
