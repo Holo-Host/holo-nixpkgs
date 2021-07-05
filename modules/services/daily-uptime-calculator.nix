@@ -8,7 +8,7 @@ in
 
 {
   options.services.daily-uptime-calculator = {
-    enable = mkEnableOption "KV Uploader";
+    enable = mkEnableOption "Daily Uptime Calculator";
 
     package = mkOption {
       default = pkgs.matching-engine;
