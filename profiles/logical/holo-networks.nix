@@ -1,7 +1,7 @@
 {
   # Default network, must be defined
-  mainNet = {
-    networkName = "mainNet";
+  alphaNet = {
+    networkName = "alphaNet";
     zerotierNetworkID = "93afae5963c547f1";
     hposDomain = "holohost.net";
     routerRegistry = {
