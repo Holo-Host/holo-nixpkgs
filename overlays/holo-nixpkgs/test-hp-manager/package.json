@@ -1,0 +1,26 @@
+{
+  "name": "test-holoports-monitor",
+  "version": "0.0.1",
+  "description": "Script for testing uptime of holoports assigned for test",
+  "main": "src/index.js",
+  "bin": {
+    "test-holoports-monitor": "src/index.js",
+    "test-holoports-switcher": "src/switcher.js"
+  },
+  "repository": "https://github.com/Holo-Host/test-holoports-monitor.git",
+  "author": "peeech <pj@imagine-nyc.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.cjs"
+  },
+  "dependencies": {
+    "mongodb": "=3.6.3",
+    "mongodb-client-encryption": "^1.2.5",
+    "yargs": "^16.2.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.4.0",
+    "webpack-cli": "^4.7.2"
+  }
+}
