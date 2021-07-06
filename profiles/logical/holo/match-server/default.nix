@@ -12,6 +12,12 @@ let
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
 
   settings = import ../../global-settings.nix { inherit config; };
+
+  
+  test-holoports-switcher = writeShellScriptBin "test-holoports-switcher" ''
+    ${test-hp-manager}/bin/test-holoports-switcher --ssh-key-path ${matchServerCredentialsDir}/id_rsa --config-path ${matchServerCredentialsDir}/config.json --target-channel "$@"
+  '';
+
 in
 
 {
@@ -19,7 +25,7 @@ in
     ../.
   ];
 
-  environment.systemPackages = [ hc-state git hpos-update-cli hpos-holochain-client holochain hc kitsune-p2p-proxy ];
+  environment.systemPackages = [ hc-state git hpos-update-cli hpos-holochain-client holochain hc kitsune-p2p-proxy test-holoports-switcher ];
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
@@ -167,4 +173,9 @@ in
   users.users.nginx.extraGroups = [ "apis" ];
 
   services.hpos-holochain-api.enable = true; # Temporary
+
+  services.ssh-pinger = {
+    enable = true;
+    credentialsDir = matchServerCredentialsDir;
+  };
 }
