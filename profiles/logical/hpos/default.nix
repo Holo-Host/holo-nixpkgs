@@ -3,19 +3,23 @@
 with pkgs;
 
 let
-  settings = import ../global-settings.nix { inherit config; };
+  settings = import ../global-settings.nix;
 
-  acmeCfg = config.security.acme.certs."${settings.holoNetwork.networkName}";
+  networks = import ../holo-networks.nix;
+
+  holoNetwork = networks.selectNetwork config.system.holoNetwork;
+
+  acmeCfg = config.security.acme.certs."${holoNetwork.networkName}";
 
   holo-router-acme = writeShellScriptBin "holo-router-acme" ''
     base36_id=$(${hpos-config}/bin/hpos-config-into-base36-id < "$HPOS_CONFIG_PATH")
-    until $(${curl}/bin/curl --fail --head --insecure --max-time 10 --output /dev/null --silent "https://$base36_id.${settings.holoNetwork.hposDomain}"); do
+    until $(${curl}/bin/curl --fail --head --insecure --max-time 10 --output /dev/null --silent "https://$base36_id.${holoNetwork.hposDomain}"); do
       sleep 5
     done
     ${simp_le}/bin/simp_le \
       --default_root ${acmeCfg.webroot} \
       --valid_min ${toString (config.security.acme.validMinDays * 24 * 60 * 60)} \
-      -d "$base36_id.${settings.holoNetwork.hposDomain}" \
+      -d "$base36_id.${holoNetwork.hposDomain}" \
       -f fullchain.pem \
       -f full.pem \
       -f chain.pem \
@@ -88,7 +92,7 @@ in
 
   services.holo-router-agent = {
     enable = lib.mkDefault true;
-    registryUrl = settings.holoNetwork.routerRegistry.url;
+    registryUrl = holoNetwork.routerRegistry.url;
   };
 
   services.hp-admin-crypto-server.enable = true;
@@ -99,19 +103,19 @@ in
 
   services.hpos-init = {
     enable = lib.mkDefault true;
-    networkName = settings.holoNetwork.networkName;
+    networkName = holoNetwork.networkName;
   };
 
   services.lair-keystore.enable = true;
 
   services.mingetty.autologinUser = "root";
 
-  services.hpos-led-manager.kitsuneAddress = settings.holoNetwork.proxy.kitsuneAddress;
+  services.hpos-led-manager.kitsuneAddress = holoNetwork.proxy.kitsuneAddress;
 
   services.nginx = {
     enable = true;
 
-    virtualHosts."${settings.holoNetwork.networkName}" = {
+    virtualHosts."${holoNetwork.networkName}" = {
       enableACME = true;
       onlySSL = true;
       locations = {
@@ -221,7 +225,7 @@ in
         }
       ];
       network = {
-        bootstrap_service = settings.holoNetwork.bootstrapUrl;
+        bootstrap_service = holoNetwork.bootstrapUrl;
         network_type = "quic_bootstrap";
         transport_pool = [{
           type = "proxy";
@@ -230,7 +234,7 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = settings.holoNetwork.proxy.kitsuneAddress;
+            proxy_url = holoNetwork.proxy.kitsuneAddress;
           };
         }];
         tuning_params = {
@@ -289,7 +293,7 @@ in
 
   services.zerotierone = {
     enable = lib.mkDefault true;
-    joinNetworks = [ settings.holoNetwork.zerotierNetworkID ];
+    joinNetworks = [ holoNetwork.zerotierNetworkID ];
   };
 
   system.holo-nixpkgs.autoUpgrade = {
@@ -302,14 +306,16 @@ in
     filename = "hpos-reset";
   };
 
-  systemd.services."acme-${settings.holoNetwork.networkName}" = {
+  system.stateVersion = "20.09";
+
+  system.holoNetwork = settings.holoNetwork;
+
+  systemd.services."acme-${holoNetwork.networkName}" = {
     serviceConfig = {
       ExecStart = lib.mkForce "${holo-router-acme}/bin/holo-router-acme";
       WorkingDirectory = lib.mkForce "${acmeCfg.directory}";
     };
   };
-
-  system.stateVersion = "20.09";
 
   users.groups.apis = {};
 
