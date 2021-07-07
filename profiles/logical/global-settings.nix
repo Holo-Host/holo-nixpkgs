@@ -1,3 +1,3 @@
 {
-  holoNetwork = "devNet";
+  holoNetwork = "flexNet";
 }
