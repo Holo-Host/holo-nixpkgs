@@ -144,7 +144,7 @@ rec {
   );
 
   holochainMeta = callPackage ./holochain {
-    inherit (rust.packages.stable) rustPlatform;
+    inherit (rust.packages.v1_53_0) rustPlatform;
   };
 
   inherit (holochainMeta)
@@ -170,7 +170,7 @@ rec {
 
   # expose all versions to make hydra build them
   holochain_main = holochainAllBinariesWithDeps.main.holochain;
-  dna-util_main = holochainAllBinariesWithDeps.main.dna-util;
+  hc_main = holochainAllBinariesWithDeps.main.hc;
   lair-keystore_main = holochainAllBinariesWithDeps.main.lair-keystore;
   kitsune-p2p-proxy_main = holochainAllBinariesWithDeps.main.kitsune-p2p-proxy;
   holochain_develop = holochainAllBinariesWithDeps.develop.holochain;
@@ -273,17 +273,27 @@ rec {
       "x86_64-pc-windows-gnu"
       "x86_64-unknown-linux-musl"
     ];
+    extensions = [
+      "rust-src"
+    ];
 
     rustNightly = (rustChannelOf {
       channel = "nightly";
       date = "2019-11-16";
       sha256 = "17l8mll020zc0c629cypl5hhga4hns1nrafr7a62bhsp4hg9vswd";
-    }).rust.override { inherit targets; };
+    }).rust.override { inherit targets extensions; };
 
-    rustStable = (rustChannelOf {
+    rust_1_52_0 = (rustChannelOf {
       channel = "1.52.0";
       sha256 = "0qzaq3hsxh7skxjix4d4k38rv0cxwwnvi32arg08p11cxvpsmikx";
-    }).rust.override { inherit targets; };
+    }).rust.override { inherit targets extensions; };
+
+    rust_1_53_0 = (rustChannelOf {
+      channel = "1.53.0";
+      sha256 = "1p4vxwv28v7qmrblnvp6qv8dgcrj8ka5c7dw2g2cr3vis7xhflaa";
+    }).rust.override { inherit targets extensions; };
+
+    rustStable = rust_1_52_0;
   in {
     packages = previous.rust.packages // {
       nightly = {
@@ -302,6 +312,15 @@ rec {
         };
 
         inherit (final.rust.packages.stable.rustPlatform) rust;
+      };
+
+      v1_53_0 = {
+        rustPlatform = final.makeRustPlatform {
+          rustc = rust_1_53_0;
+          cargo = rust_1_53_0;
+        };
+
+        inherit (final.rust.packages.v1_53_0.rustPlatform) rust;
       };
     };
   });
