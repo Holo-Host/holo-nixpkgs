@@ -63,15 +63,7 @@ in
         }];
         tuning_params = {
           gossip_loop_iteration_delay_ms = 1000; # Default was 10
-          default_notify_remote_agent_count = 5;
-          default_notify_timeout_ms = 1000;
-          default_rpc_single_timeout_ms = 20000;
-          default_rpc_multi_remote_agent_count = 2;
-          default_rpc_multi_timeout_ms = 2000;
           agent_info_expires_after_ms = 1000 * 60 * 30; #// Default was 20 minutes
-          tls_in_mem_session_storage = 512;
-          proxy_keepalive_ms = 1000 * 60 * 2;
-          proxy_to_expire_ms = 1000 * 60 * 5;
         };
       };
     };
@@ -156,12 +148,6 @@ in
         locations."/holochain-api/".proxyPass = "http://unix:/run/hpos-holochain-api/hpos-holochain-api.sock:/";
       };
   };
-
-#  security.acme = {
-#    acceptTerms = true;
-#    # REVIEW: maybe a dedicated email for Hydra?
-#    email = "oleksii.filonenko@holo.host";
-#  };
 
   system.holo-nixpkgs.autoUpgrade = {
     enable = lib.mkDefault true;

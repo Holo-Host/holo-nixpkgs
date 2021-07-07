@@ -26,7 +26,7 @@ in
     systemd.services.ssh-pinger = {
       after = [ "network.target" "holochain.service" "configure-holochain.service"];
       requisite = [ "holochain.service" ]; 
-      startAt = "*:5/120";
+      startAt = "00/2:30";
       
       serviceConfig = {
         ExecStart = "${pkgs.nodejs}/bin/node --no-warnings ${cfg.package}/bin/test-holoports-monitor --ssh-key-path=${cfg.credentialsDir}/id_rsa --config-path=${cfg.credentialsDir}/config.json";
