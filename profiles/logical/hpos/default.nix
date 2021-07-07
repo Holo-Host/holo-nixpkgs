@@ -282,12 +282,7 @@ in
       ];
     };
     membrane-proofs = {
-      payload = [
-        {
-          cell_nick = "elemental-chat";
-          proof = "AA==";  #read-only membrane proof
-        }
-      ];
+      payload = [];
     };
   };
 
