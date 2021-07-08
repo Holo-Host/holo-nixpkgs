@@ -325,10 +325,12 @@ in
 
   users.users.root.hashedPassword = "*";
 
-  profiles.development = {
-    enable = true;
-    features.ssh = {
-      enable = true;
+  profiles.development = mkIf (holoNetwork.enforceHoloSsh) {
+    enable = mkForce true;
+    features = mkForce {
+      ssh = {
+        enable = true;
+      };
     };
   };
 }
