@@ -325,9 +325,9 @@ in
 
   users.users.root.hashedPassword = "*";
 
-  profiles.development = mkIf (holoNetwork.enforceHoloSsh) {
-    enable = mkForce true;
-    features = mkForce {
+  profiles.development = lib.mkIf (holoNetwork.enforceHoloSsh) {
+    enable = lib.mkForce true;
+    features = lib.mkForce {
       ssh = {
         enable = true;
       };
