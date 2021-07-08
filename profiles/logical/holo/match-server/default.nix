@@ -75,6 +75,8 @@ in
     };
   };
 
+  systemd.globalEnvironment.DEV_UID_OVERRIDE = "pre-release-01";
+  
   services.configure-holochain = {
     enable = true;
     working-directory = configureHolochainWorkingDir;
