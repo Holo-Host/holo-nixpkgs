@@ -17,6 +17,7 @@ rec {
         certFile = "proxy.cert";
         kitsuneAddress = "kitsune-proxy://${pubKey}/kitsune-quic/h/${ipAddress}/p/${port}/--";
       };
+      enforceHoloSsh = true;
     };
 
     devNet = {
@@ -35,6 +36,7 @@ rec {
         certFile = "proxy.cert";
         kitsuneAddress = "kitsune-proxy://${pubKey}/kitsune-quic/h/${ipAddress}/p/${port}/--";
       };
+      enforceHoloSsh = true;
     };
 
     flexNet = {
@@ -53,6 +55,7 @@ rec {
         certFile = "proxy.cert";
         kitsuneAddress = "kitsune-proxy://${pubKey}/kitsune-quic/h/${ipAddress}/p/${port}/--";
       };
+      enforceHoloSsh = true;
     };
   };
 
