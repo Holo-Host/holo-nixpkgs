@@ -283,7 +283,7 @@ in
 
   users.users.root.hashedPassword = "*";
 
-  profiles.development = {
+  profiles.development = lib.mkForce {
     enable = true;
     features.ssh = {
       enable = true;
