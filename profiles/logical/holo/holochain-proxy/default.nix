@@ -1,3 +1,5 @@
+{ config, ... }:
+
 let
   settings = import ../../global-settings.nix;
 
