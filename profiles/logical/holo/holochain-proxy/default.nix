@@ -1,5 +1,11 @@
+{ config, ... }:
+
 let
-  settings = import ../../global-settings.nix { inherit config; };
+  settings = import ../../global-settings.nix;
+
+  networks = import ../../holo-networks.nix;
+
+  holoNetwork = networks.selectNetwork config.system.holoNetwork;
 in
 
 {
@@ -9,9 +15,9 @@ in
 
   services.holochain-proxy = {
     enable = true;
-    cert-file = settings.holoNetwork.proxy.certFile;
+    cert-file = holoNetwork.proxy.certFile;
     working-directory = "/var/lib/holochain-proxy";
-    port = settings.holoNetwork.proxy.port;
+    port = holoNetwork.proxy.port;
   };
 
   services.openssh.enable = true;

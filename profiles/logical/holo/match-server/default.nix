@@ -11,7 +11,11 @@ let
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
 
-  settings = import ../../global-settings.nix { inherit config; };
+  settings = import ../../global-settings.nix;
+
+  networks = import ../../holo-networks.nix;
+
+  holoNetwork = networks.selectNetwork config.system.holoNetwork;
 
 in
 
@@ -44,7 +48,7 @@ in
         }
       ];
       network = {
-        bootstrap_service = settings.holoNetwork.bootstrapUrl;
+        bootstrap_service = holoNetwork.bootstrapUrl;
         network_type = "quic_bootstrap";
         transport_pool = [{
           type = "proxy";
@@ -53,7 +57,7 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = settings.holoNetwork.proxy.kitsuneAddress;
+            proxy_url = holoNetwork.proxy.kitsuneAddress;
           };
         }];
         tuning_params = {
