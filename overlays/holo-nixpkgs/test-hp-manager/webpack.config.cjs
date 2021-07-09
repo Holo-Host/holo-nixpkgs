@@ -8,7 +8,8 @@ module.exports = {
   },
   entry: {
     pingCheck: "./src/index.js",
-    channelSwitch: "./src/switcher.js"
+    channelSwitch: "./src/switcher.js",
+    rebooter: "./src/rebooter.js"
 },
   module: {
     rules: [

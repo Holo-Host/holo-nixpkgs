@@ -1,4 +1,4 @@
-const { getTestHoloports, getHoloportDetails, insertPingResults } = require('./data-handler')
+const { getTestHoloports, getHoloportDetails, disableUnswitchedHoloports } = require('./data-handler')
 const { getAllPingResults } = require('./ping-utils')
 const { closeDb } = require('./database')
 
@@ -15,6 +15,7 @@ async function run() {
   const failedSwitch = channelSwitchResults.filter(function(hp){ return !hp.success })
   console.log(`Failed to switch ${failedSwitch.length} holoports to channel`)
   console.log("Unswitched holoports are: \n", failedSwitch)
+  await disableUnswitchedHoloports(failedSwitch)  
 }
 
 run()

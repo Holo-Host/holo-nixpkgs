@@ -13,11 +13,6 @@ let
 
   settings = import ../../global-settings.nix { inherit config; };
 
-  
-  test-holoports-switcher = writeShellScriptBin "test-holoports-switcher" ''
-    ${test-hp-manager}/bin/test-holoports-switcher --ssh-key-path ${matchServerCredentialsDir}/id_rsa --config-path ${matchServerCredentialsDir}/config.json --target-channel "$@"
-  '';
-
 in
 
 {
@@ -25,7 +20,7 @@ in
     ../.
   ];
 
-  environment.systemPackages = [ hc-state git hpos-update-cli hpos-holochain-client holochain hc kitsune-p2p-proxy test-holoports-switcher ];
+  environment.systemPackages = [ hc-state git hpos-update-cli hpos-holochain-client holochain hc kitsune-p2p-proxy ];
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 

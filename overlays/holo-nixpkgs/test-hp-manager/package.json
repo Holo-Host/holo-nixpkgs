@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "bin": {
     "test-holoports-monitor": "src/index.js",
-    "test-holoports-switcher": "src/switcher.js"
+    "test-holoports-switcher": "src/switcher.js",
+    "test-holoports-rebooter": "src/rebooter.js"
   },
   "repository": "https://github.com/Holo-Host/test-holoports-monitor.git",
   "author": "peeech <pj@imagine-nyc.com>",
