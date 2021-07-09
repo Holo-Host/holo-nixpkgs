@@ -9,8 +9,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
       owner = "Holo-Host";
       repo = "matching-engine";
-      rev = "7f3e652a2132c60f27908d8120db320a76a8a5b2";
-      sha256 = "1k2yrkmvx85c4w6di9hcq7d585vdawkq7qsc2fn8gc4ncgz3jh0r";
+      rev = "74632c7c626f8095c223c9570d657df196f59802";
+      sha256 = "1i1x9zcc4kg2xd2bdksg2hjvjcf8fmx4gm0yv0gcmrpf4iw36i9f";
       private = true;
     };
 
