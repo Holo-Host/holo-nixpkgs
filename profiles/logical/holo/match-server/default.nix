@@ -169,4 +169,6 @@ in
   users.users.nginx.extraGroups = [ "apis" ];
 
   services.hpos-holochain-api.enable = true; # Temporary
+
+  system.holoNetwork = settings.holoNetwork;
 }
