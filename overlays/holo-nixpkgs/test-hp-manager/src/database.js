@@ -23,7 +23,7 @@ module.exports.getDb = async () => {
   // Connection URL
   const url = `mongodb+srv://${username}:${password}@cluster0.hjwna.mongodb.net/${dbName}?retryWrites=true&w=majority`
 
-  // Open db connection and store it in global db (instanton pattern)
+  // Open db connection and store it in global db (singleton pattern)
   console.log('Connecting to db...')
   client = new MongoClient(url, {
     useUnifiedTopology: true
