@@ -27,6 +27,10 @@ in
     working-directory = mkOption {
       type = types.path;
     };
+
+    restart-interval = mkOption {
+      type = types.str;
+    };
   };
 
   config = mkIf (cfg.enable) {
@@ -54,7 +58,18 @@ in
         RestartSec = 1;
         Type = "notify";
         NotifyAccess = "exec";
+        LimitNOFILE = 524288;
       };
+    };
+
+    systemd.services.holochain-restarter = {
+      serviceConfig.Type = "oneshot";
+
+      script = ''
+        /run/current-system/sw/bin/systemctl try-restart holochain.service
+      '';
+
+      startAt = cfg.restart-interval;
     };
 
     users.users.holochain-rsm = {

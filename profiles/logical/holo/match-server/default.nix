@@ -33,6 +33,7 @@ in
 
   services.holochain = lib.mkDefault {
     enable = true;
+    restart-interval = "00/2:30"; # every 2 hours at 30 past
     working-directory = holochainWorkingDir;
     config = {
       environment_path = "${holochainWorkingDir}/databases_lmdb4";
@@ -75,6 +76,8 @@ in
     };
   };
 
+  systemd.globalEnvironment.DEV_UID_OVERRIDE = "pre-release-01";
+  
   services.configure-holochain = {
     enable = true;
     working-directory = configureHolochainWorkingDir;
@@ -83,11 +86,11 @@ in
       core_happs = [
        {
          app_id = "core-app";
-         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha20/core-app.0_1_0_alpha20.happ";
+         bundle_url = "https://holo-host.github.io/holo-hosting-app-rsm/releases/downloads/0_1_0_alpha21/core-app.0_1_0_alpha21.happ";
        }
        {
          app_id = "servicelogger";
-         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/0_1_0_alpha8/servicelogger.0_1_0_alpha8.happ";
+         bundle_url = "https://holo-host.github.io/servicelogger-rsm/releases/downloads/0_1_0_alpha9/servicelogger.0_1_0_alpha9.happ";
        }
       ];
     };
