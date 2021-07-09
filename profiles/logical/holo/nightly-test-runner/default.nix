@@ -12,7 +12,7 @@ with pkgs;
 
   environment.systemPackages = [
     git
-    node
+    nodejs
     jq
   ];
 
