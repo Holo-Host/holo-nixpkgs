@@ -48,21 +48,3 @@ getCollection = async (name) => {
   db = await getDb()
   return await db.collection(name);
 }
-
-
-// {
-//   _id: { name: "$name", IP:"$IP"},
-//   holoNet: {$last: "$holoNet"},
-//   sshEntries: { 
-//     $push:  { 
-//       timestamp: {
-//         $toDate: "$timestamp"
-//       }, 
-//       success: "$success" 
-//       }
-//     }
-//  }
-
-//  {
-//   timestamp: 1
-// }
