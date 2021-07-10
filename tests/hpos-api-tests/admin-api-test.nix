@@ -10,7 +10,7 @@
     expected_settings = {
         "admin": {
             "email": "test@holo.host",
-            "public_key": "zQJsyuGmTKhMCJQvZZmXCwJ8/nbjSLF6cEe0vNOJqfM",
+            "public_key": "hcakbzubgzsxbuzgkqtaisqxwlgmxbmbhz7tw4nelc6tqi62lzu4jvhz4s74xei",
         },
         "example": "KbFzEiWEmM1ogbJbee2fkrA1",
     }

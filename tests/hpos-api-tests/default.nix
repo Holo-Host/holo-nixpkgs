@@ -15,14 +15,15 @@ makeTest {
     import json
 
     start_all()
-
     machine.succeed("mkdir /etc/hpos")
     machine.succeed("chgrp apis /etc/hpos")
     machine.succeed("chmod g+rwx /etc/hpos")
     machine.succeed(
-        "hpos-config-gen-cli --email test\@holo.host --password : --seed-from ${./seed.txt} > /etc/hpos/config.json"
+        "hpos-config-gen-cli --email test\@holo.host --password : --registration-code : --seed-from ${./seed.txt} > /etc/hpos/config.json"
     )
 
+    machine.wait_for_unit("lair-keystore.service")
+   
     ${admin-api-test}
     
     ${holochain-api-test}
