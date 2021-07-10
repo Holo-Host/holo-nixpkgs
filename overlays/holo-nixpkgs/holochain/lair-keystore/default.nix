@@ -1,7 +1,7 @@
 { stdenv, rustPlatform, fetchFromGitHub, lib, darwin, libiconv }:
 
 let
-  version = "v0.0.1-alpha.12";
+  version = "2142312299e3662d3c5f22318525c7918fba1868";
 in
 
 rustPlatform.buildRustPackage {
@@ -12,10 +12,10 @@ rustPlatform.buildRustPackage {
     owner = "holochain";
     repo = "lair";
     rev = version;
-    sha256 = "05p8j1yfvwqg2amnbqaphc6cd92k65dq10v3afdj0k0kj42gd6ic";
+    sha256 = "1qa80yswp7gf2am4g2c1xkibx9rw6r2nl5827sqaqskjyldgjyy1";
   };
 
-  cargoSha256 = "1x7gzndv8qax3wwv7imki9rrzm0l22qhf49bdkjjn6nb430fmlnk";
+  cargoSha256 = "1gl2jiabkhhkrn95snjrsnx2qjsypfhfrypv9zhfp54ghmkw9zsb";
 
   buildInputs = lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
     AppKit
