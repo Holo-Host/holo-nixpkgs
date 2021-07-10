@@ -3,7 +3,7 @@
 with pkgs;
 
 let
-  inherit (rust.packages.nightly) rustPlatform;
+  inherit (rust.packages.stable) rustPlatform;
   inherit (darwin.apple_sdk.frameworks) Security;
 in
 
@@ -15,11 +15,11 @@ in
     src = fetchFromGitHub {
         owner = "Holo-Host";
         repo = "hpos-config";
-        rev = "920bd38401edf0b5e81da489d5e519852d7b3218";
-        sha256 = "1sc4jhn4h0phxi1pn20c5wq7x8zs3d8dis9il7fdc5iiszki5413";
+        rev = "91a9e35547f7db492446857fccd83c54e705cb0e";
+        sha256 = "010ryvh37aa2wxcshgizasbfhw3g110ghgwvrvnfkv2klclam96s";
     };
 
-    cargoSha256 = "19fk595k9nrqgn5nwfxd0mnzw3is448q2lpgc8m20d92sw2az8fx";
+    cargoSha256 = "0mzcg419klhn7fab7za0m68m6yzgbazamx611lph4a7saqdmzz9i";
 
     nativeBuildInputs = [ perl ];
 
