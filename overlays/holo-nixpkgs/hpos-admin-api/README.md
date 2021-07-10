@@ -10,15 +10,15 @@ Traffic to the API is directed by `HP Dispatcher` and access authorization and v
 
 #### `200 OK`
 
-Gets `hpos-config.json` `v1.settings`.
+Gets `hpos-config.json` `v2.settings`.
 
 ```json
 {
-    "admin": {
-        "email": "sam.rose@holo.host",
-        "public_key": "Tw7179WYi/zSRLRSb6DWgZf4dhw5+b0ACdlvAw3WYH8"
-    },
-    "name": "My HoloPort" // name is not in the default hpos-config.json file but can be added via PUT endpoint
+  "admin": {
+    "email": "jack@holo.host",
+    "public_key": "hcakb6apsaoir7nx2pmalumlil7plg6w54wqwxiiiaj42g6z23x6jc6iepwfel4"
+  },
+  "name": "My HoloPort" // name is not in the default hpos-config.json file but can be added via PUT endpoint
 }
 ```
 
@@ -26,33 +26,35 @@ Gets `hpos-config.json` `v1.settings`.
 
 ### `PUT /config`
 
-Sets `hpos-config.json` `v1.settings`.
+Sets `hpos-config.json` `v2.settings`.
 
-Requires `x-hp-admin-cas` header set to Base64-encoded SHA-512 hash of `GET
-/v1/config` response body. Will only proceed if `holo-config.json` didn't
+Requires `x-hp-admin-cas` header set to Base64-encoded SHA-512 hash of `GET /v2/config` response body. Will only proceed if `holo-config.json` didn't
 change.
 
 Settings can take any valid json.
 
 ```json
 {
-    "admin": {
-        "email": "sam.rose@holo.host",
-        "name": "Holo Naut",
-        "public_key": "z4NA8s70Wyaa2kckSQ3S3V3eIi8yLPFFdad9L0CY3iw"
-    },
+  "admin": {
+    "email": "jack@holo.host",
+    "name": "Holo Naut",
+    "public_key": "hcakb6apsaoir7nx2pmalumlil7plg6w54wqwxiiiaj42g6z23x6jc6iepwfel4"
+  },
 
-    "name": "My HoloPort",
-    "myArbitraryField": ":)"
+  "name": "My HoloPort",
+  "myArbitraryField": ":)"
 }
 ```
 
 #### `200 OK`
+
 #### `400 Bad Request`
+
 #### `401 Unauthorized`
+
 #### `409 Conflict`
 
-Returned if CAS hash doesn't match current `hpos-state.json` `v1.config`.
+Returned if CAS hash doesn't match current `hpos-state.json` `v2.config`.
 
 ### `GET /profiles/<profile>/features/<feature>`
 
@@ -65,7 +67,7 @@ Note: currently the only profile (and the profile with SSH options) is `developm
 
 ```json
 {
-    "enabled": "boolean"
+  "enabled": "boolean"
 }
 ```
 
@@ -93,15 +95,15 @@ Prints immutable HoloPort status data.
 
 ```json
 {
-    "holo_nixpkgs": {
-        "channel": {
-            "name": "master",
-            "rev": "b13891c28d78f1e916fdefb5edc1d386e4f533c8"
-        },
-        "current_system": {
-            "rev": "4707080a5cba68e8bc215e22ef1c8e7d8e70791b"
-        }
+  "holo_nixpkgs": {
+    "channel": {
+      "name": "master",
+      "rev": "b13891c28d78f1e916fdefb5edc1d386e4f533c8"
+    },
+    "current_system": {
+      "rev": "4707080a5cba68e8bc215e22ef1c8e7d8e70791b"
     }
+  }
 }
 ```
 
@@ -111,5 +113,5 @@ Executes a 'Factory Reset' that wipes all user and registration data from the Ho
 Nothing is returned on success, since success wipes the HoloPort and disconnects the user from the HP admin UI.
 
 #### `400 Bad Request`
-#### `401 Unauthorized`
 
+#### `401 Unauthorized`
