@@ -39,6 +39,8 @@ let
 
   holochainWorkingDir = "/var/lib/holochain-rsm";
 
+  hostedUisDir = "/var/lib/hosted-uis";
+
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
 in
 
@@ -99,7 +101,10 @@ in
 
   services.hpos-admin-api.enable = true;
 
-  services.hpos-holochain-api.enable = true;
+  services.hpos-holochain-api = lib.mkDefault {
+    enable = true;
+    hosted-uis-directory = hostedUisDir;
+  };
 
   services.hpos-init = {
     enable = lib.mkDefault true;
@@ -131,6 +136,13 @@ in
 
         "/apps/" = {
           alias = "${configureHolochainWorkingDir}/uis/";
+          extraConfig = ''
+            limit_req zone=zone1 burst=30;
+          '';
+        };
+
+        "/hosted/" = {
+          alias = "${hostedUisDir}/";
           extraConfig = ''
             limit_req zone=zone1 burst=30;
           '';
@@ -253,7 +265,7 @@ in
     };
   };
 
-  systemd.globalEnvironment.DEV_UID_OVERRIDE = "develop";
+  systemd.globalEnvironment.DEV_UID_OVERRIDE = "jack0002";
 
   services.holo-auto-installer = lib.mkDefault {
     enable = true;

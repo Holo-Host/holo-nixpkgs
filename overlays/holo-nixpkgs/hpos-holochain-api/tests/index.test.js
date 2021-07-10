@@ -21,14 +21,14 @@ function pathWithTimeInterval(path, usageTimeInterval) {
 }
 
 test('holochain-api endpoint ', async () => {
-  const listOfHappsResponse = await request(app).get(pathWithTimeInterval('/hosted_happs', usageTimeInterval))
+  let listOfHappsResponse = await request(app).get(pathWithTimeInterval('/hosted_happs', usageTimeInterval))
   expect(listOfHappsResponse.status).toBe(200)
-  const listOfHapps = JSON.parse(listOfHappsResponse.text)
+  let listOfHapps = JSON.parse(listOfHappsResponse.text)
   expect(listOfHapps.length).toBe(0)
 
   const res1 = await request(app)
     .post('/register_happ')
-    .send({ url: "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha7/elemental-chat.0_2_0_alpha7.happ" })
+    .send({ bundleUrl: "https://github.com/holochain/elemental-chat/releases/download/v0.2.0-alpha7/elemental-chat.0_2_0_alpha7.happ" })
   expect(res1.status).toBe(200)
 
   await delay(10000)
@@ -89,7 +89,7 @@ test('dashboard endpoint', async () => {
 test('register_happ endpoint ', async () => {
   const res = await request(app)
     .post('/register_happ')
-    .send({ url: "testing.url" })
+    .send({ bundleUrl: "testing.url" })
   expect(res.status).toBe(200)
 
   await delay(10000)

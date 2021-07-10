@@ -11,6 +11,7 @@ const DEV_UID_OVERRIDE = process.env.DEV_UID_OVERRIDE
 
 const CONFIGURE_HC = process.env.NODE_ENV === 'test' ? './tests/config.yaml' : '/var/lib/configure-holochain/config.yaml'
 const READ_ONLY_PUBKEY = '/var/lib/configure-holochain/agent_key.pub'
+const UI_STORE_FOLDER = process.env.HOSTED_UIS_DIR
 
 const getReadOnlyPubKey = async () => {
   try {
@@ -50,6 +51,7 @@ module.exports = {
   ADMIN_PORT,
   HAPP_PORT,
   DEV_UID_OVERRIDE,
+  UI_STORE_FOLDER,
   getReadOnlyPubKey,
   getAppIds
 }

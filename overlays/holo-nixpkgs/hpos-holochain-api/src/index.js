@@ -7,7 +7,9 @@ const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 yargs(hideBin(process.argv))
 const { UNIX_SOCKET, HAPP_PORT, ADMIN_PORT } = require('./const')
-const { callZome, createAgent, listInstalledApps, installHostedHapp } = require('./api')
+const { callZome, createAgent, listInstalledApps } = require('./api')
+const { installHostedHapp, installHostedUI } = require('./install_hosted_happ')
+const { registerECHapp } = require('./register_happ')
 const { parsePreferences, isUsageTimeInterval } = require('./utils')
 const { getAppIds, getReadOnlyPubKey } = require('./const')
 const { AdminWebsocket, AppWebsocket } = require('@holochain/conductor-api')
@@ -25,15 +27,16 @@ const getPresentedHapps = async usageTimeInterval => {
     }
     let appStats, enabled
     let happDetails = null
+    let happ_id = happs[i].happ_id
     try {
-      appStats = await callZome(appWs, `${happs[i].happ_id}::servicelogger`, 'service', 'get_stats', usageTimeInterval)
+      appStats = await callZome(appWs, `${happ_id}::servicelogger`, 'service', 'get_stats', usageTimeInterval)
       enabled = true
       const { source_chain_count: sourceChains, bandwidth, cpu, disk_usage: storage } = appStats
       usage.cpu = cpu
       usage.bandwidth = bandwidth
       // Create happ details with enabled true and servicelogger deatils
       happDetails = {
-        id: happs[i].happ_id,
+        id: happ_id,
         name: happs[i].happ_bundle.name,
         bundleUrl: happs[i].happ_bundle.bundle_url,
         hostedUrl: happs[i].happ_bundle.hosted_url,
@@ -45,13 +48,13 @@ const getPresentedHapps = async usageTimeInterval => {
     } catch (e) {
       // Creat happ deatils with enabled false and and error for servicelogger
       happDetails = {
-        id: happs[i].happ_id,
+        id: happ_id,
         name: happs[i].happ_bundle.name,
         bundleUrl: happs[i].happ_bundle.bundle_url,
         hostedUrl: happs[i].happ_bundle.hosted_url,
         enabled: false,
         error: {
-          source: `${happs[i].happ_id}::servicelogger`,
+          source: `${happ_id}::servicelogger`,
           message: e.message,
           stack: e.stack
         }
@@ -60,25 +63,6 @@ const getPresentedHapps = async usageTimeInterval => {
     presentedHapps.push(happDetails)
   }
   return presentedHapps
-}
-
-const registerECHapp = async url => {
-  const appWs = await AppWebsocket.connect(`ws://localhost:${HAPP_PORT}`)
-  const APP_ID = await getAppIds()
-  const ecHappBundle = {
-    hosted_url: "https://elemental-chat.holo.host",
-    bundle_url: url,
-    happ_alias: "chat",
-    ui_src_url: "fake-path",
-    name: "Elemental Chat",
-    dnas: [{
-      hash: "fake-hash",
-      src_url: "fake-path",
-      nick: "elemental-chat",
-    }]
-  }
-  let happ =  await callZome(appWs, APP_ID.HHA, 'hha', 'register_happ', ecHappBundle)
-  return happ
 }
 
 const enableHapp = async happ_id => {
@@ -101,7 +85,6 @@ const enableHapp = async happ_id => {
   let happ =  await callZome(appWs, APP_ID.HHA, 'hha', 'enable_happ', enableBundle)
   return happ
 }
-
 
 app.get('/hosted_happs', async (req, res) => {
   const usageTimeInterval = {
@@ -214,8 +197,9 @@ app.post('/install_hosted_happ', async (req, res) => {
 
       // Generate new agent in a test environment else read the location in hpos
       const hostPubKey = process.env.NODE_ENV === 'test' ? await createAgent(adminWs) : await getReadOnlyPubKey()
-
+      let happ_id = happBundleDetails.happ_id;
       // check if the hosted_happ is already listOfInstalledHapps
+
       if (listOfInstalledHapps.includes(`${happBundleDetails.happ_id}`)) {
         await enableHapp(happBundleDetails.happ_id)
         return res.status(501).send(`hpos-holochain-api error: ${happBundleDetails.happ_id} already installed on your holoport`)
@@ -226,9 +210,10 @@ app.post('/install_hosted_happ', async (req, res) => {
         await installHostedHapp(happBundleDetails.happ_id, happBundleDetails.happ_bundle.bundle_url, hostPubKey, serviceloggerPref, data.membrane_proofs)
         await enableHapp(happBundleDetails.happ_id)
       }
+      await installHostedUI(happ_id, happBundleDetails.happ_bundle.ui_src_url)
 
-      // Note: Do not need to install UI's for hosted happ
-      return res.status(200).send(`Successfully installed happ_id: ${happId}`)
+      console.log(`Completed hosted-happ install sequence for happ_id: ${happId}`)
+      return res.status(200).send(`Completed hosted-happ install sequence for happ_id: ${happId}`)
     } catch (e) {
       return res.status(501).send(`hpos-holochain-api error: Failed to install hosted Happ with error - ${e}`)
     }
@@ -245,9 +230,9 @@ app.post('/register_happ', async (req, res) => {
   const data = await new Promise(resolve => req.on('data', (body) => {
     resolve(JSON.parse(body.toString()))
   }))
-  if (data.url) {
+  if (data.bundleUrl) {
     try {
-      const happ = await registerECHapp(data.url)
+      const happ = await registerECHapp(data.bundleUrl, data.uiUrl)
       res.status(200).send(happ)
     } catch (e) {
       return res.status(501).send(`hpos-holochain-api error: ${e}`)
