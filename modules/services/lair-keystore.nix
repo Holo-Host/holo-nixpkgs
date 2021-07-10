@@ -21,13 +21,18 @@ in
     environment.systemPackages = [ cfg.package ];
 
     systemd.services.lair-keystore = {
-      after = [ "network.target" ];
+      after = [ "network.target"];
       wantedBy = [ "multi-user.target" ];
 
+      path = with pkgs; [ jq more ];
+      
       preStart = ''
         rm -f ${holochain-home}/lair-keystore/pid
-      '';
-
+        echo "initializing keystore from config at $HPOS_CONFIG_PATH"
+        sleep 1
+        ${cfg.package}/bin/lair-keystore --load-ed25519-keypair-from-base64 $(jq .v2.encrypted_key $HPOS_CONFIG_PATH | sed 's/"//g') -d ${holochain-home}/lair-keystore
+      ''; 
+    
       serviceConfig = {
         User = "holochain-rsm";
         Group = "holochain-rsm";
