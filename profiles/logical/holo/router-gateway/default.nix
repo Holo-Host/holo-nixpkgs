@@ -3,7 +3,11 @@
 with pkgs;
 
 let
-  settings = import ../../global-settings.nix { inherit config; };
+  settings = import ../../global-settings.nix;
+
+  networks = import ../../holo-networks.nix;
+
+  holoNetwork = networks.selectNetwork config.system.holoNetwork;
 in
 
 {
@@ -19,12 +23,12 @@ in
     enable = true;
 
     # https://dnscrypt.info/stamps/
-    settings.static.holo-router-registry.stamp = settings.holoNetwork.routerRegistry.stamp;
+    settings.static.holo-router-registry.stamp = holoNetwork.routerRegistry.stamp;
   };
 
   services.holo-router-gateway = {
     enable = true;
-    hposDomain = settings.holoNetwork.hposDomain;
+    hposDomain = holoNetwork.hposDomain;
   };
 
   services.nginx = {
@@ -38,7 +42,7 @@ in
 
   services.zerotierone = {
     enable = lib.mkDefault true;
-    joinNetworks = [ settings.holoNetwork.zerotierNetworkID ];
+    joinNetworks = [ holoNetwork.zerotierNetworkID ];
   };
 
   boot.cleanTmpDir = true;

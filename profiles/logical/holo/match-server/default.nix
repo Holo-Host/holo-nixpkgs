@@ -11,7 +11,12 @@ let
 
   configureHolochainWorkingDir = "/var/lib/configure-holochain";
 
-  settings = import ../../global-settings.nix { inherit config; };
+  settings = import ../../global-settings.nix;
+
+  networks = import ../../holo-networks.nix;
+
+  holoNetwork = networks.selectNetwork config.system.holoNetwork;
+
 in
 
 {
@@ -43,7 +48,7 @@ in
         }
       ];
       network = {
-        bootstrap_service = settings.holoNetwork.bootstrapUrl;
+        bootstrap_service = holoNetwork.bootstrapUrl;
         network_type = "quic_bootstrap";
         transport_pool = [{
           type = "proxy";
@@ -52,20 +57,12 @@ in
           };
           proxy_config = {
             type = "remote_proxy_client";
-            proxy_url = settings.holoNetwork.proxy.kitsuneAddress;
+            proxy_url = holoNetwork.proxy.kitsuneAddress;
           };
         }];
         tuning_params = {
           gossip_loop_iteration_delay_ms = 1000; # Default was 10
-          default_notify_remote_agent_count = 5;
-          default_notify_timeout_ms = 1000;
-          default_rpc_single_timeout_ms = 20000;
-          default_rpc_multi_remote_agent_count = 2;
-          default_rpc_multi_timeout_ms = 2000;
           agent_info_expires_after_ms = 1000 * 60 * 30; #// Default was 20 minutes
-          tls_in_mem_session_storage = 512;
-          proxy_keepalive_ms = 1000 * 60 * 2;
-          proxy_to_expire_ms = 1000 * 60 * 5;
         };
       };
     };
@@ -112,6 +109,11 @@ in
     credentialsDir = matchServerCredentialsDir;
   };
 
+  services.daily-uptime-calculator = {
+    enable = true;
+    credentialsDir = matchServerCredentialsDir;
+  };
+
   services.match-service-api = {
     enable = true;
     socket = matchServiceApiSocket;
@@ -146,12 +148,6 @@ in
       };
   };
 
-#  security.acme = {
-#    acceptTerms = true;
-#    # REVIEW: maybe a dedicated email for Hydra?
-#    email = "oleksii.filonenko@holo.host";
-#  };
-
   system.holo-nixpkgs.autoUpgrade = {
     enable = lib.mkDefault true;
     interval = "10min";
@@ -162,4 +158,9 @@ in
   users.users.nginx.extraGroups = [ "apis" ];
 
   services.hpos-holochain-api.enable = true; # Temporary
+
+  services.ssh-pinger = {
+    enable = true;
+    credentialsDir = matchServerCredentialsDir;
+  };
 }

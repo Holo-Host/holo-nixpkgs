@@ -26,6 +26,8 @@ in
       wantedBy = [ "multi-user.target" ];
       path = with pkgs; [ unzip ];
 
+      path = [ pkgs.hpos-config ];
+
       serviceConfig = {
         ExecStart = "${cfg.package}/bin/hpos-holochain-api";
         User = "hc-api";
@@ -36,7 +38,7 @@ in
 
       environment.HOSTED_UIS_DIR = cfg.hosted-uis-directory;
     };
-
+    
     systemd.tmpfiles.rules = [
       "d /run/hpos-holochain-api 0770 hc-api apis - -"
       "d ${cfg.hosted-uis-directory} 0755 hc-api apis - -"
