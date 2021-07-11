@@ -1,4 +1,4 @@
-{ stdenv, rustPlatform, fetchFromGitHub, lib, darwin, libiconv }:
+{ stdenv, rustPlatform, fetchFromGitHub, lib, darwin, pkgconfig, xcbuild, libiconv }:
 
 let
   version = "45cc6c1392beb5244d6f1d4ebc58e68e9ddfd1e8";
@@ -16,6 +16,10 @@ rustPlatform.buildRustPackage {
   };
 
   cargoSha256 = "19kgz81klkf1grw80h11qsixk1jfcg0w61l7wnm9x7qj3pd3wrn4";
+
+  nativeBuildInputs = [ pkgconfig ] ++ stdenv.lib.optionals stdenv.isDarwin [
+    xcbuild
+  ];
 
   buildInputs = lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
     AppKit
