@@ -1,4 +1,4 @@
-{ stdenv, pkgs }:
+{ pkgs }:
 
 with pkgs;
 
@@ -21,13 +21,14 @@ in
 
     cargoSha256 = "0yhiq52bb6kv8gyqz61d5gqzgzsywg3j1kaz5p5yny0dbc0a03kk";
 
-    nativeBuildInputs = [ perl ];
+    nativeBuildInputs = [ perl pkgconfig ] ++ stdenv.lib.optionals stdenv.isDarwin [
+      xcbuild
+    ];
 
     buildInputs = lib.optionals stdenv.isDarwin [ Security ];
 
     RUST_SODIUM_LIB_DIR = "${libsodium}/lib";
     RUST_SODIUM_SHARED = "1";
-    CROSS_COMPILE = stdenv.cc.targetPrefix;
 
     doCheck = false;
   };
