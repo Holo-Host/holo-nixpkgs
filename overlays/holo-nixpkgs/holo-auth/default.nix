@@ -16,7 +16,7 @@ in
       sha256 = "19579ixcq7gmcba0pd888nqrigcnvq83vn1z9y25vwbaaz9j0c0l";
     };
 
-    cargoSha256 = "0fzd3pgy5z9ya6p2n3k5lcyzhcyjd0pd0pyyzjhqgsksifnc7yxm";
+    cargoSha256 = "1hykr3khbilavj0iahinyj24kpcd5kgflk6bffscmgvr78fhqy6n";
     
     nativeBuildInputs = [ pkgconfig ];
     buildInputs = [ openssl ];
