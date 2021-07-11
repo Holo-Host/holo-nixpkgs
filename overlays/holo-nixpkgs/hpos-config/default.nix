@@ -1,4 +1,4 @@
-{ pkgs }:
+{ stdenv, pkgs }:
 
 with pkgs;
 
@@ -27,6 +27,7 @@ in
 
     RUST_SODIUM_LIB_DIR = "${libsodium}/lib";
     RUST_SODIUM_SHARED = "1";
+    CROSS_COMPILE = stdenv.cc.targetPrefix;
 
     doCheck = false;
   };
