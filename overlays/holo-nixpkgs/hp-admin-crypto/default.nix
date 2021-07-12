@@ -19,6 +19,15 @@ in
     
     cargoSha256 = "0vl39yj70f6fc84yih3m494ypcbjzd1i1pd9fy7sqlalf6r5siy9";
 
-    buildInputs = lib.optionals stdenv.isDarwin [ Security ];
+    nativeBuildInputs = [ perl pkgconfig ] ++ stdenv.lib.optionals stdenv.isDarwin [
+      xcbuild
+    ];
+
+    buildInputs = lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
+      AppKit
+      Security
+      libiconv
+    ]);
+    
   };
 }
