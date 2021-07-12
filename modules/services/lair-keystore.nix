@@ -29,7 +29,7 @@ in
       preStart = ''
         rm -f ${holochain-home}/lair-keystore/pid
         echo "initializing keystore from config at $HPOS_CONFIG_PATH"
-        sleep 1
+        sleep 10 # wait for hpos-init to complete
         ${cfg.package}/bin/lair-keystore --load-ed25519-keypair-from-base64 $(jq .v2.encrypted_key $HPOS_CONFIG_PATH | sed 's/"//g') -d ${holochain-home}/lair-keystore
       ''; 
     

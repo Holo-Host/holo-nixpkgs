@@ -1,7 +1,7 @@
-{ stdenv, rustPlatform, fetchFromGitHub, lib, darwin, libiconv }:
+{ stdenv, rustPlatform, fetchFromGitHub, lib, darwin, pkgconfig, xcbuild, libiconv }:
 
 let
-  version = "2142312299e3662d3c5f22318525c7918fba1868";
+  version = "45cc6c1392beb5244d6f1d4ebc58e68e9ddfd1e8";
 in
 
 rustPlatform.buildRustPackage {
@@ -12,10 +12,14 @@ rustPlatform.buildRustPackage {
     owner = "holochain";
     repo = "lair";
     rev = version;
-    sha256 = "1qa80yswp7gf2am4g2c1xkibx9rw6r2nl5827sqaqskjyldgjyy1";
+    sha256 = "1rplli16l2dl2h5pa9lgzs1xbi2hcff33dxvq8b7mrkcvwr49fzs";
   };
 
-  cargoSha256 = "1gl2jiabkhhkrn95snjrsnx2qjsypfhfrypv9zhfp54ghmkw9zsb";
+  cargoSha256 = "19kgz81klkf1grw80h11qsixk1jfcg0w61l7wnm9x7qj3pd3wrn4";
+
+  nativeBuildInputs = [ pkgconfig ] ++ stdenv.lib.optionals stdenv.isDarwin [
+    xcbuild
+  ];
 
   buildInputs = lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
     AppKit

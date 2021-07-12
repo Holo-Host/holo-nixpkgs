@@ -3,7 +3,7 @@
 with pkgs;
 
 let
-  inherit (rust.packages.nightly) rustPlatform;
+  inherit (rust.packages.stable) rustPlatform;
   inherit (darwin.apple_sdk.frameworks) Security;
 in
 
@@ -13,12 +13,21 @@ in
     src = fetchFromGitHub {
       owner = "Holo-Host";
       repo = "hp-admin-crypto";
-      rev = "321833b8711d4141de419fa3d1610165621569a5";
-      sha256 = "0pssizqpmyxjwzqgkrd3vdg3r30cvz4zwb23zf895rm7djhq52sn";
+      rev = "db676b4452050c8e3c07e538c995f22f6d00fb17";
+      sha256 = "0y5s01sn4nyxn69rk3vag2p1d3cn6rcgb70bzcwdgxvgi1xi9xsa";
     };
     
-    cargoSha256 = "1p5y7z0hn1nj67yyx1q7bg0z4s9mqd6cbh0h45cjjlma8widq5sp";
+    cargoSha256 = "0vl39yj70f6fc84yih3m494ypcbjzd1i1pd9fy7sqlalf6r5siy9";
 
-    buildInputs = lib.optionals stdenv.isDarwin [ Security ];
+    nativeBuildInputs = [ perl pkgconfig ] ++ stdenv.lib.optionals stdenv.isDarwin [
+      xcbuild
+    ];
+
+    buildInputs = lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
+      AppKit
+      Security
+      libiconv
+    ]);
+    
   };
 }

@@ -15,16 +15,22 @@ in
     src = fetchFromGitHub {
         owner = "Holo-Host";
         repo = "hpos-config";
-        rev = "91a9e35547f7db492446857fccd83c54e705cb0e";
-        sha256 = "010ryvh37aa2wxcshgizasbfhw3g110ghgwvrvnfkv2klclam96s";
+        rev = "dd8b8e7a9261ac1e3613859b2deed57823a803e0";
+        sha256 = "1dzjiffkaq6rqnr4ik0ys1xvapp30hs9cn2v9600c1nah97p7601";
     };
 
-    cargoSha256 = "0mzcg419klhn7fab7za0m68m6yzgbazamx611lph4a7saqdmzz9i";
+    cargoSha256 = "0yhiq52bb6kv8gyqz61d5gqzgzsywg3j1kaz5p5yny0dbc0a03kk";
 
-    nativeBuildInputs = [ perl ];
+    nativeBuildInputs = [ perl pkgconfig ] ++ stdenv.lib.optionals stdenv.isDarwin [
+      xcbuild
+    ];
 
-    buildInputs = lib.optionals stdenv.isDarwin [ Security ];
-
+    buildInputs = lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
+      AppKit
+      Security
+      libiconv
+    ]);
+    
     RUST_SODIUM_LIB_DIR = "${libsodium}/lib";
     RUST_SODIUM_SHARED = "1";
 
