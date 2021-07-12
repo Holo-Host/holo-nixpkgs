@@ -263,6 +263,7 @@ in
   services.configure-holochain = lib.mkDefault {
     enable = true;
     working-directory = configureHolochainWorkingDir;
+    holo-network = settings.holoNetwork;
     install-list = {
       core_happs = [
        {

@@ -7,11 +7,11 @@ rustPlatform.buildRustPackage {
   src = fetchFromGitHub {
     owner = "Holo-Host";
     repo = "hpos-configure-holochain";
-    rev = "31a339e961bbe7b9177f3a721b5d29801c0d274b";
-    sha256 = "1m68nqww9gz2hki4n3xv86c6wr1kgf7snbbf7nnsbb26dhb5qlhm";
+    rev = "baaaba1175ff403d6d0dfeed84631da2b708f0a3";
+    sha256 = "1rrbhlqrin0k7blaczrl8zpvbsnzy752fpk4rk49g8swj7dsrzqy";
   };
 
-  cargoSha256 = "1n9pywziayyhvr2sjp595psh5niahvdl2d1lmblklkvarbp58c1d";
+  cargoSha256 = "1d0z20mv61crlww8a2bsvbhr1ajixgxh3d0wn4lnfnp08c4z3w4l";
 
   nativeBuildInputs = [ pkgconfig ];
   buildInputs = [ openssl ];

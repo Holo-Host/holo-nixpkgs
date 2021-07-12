@@ -71,6 +71,7 @@ in
   services.configure-holochain = {
     enable = true;
     working-directory = configureHolochainWorkingDir;
+    holo-network = settings.holoNetwork;
     install-list = {
       self_hosted_happs = [];
       core_happs = [

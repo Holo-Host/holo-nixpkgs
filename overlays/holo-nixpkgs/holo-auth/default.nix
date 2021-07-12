@@ -3,7 +3,7 @@
 with pkgs;
 
 let
-  inherit (rust.packages.nightly) rustPlatform;
+  inherit (rust.packages.stable) rustPlatform;
 in
 
 {
@@ -12,11 +12,11 @@ in
     src = fetchFromGitHub {
       owner = "Holo-Host";
       repo = "holo-auth";
-      rev = "43009e8ab644621dd4272c4723d0e603412f062b";
-      sha256 = "1c8p9xjhfxgh11vf55fwkglffv0qjc8gzc98kybqznhm81l8y2fl";
+      rev = "dd4ccce07f54413a0ae70b92716be3fb21679a81";
+      sha256 = "19579ixcq7gmcba0pd888nqrigcnvq83vn1z9y25vwbaaz9j0c0l";
     };
 
-    cargoSha256 = "021g6416kpfqm800c24nvvmaxsm2ywxkps2pzaydm9vhpvnhpdqb";
+    cargoSha256 = "1hykr3khbilavj0iahinyj24kpcd5kgflk6bffscmgvr78fhqy6n";
     
     nativeBuildInputs = [ pkgconfig ];
     buildInputs = [ openssl ];

@@ -10,6 +10,10 @@ in
   options.services.configure-holochain = {
     enable = mkEnableOption "configure-holochain";
 
+    holo-network = mkOption {
+      default = "";
+    };
+
     install-list = mkOption {
       type = types.attrs;
     };

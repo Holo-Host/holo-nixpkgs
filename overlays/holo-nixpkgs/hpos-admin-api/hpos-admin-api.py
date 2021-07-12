@@ -50,7 +50,7 @@ def cas_hash(data):
 
 @app.route('/config', methods=['GET'])
 def get_settings():
-    return jsonify(get_state_data()['v1']['settings'])
+    return jsonify(get_state_data()['v2']['settings'])
 
 
 def replace_file_contents(path, data):
@@ -64,12 +64,12 @@ def replace_file_contents(path, data):
 def put_settings():
     with state_lock:
         state = get_state_data()
-        expected_cas = cas_hash(state['v1']['settings'])
+        expected_cas = cas_hash(state['v2']['settings'])
         received_cas = request.headers.get('x-hpos-admin-cas')
         if received_cas != expected_cas:
             app.logger.warning('CAS mismatch: {} != {}'.format(received_cas, expected_cas))
             return '', 409
-        state['v1']['settings'] = request.get_json(force=True)
+        state['v2']['settings'] = request.get_json(force=True)
         state_json = json.dumps(state, indent=2)
         try:
             subprocess.run(['hpos-config-is-valid'], check=True, input=state_json, text=True)

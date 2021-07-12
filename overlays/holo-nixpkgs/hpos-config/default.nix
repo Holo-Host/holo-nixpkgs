@@ -3,7 +3,7 @@
 with pkgs;
 
 let
-  inherit (rust.packages.nightly) rustPlatform;
+  inherit (rust.packages.stable) rustPlatform;
   inherit (darwin.apple_sdk.frameworks) Security;
 in
 
@@ -15,16 +15,22 @@ in
     src = fetchFromGitHub {
         owner = "Holo-Host";
         repo = "hpos-config";
-        rev = "920bd38401edf0b5e81da489d5e519852d7b3218";
-        sha256 = "1sc4jhn4h0phxi1pn20c5wq7x8zs3d8dis9il7fdc5iiszki5413";
+        rev = "dd8b8e7a9261ac1e3613859b2deed57823a803e0";
+        sha256 = "1dzjiffkaq6rqnr4ik0ys1xvapp30hs9cn2v9600c1nah97p7601";
     };
 
-    cargoSha256 = "19fk595k9nrqgn5nwfxd0mnzw3is448q2lpgc8m20d92sw2az8fx";
+    cargoSha256 = "0yhiq52bb6kv8gyqz61d5gqzgzsywg3j1kaz5p5yny0dbc0a03kk";
 
-    nativeBuildInputs = [ perl ];
+    nativeBuildInputs = [ perl pkgconfig ] ++ stdenv.lib.optionals stdenv.isDarwin [
+      xcbuild
+    ];
 
-    buildInputs = lib.optionals stdenv.isDarwin [ Security ];
-
+    buildInputs = lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
+      AppKit
+      Security
+      libiconv
+    ]);
+    
     RUST_SODIUM_LIB_DIR = "${libsodium}/lib";
     RUST_SODIUM_SHARED = "1";
 
